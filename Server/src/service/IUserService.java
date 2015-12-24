@@ -3,7 +3,7 @@ package service;
 import entity.User;
 
 public interface IUserService {
-	public boolean checkUserExist(User u);
+	public boolean checkAccountExist(User u);
 
 	public boolean userRegister(User u);
 

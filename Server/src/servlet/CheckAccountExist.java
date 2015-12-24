@@ -13,7 +13,7 @@ import org.json.JSONObject;
 import entity.User;
 import factory.Factory;
 
-public class UserRegister extends HttpServlet {
+public class CheckAccountExist extends HttpServlet {
 
 	/**
 	 * The doGet method of the servlet. <br>
@@ -31,7 +31,19 @@ public class UserRegister extends HttpServlet {
 	 */
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		doPost(request, response);
+
+		response.setContentType("text/html;charset=UTF-8");
+		request.setCharacterEncoding("UTF-8");
+
+		PrintWriter out = response.getWriter();
+		String account = request.getParameter("account");
+		boolean result = Factory.getIUserService().checkAccountExist(
+				new User(account, null));
+		JSONObject json = new JSONObject();
+		json.put("result", result);
+		out.print(json);
+		out.flush();
+		out.close();
 	}
 
 	/**
@@ -52,28 +64,7 @@ public class UserRegister extends HttpServlet {
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		response.setContentType("text/html;charset=UTF-8");
-		request.setCharacterEncoding("UTF-8");
-
-		PrintWriter out = response.getWriter();
-		String account = request.getParameter("account");
-		String password = request.getParameter("password");
-		User u = new User(account, password);
-		boolean result = Factory.getIUserService().userRegister(u);
-		JSONObject json = new JSONObject();
-		json.put("result", result);
-		if(result){
-			json.put("account", u.getAccount());
-			json.put("userId", u.getUserId());
-			json.put("username", u.getUsername());
-			json.put("userIntro", u.getUserIntro());
-			json.put("msgCount", u.getMsgCount());
-			json.put("fansCount", u.getFansCount());
-			json.put("focusCount", u.getFocusCount());
-		}
-		out.print(json);
-		out.flush();
-		out.close();
+		doGet(request, response);
 	}
 
 }

@@ -43,17 +43,17 @@ public class IUserDaoImpl implements IUserDao {
 	}
 
 	/**
-	 * @return true if user exist
+	 * @return true if account exist
 	 */
-	public boolean checkUserExist(User u) {
+	public boolean checkAccountExist(User u) {
 		Connection conn = new ConnectionOracle().getConnection();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		boolean flag = false;
-		String sql = "select * from t_user_info where user_name=?";
+		String sql = "select * from t_user_account where account=?";
 		try {
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, u.getUsername());
+			pstmt.setString(1, u.getAccount());
 			rs = pstmt.executeQuery();
 			if (rs.next()) {
 				flag = true;
@@ -119,7 +119,7 @@ public class IUserDaoImpl implements IUserDao {
 	 */
 	public boolean userRegisterInfo(User u) {
 		boolean flag = false;
-		if (checkUserExist(u)) {
+		if (checkAccountExist(u)) {
 			return flag;
 		} else {
 			Connection conn = new ConnectionOracle().getConnection();

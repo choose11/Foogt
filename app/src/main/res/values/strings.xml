@@ -13,4 +13,6 @@
     <string name="register_welcome">欢迎注册</string>
     <string name="exit_account">退出当前帐号</string>
     <string name="account_management">账号管理</string>
+    <string name="account_exist">账号已存在</string>
+    <string name="http_fail">网络有问题</string>
 </resources>

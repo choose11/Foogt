@@ -3,7 +3,7 @@ package dao;
 import entity.User;
 
 public interface IUserDao {
-	public boolean checkUserExist(User u);
+	public boolean checkAccountExist(User u);
 
 	public boolean userRegisterAccount(User u);
 	

@@ -17,8 +17,8 @@ public class IUserServiceImpl implements IUserService {
 		return dao.changePW(u, newPW);
 	}
 
-	public boolean checkUserExist(User u) {
-		return dao.checkUserExist(u);
+	public boolean checkAccountExist(User u) {
+		return dao.checkAccountExist(u);
 	}
 
 	public boolean userLogin(User u) {
@@ -29,7 +29,7 @@ public class IUserServiceImpl implements IUserService {
 	 * register user info first to get userId, then register account.
 	 */
 	public boolean userRegister(User u) {
-		if (!dao.checkUserExist(u)) {
+		if (!dao.checkAccountExist(u)) {
 			dao.userRegisterInfo(u);
 			return dao.userRegisterAccount(u);
 		} else {
@@ -45,7 +45,7 @@ public class IUserServiceImpl implements IUserService {
 	public static void main(String[] args) {
 		IUserServiceImpl i = new IUserServiceImpl();
 		User u = new User("eric", "eric");
-		System.out.println("CheckExist\t" + i.checkUserExist(u));
+		System.out.println("CheckExist\t" + i.checkAccountExist(u));
 		System.out.println("Regist\t" + i.userRegister(u));
 		System.out.println("Login\t" + i.userLogin(u));
 		System.out.println("ChangePW\t" + i.changePW(u, "passwd"));
