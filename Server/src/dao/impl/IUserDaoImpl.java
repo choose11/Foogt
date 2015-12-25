@@ -71,7 +71,8 @@ public class IUserDaoImpl implements IUserDao {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		boolean flag = false;
-		String sql = "select * from ticketuser where user_name=? and user_password=?";
+		String sql = "select * from t_user_account where account=? and password=?";
+		System.out.println(1);
 		try {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, u.getUsername());
