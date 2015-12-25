@@ -7,15 +7,16 @@ import android.os.Bundle;
 
 import com.example.json.foogt.R;
 
-public class SearchActivity extends AppCompatActivity {
+public class CollectionActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_search);
+        setContentView(R.layout.activity_collection);
     }
+
     public static void actionStart(Context context) {
-        Intent i = new Intent(context, SearchActivity.class);
+        Intent i = new Intent(context, CollectionActivity.class);
         context.startActivity(i);
     }
 }

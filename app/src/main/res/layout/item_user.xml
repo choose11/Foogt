@@ -14,7 +14,7 @@
 
 
         <TextView
-            android:id="@+id/title"
+            android:id="@+id/txt_search_username"
             android:layout_width="match_parent"
             android:layout_height="70sp"
             android:text="票未ieie"

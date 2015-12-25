@@ -4,6 +4,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -15,7 +16,7 @@
             android:label="@string/title_activity_login"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
-        <activity android:name=".activity.RegisterActivity" >
+        <activity android:name=".activity.RegisterActivity">
         </activity>
         <activity android:name=".activity.DataEditActivity">
         </activity>
@@ -34,7 +35,8 @@
             android:name=".activity.MenuActivity"
             android:label="@string/title_activity_menu"
             android:theme="@style/AppTheme.NoActionBar">
-
+        </activity>
+        <activity android:name=".activity.CollectionActivity">
         </activity>
     </application>
 

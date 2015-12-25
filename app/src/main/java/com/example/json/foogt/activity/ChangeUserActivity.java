@@ -1,5 +1,7 @@
 package com.example.json.foogt.activity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -37,5 +39,9 @@ public class ChangeUserActivity extends AppCompatActivity {
         }
         //return super.onOptionsItemSelected(item);
         return true;
+    }
+    public static void actionStart(Context context) {
+        Intent i = new Intent(context, ChangeUserActivity.class);
+        context.startActivity(i);
     }
 }

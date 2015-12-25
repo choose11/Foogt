@@ -11,22 +11,19 @@
             android:icon="@android:drawable/star_off"
             android:title="@string/user_coll"/>
         <item
-            android:id="@+id/nav_slideshow"
-            android:icon="@android:drawable/ic_menu_slideshow"
-            android:title="Slideshow"/>
+            android:id="@+id/nav_send"
+            android:icon="@android:drawable/ic_menu_send"
+            android:title="@string/send_blog"/>
 
     </group>
 
-    <item android:title="Communicate">
+    <item android:title="@string/set">
         <menu>
             <item
                 android:id="@+id/nav_manage"
                 android:icon="@android:drawable/ic_menu_manage"
-                android:title="Tools"/>
-            <item
-                android:id="@+id/nav_send"
-                android:icon="@android:drawable/ic_menu_send"
-                android:title="Send"/>
+                android:title="@string/account_management"/>
+
         </menu>
     </item>
 

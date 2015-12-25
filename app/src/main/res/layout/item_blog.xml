@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/img_blog_user_profile"
+            android:layout_width="70sp"
+            android:layout_height="70sp"
+            android:padding="25sp"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="72dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/txt_blog_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="5sp"
+                android:text="赵文彬"
+                android:textSize="25sp"/>
+
+            <TextView
+                android:id="@+id/txt_blog_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5sp"
+                android:text="今天 10:10"
+                android:textAppearance="?android:attr/textAppearanceSmall"/>
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/txt_blog_msg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:paddingLeft="80sp"
+        android:paddingRight="10sp"
+        android:paddingTop="5sp"
+        android:text="Large T由此可以看出，服务器返回给我们的数据确实是JSON格式的，并且onResponse()方法中携带的参数也正是一个JSONObject对象，之后只需要从JSONObject对象取出我们想要得到的那部分数据就可以了。ext"
+        android:textSize="15sp"
+        />
+
+
+</LinearLayout>
