@@ -34,5 +34,3 @@ proguard/
 #NDK
 obj/
 
-#Const
-IConst.java

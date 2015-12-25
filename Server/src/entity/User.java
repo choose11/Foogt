@@ -10,6 +10,9 @@ public class User {
 	private int fansCount;
 	private int focusCount;
 
+	public User() {
+	}
+
 	/**
 	 * For register. default username is account.
 	 * 

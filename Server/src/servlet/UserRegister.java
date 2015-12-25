@@ -10,7 +10,12 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONObject;
 
+import com.alibaba.fastjson.JSON;
+
+import sun.org.mozilla.javascript.internal.json.JsonParser;
+
 import entity.User;
+import entity.UserInfoMsg;
 import factory.Factory;
 
 public class UserRegister extends HttpServlet {
@@ -60,17 +65,12 @@ public class UserRegister extends HttpServlet {
 		String password = request.getParameter("password");
 		User u = new User(account, password);
 		boolean result = Factory.getIUserService().userRegister(u);
-		JSONObject json = new JSONObject();
-		json.put("result", result);
-		if(result){
-			json.put("account", u.getAccount());
-			json.put("userId", u.getUserId());
-			json.put("username", u.getUsername());
-			json.put("userIntro", u.getUserIntro());
-			json.put("msgCount", u.getMsgCount());
-			json.put("fansCount", u.getFansCount());
-			json.put("focusCount", u.getFocusCount());
+		UserInfoMsg msg = new UserInfoMsg();
+		msg.setResult(result);
+		if (result) {
+			msg.setUser(u);
 		}
+		String json = JSON.toJSONString(msg);
 		out.print(json);
 		out.flush();
 		out.close();

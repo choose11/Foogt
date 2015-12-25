@@ -12,14 +12,27 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.json.foogt.R;
 import com.example.json.foogt.db.FoogtDB;
 import com.example.json.foogt.entity.User;
+import com.example.json.foogt.entity.UserInfoMsg;
 import com.example.json.foogt.util.HttpCallbackListener;
 import com.example.json.foogt.util.HttpUtil;
 import com.example.json.foogt.util.IConst;
 import com.example.json.foogt.util.LogUtil;
 import com.example.json.foogt.util.Utility;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -27,6 +40,7 @@ public class RegisterActivity extends AppCompatActivity {
     EditText accountEdit;
     EditText passwordEdit;
     Button registerBtn;
+    RequestQueue mQueue;
 
     private ActionBar bar;
 
@@ -36,6 +50,7 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
 
         bar = getSupportActionBar();
+        //// TODO: 2015/12/25 warning
         bar.setDisplayHomeAsUpEnabled(true);
         bar.setDisplayShowHomeEnabled(true);
         bar.setHomeButtonEnabled(true);
@@ -47,6 +62,8 @@ public class RegisterActivity extends AppCompatActivity {
 
         registerBtn.setOnClickListener(new onRegisterButtonClickListener());
         passwordEdit.setOnFocusChangeListener(new onPasswordFocusChangeListener());
+
+        mQueue = Volley.newRequestQueue(RegisterActivity.this);
     }
 
     /*
@@ -67,36 +84,33 @@ public class RegisterActivity extends AppCompatActivity {
 
         @Override
         public void onClick(View v) {
-            if(!v.isClickable()){
+            if (!v.isClickable()) {
                 return;
             }
-            String account = accountEdit.getText().toString();
-            String pwd = passwordEdit.getText().toString();
+            final String account = accountEdit.getText().toString();
+            final String pwd = passwordEdit.getText().toString();
             if (!TextUtils.isEmpty(account) && !TextUtils.isEmpty(pwd)) {
                 String url = IConst.SERVLET_ADDR + "UserRegister";
-                String data = "account=" + account + "&" + "password=" + pwd;
-                HttpUtil.sendHttpRequest(url, "POST", data, new HttpCallbackListener() {
-                    @Override
-                    public void onFinish(String response) {
-                        if(Utility.handleBooleanResultResponse(response)){
-                            User u =Utility.handleUserInfoResultResponse(response);
-                            FoogtDB.getInstance(RegisterActivity.this).saveUser(u);
-//                            finish();
-                        }
-                    }
-
-                    @Override
-                    public void onError(Exception e) {
-                        e.printStackTrace();
-                        LogUtil.e(TAG, e.toString());
-                        runOnUiThread(new Runnable() {
+                StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                        new Response.Listener<String>() {
                             @Override
-                            public void run() {
-                                Toast.makeText(RegisterActivity.this, R.string.http_fail, Toast.LENGTH_SHORT).show();
+                            public void onResponse(String response) {
+                                UserInfoMsg userInfo = JSON.parseObject(response, UserInfoMsg.class);
+                                if (userInfo.isResult()) {
+                                    FoogtDB.getInstance(RegisterActivity.this).saveUser(userInfo.getUser());
+                                }
+                                finish();
                             }
-                        });
+                        }, new NetErrorListener()) {
+                    @Override
+                    protected Map<String, String> getParams() throws AuthFailureError {
+                        Map<String, String> map = new HashMap<>();
+                        map.put("account", account);
+                        map.put("password", pwd);
+                        return map;
                     }
-                });
+                };
+                mQueue.add(stringRequest);
             }
         }
     }
@@ -115,37 +129,41 @@ public class RegisterActivity extends AppCompatActivity {
                 if (flag) {
                     // account not empty
                     String url = IConst.SERVLET_ADDR + "CheckAccountExist?account=" + account;
-                    HttpUtil.sendHttpRequest(url, "GET", null, new HttpCallbackListener() {
-                        @Override
-                        public void onFinish(String response) {
-                            // TODO: 2015/12/24 to be optimized to free server
-                            if (Utility.handleBooleanResultResponse(response)) {
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        registerBtn.setClickable(false);
-                                        Toast.makeText(RegisterActivity.this, R.string.account_exist, Toast.LENGTH_SHORT).show();
-                                    }
-                                });
-                            }
-                        }
-
-                        @Override
-                        public void onError(Exception e) {
-                            e.printStackTrace();
-                            LogUtil.e(TAG, e.toString());
-                            runOnUiThread(new Runnable() {
+                    StringRequest stringRequest = new StringRequest(url,
+                            new Response.Listener<String>() {
                                 @Override
-                                public void run() {
-                                    Toast.makeText(RegisterActivity.this, R.string.http_fail, Toast.LENGTH_SHORT).show();
+                                public void onResponse(String response) {
+                                    if (Utility.handleBooleanResultResponse(response)) {
+                                        runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                registerBtn.setClickable(false);
+                                                Toast.makeText(RegisterActivity.this, R.string.account_exist, Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                                    }
                                 }
-                            });
-                        }
-                    });
+                            }, new NetErrorListener());
+                    mQueue.add(stringRequest);
                 }
-                LogUtil.d(TAG,"RegisterButton\t"+flag);
+                LogUtil.d(TAG, "RegisterButton\t" + flag);
                 registerBtn.setClickable(flag);
             }
+        }
+    }
+
+    class NetErrorListener implements Response.ErrorListener {
+
+        @Override
+        public void onErrorResponse(VolleyError e) {
+            e.printStackTrace();
+            LogUtil.e(TAG, e.toString());
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(RegisterActivity.this, R.string.http_fail, Toast.LENGTH_SHORT).show();
+                }
+            });
         }
     }
 
