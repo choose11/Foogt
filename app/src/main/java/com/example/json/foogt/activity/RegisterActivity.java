@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.json.foogt.R;
+import com.example.json.foogt.db.FoogtDB;
 import com.example.json.foogt.entity.User;
 import com.example.json.foogt.util.HttpCallbackListener;
 import com.example.json.foogt.util.HttpUtil;
@@ -66,6 +67,9 @@ public class RegisterActivity extends AppCompatActivity {
 
         @Override
         public void onClick(View v) {
+            if(!v.isClickable()){
+                return;
+            }
             String account = accountEdit.getText().toString();
             String pwd = passwordEdit.getText().toString();
             if (!TextUtils.isEmpty(account) && !TextUtils.isEmpty(pwd)) {
@@ -76,7 +80,7 @@ public class RegisterActivity extends AppCompatActivity {
                     public void onFinish(String response) {
                         if(Utility.handleBooleanResultResponse(response)){
                             User u =Utility.handleUserInfoResultResponse(response);
-                            // TODO: 2015/12/24 save user info
+                            FoogtDB.getInstance(RegisterActivity.this).saveUser(u);
 //                            finish();
                         }
                     }
@@ -119,9 +123,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        // TODO: 2015/12/24 confirm no conflict with out of if(flag)
-                                        // TODO: 2015/12/24 button still clickable
-                                        accountEdit.setClickable(false);
+                                        registerBtn.setClickable(false);
                                         Toast.makeText(RegisterActivity.this, R.string.account_exist, Toast.LENGTH_SHORT).show();
                                     }
                                 });
@@ -141,13 +143,12 @@ public class RegisterActivity extends AppCompatActivity {
                         }
                     });
                 }
-                LogUtil.d(TAG,"Button\t"+flag);
-                accountEdit.setClickable(flag);
+                LogUtil.d(TAG,"RegisterButton\t"+flag);
+                registerBtn.setClickable(flag);
             }
         }
     }
 
-    // TODO: 2015/12/24 等待登录界面完成对接 
     public static void actionStart(Context context) {
         Intent i = new Intent(context, RegisterActivity.class);
         context.startActivity(i);

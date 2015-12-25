@@ -30,6 +30,7 @@ public class IUserServiceImpl implements IUserService {
 	 */
 	public boolean userRegister(User u) {
 		if (!dao.checkAccountExist(u)) {
+			//here checked so dao don't need to check again
 			dao.userRegisterInfo(u);
 			return dao.userRegisterAccount(u);
 		} else {

@@ -119,31 +119,27 @@ public class IUserDaoImpl implements IUserDao {
 	 */
 	public boolean userRegisterInfo(User u) {
 		boolean flag = false;
-		if (checkAccountExist(u)) {
-			return flag;
-		} else {
-			Connection conn = new ConnectionOracle().getConnection();
-			PreparedStatement pstmt = null;
-			String sql = "insert into t_user_info values (user_id_sequence.nextval,?,?,?,?,?)";
-			try {
-				pstmt = conn.prepareStatement(sql);
-				pstmt.setString(1, u.getUsername());
-				pstmt.setString(2, u.getUserIntro());
-				pstmt.setInt(3, u.getMsgCount());
-				pstmt.setInt(4, u.getFansCount());
-				pstmt.setInt(5, u.getFocusCount());
-				int i = pstmt.executeUpdate();
-				if (i == 1) {
-					flag = true;
-					u.setUserId(getUserId(u.getUsername()));
-				}
-			} catch (Exception e) {
-				LogUtil.e(e);
-			} finally {
-				close(conn, pstmt, null);
+		Connection conn = new ConnectionOracle().getConnection();
+		PreparedStatement pstmt = null;
+		String sql = "insert into t_user_info values (user_id_sequence.nextval,?,?,?,?,?)";
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, u.getUsername());
+			pstmt.setString(2, u.getUserIntro());
+			pstmt.setInt(3, u.getMsgCount());
+			pstmt.setInt(4, u.getFansCount());
+			pstmt.setInt(5, u.getFocusCount());
+			int i = pstmt.executeUpdate();
+			if (i == 1) {
+				flag = true;
+				u.setUserId(getUserId(u.getUsername()));
 			}
-			return flag;
+		} catch (Exception e) {
+			LogUtil.e(e);
+		} finally {
+			close(conn, pstmt, null);
 		}
+		return flag;
 	}
 
 	/**
