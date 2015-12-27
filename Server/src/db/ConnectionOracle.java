@@ -6,8 +6,8 @@ import java.sql.DriverManager;
 public class ConnectionOracle {
 
 	private static final String DRIVR = "oracle.jdbc.driver.OracleDriver";
-	private static final String IP = "10.25.84.210";
-	private static final String DBNAME = "oracle";
+	private static final String IP = "10.25.246.160";
+	private static final String DBNAME = "orcl";
 	private static final String PORT = "1521";
 	private static final String URL = "jdbc:oracle:thin:@" + IP + ":" + PORT
 			+ ":" + DBNAME;
@@ -19,6 +19,7 @@ public class ConnectionOracle {
 		try {
 			Class.forName(DRIVR);
 			conn = DriverManager.getConnection(URL, USER, PASSWORD);
+			System.out.println("Get Connection");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -30,6 +31,5 @@ public class ConnectionOracle {
 	 */
 	public static void main(String[] args) {
 		new ConnectionOracle().getConnection();
-		System.out.println("getConnection");
 	}
 }
