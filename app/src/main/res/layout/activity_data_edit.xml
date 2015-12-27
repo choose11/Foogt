@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="1">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5sp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5sp"
+            android:text="@string/nickname"
+            android:textSize="40sp"/>
+
+        <TextView
+            android:id="@+id/txt_data_edit_nickname"
+            android:layout_width="wrap_content"
+            android:layout_height="49dp"
+            android:padding="5sp"
+            android:text="New Text"
+            android:textSize="30sp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="399dp"
+        android:orientation="vertical"
+        android:padding="5sp"
+        android:weightSum="1"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5sp"
+            android:text="@string/introduction"
+            android:textSize="40sp"/>
+
+        <TextView
+            android:id="@+id/txt_data_edit_intro"
+            android:layout_width="match_parent"
+            android:layout_height="0sp"
+            android:layout_weight="0.5"
+            android:padding="5sp"
+            android:text="死亡如风"
+            android:textSize="20sp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        >
+
+        <Button
+            android:id="@+id/btn_data_edit_save"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#585cde"
+            android:padding="5sp"
+            android:text="@string/save"
+            android:textColor="#fefcfc"
+            android:textSize="20sp"/>
+    </LinearLayout>
+</LinearLayout>

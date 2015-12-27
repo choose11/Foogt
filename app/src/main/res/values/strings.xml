@@ -1,4 +1,16 @@
 <resources>
     <string name="app_name">Foogt</string>
     <string name="title_activity_login">LoginActivity</string>
+    <string name="nickname">昵称</string>
+    <string name="introduction">简介</string>
+    <string name="save">保 存</string>
+    <string name="changeIntroduction">修改资料</string>
+    <string name="joke">注册即同意我们的所有条款（其实我们就没有）</string>
+    <string name="username">用户名</string>
+    <string name="input_name_hint">请输您的注册账号</string>
+    <string name="register_pwd">注册密码</string>
+    <string name="register">注册</string>
+    <string name="register_welcome">欢迎注册</string>
+    <string name="exit_account">退出当前帐号</string>
+    <string name="account_management">账号管理</string>
 </resources>

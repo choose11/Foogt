@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="1"
+    android:padding="5sp"
+    android:paddingLeft="5sp"
+    android:paddingTop="5sp"
+    android:paddingRight="5sp"
+    android:paddingBottom="5sp">
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="443dp"
+        android:id="@+id/lv_changeUser_user"
+        android:layout_gravity="center_horizontal"
+        />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.4"
+        android:text="@string/exit_account"
+        android:id="@+id/button"
+        android:textSize="20sp"
+        android:background="#e3e1e1"
+        android:textColor="#fb2b32"/>
+
+</LinearLayout>

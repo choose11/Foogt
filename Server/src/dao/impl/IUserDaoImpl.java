@@ -117,7 +117,6 @@ public class IUserDaoImpl implements IUserDao {
 	/**
 	 * register user info first to get userId.
 	 */
-	@Override
 	public boolean userRegisterInfo(User u) {
 		boolean flag = false;
 		if (checkUserExist(u)) {
