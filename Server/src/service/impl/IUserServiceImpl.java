@@ -5,11 +5,11 @@ import dao.IUserDao;
 import dao.impl.IUserDaoImpl;
 import entity.User;
 
-public class IUserServiceImpl implements IUserService{
-	
+public class IUserServiceImpl implements IUserService {
+
 	IUserDao dao = null;
-	
-	public IUserServiceImpl(){
+
+	public IUserServiceImpl() {
 		dao = new IUserDaoImpl();
 	}
 
@@ -25,28 +25,32 @@ public class IUserServiceImpl implements IUserService{
 		return dao.userLogin(u);
 	}
 
+	/**
+	 * register user info first to get userId, then register account.
+	 */
 	public boolean userRegister(User u) {
-		return dao.userRegister(u);
+		if (!dao.checkUserExist(u)) {
+			dao.userRegisterInfo(u);
+			return dao.userRegisterAccount(u);
+		} else {
+			return false;
+		}
 	}
 
-	@Override
-	public int queryUid(User u) {
-		return dao.queryUid(u);
-	}
-	
 	/**
 	 * Test Mod
+	 * 
 	 * @param args
 	 */
 	public static void main(String[] args) {
 		IUserServiceImpl i = new IUserServiceImpl();
-		User u = new User("eric","eric");
-		System.out.println("CheckExist\t"+i.checkUserExist(u));
-		System.out.println("Regist\t"+i.userRegister(u));
-		System.out.println("Login\t"+i.userLogin(u));
-		System.out.println("ChangePW\t"+i.changePW(u, "passwd"));
-		System.out.println("Login\t"+i.userLogin(u));
+		User u = new User("eric", "eric");
+		System.out.println("CheckExist\t" + i.checkUserExist(u));
+		System.out.println("Regist\t" + i.userRegister(u));
+		System.out.println("Login\t" + i.userLogin(u));
+		System.out.println("ChangePW\t" + i.changePW(u, "passwd"));
+		System.out.println("Login\t" + i.userLogin(u));
 		u.setPassword("passwd");
-		System.out.println("newLogin\t"+i.userLogin(u));
+		System.out.println("newLogin\t" + i.userLogin(u));
 	}
 }

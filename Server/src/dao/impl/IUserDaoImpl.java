@@ -5,8 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import com.sun.org.apache.regexp.internal.recompile;
-
 import util.LogUtil;
 
 import dao.IUserDao;
@@ -44,12 +42,15 @@ public class IUserDaoImpl implements IUserDao {
 		return flag;
 	}
 
+	/**
+	 * @return true if user exist
+	 */
 	public boolean checkUserExist(User u) {
 		Connection conn = new ConnectionOracle().getConnection();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		boolean flag = false;
-		String sql = "select * from ticketuser where user_name=?";
+		String sql = "select * from t_user_info where user_name=?";
 		try {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, u.getUsername());
@@ -87,21 +88,55 @@ public class IUserDaoImpl implements IUserDao {
 		return flag;
 	}
 
-	public boolean userRegister(User u) {
+	/**
+	 * TODO: show method obviously userId is set after userRegisterInfo()
+	 * executed. so this method must execute after userRegisterInfo()
+	 */
+	public boolean userRegisterAccount(User u) {
+		boolean flag = false;
+		Connection conn = new ConnectionOracle().getConnection();
+		PreparedStatement pstmt = null;
+		String sql = "insert into t_user_account values (?,?,?)";
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, u.getAccount());
+			pstmt.setString(2, u.getPassword());
+			pstmt.setInt(3, u.getUserId());
+			int i = pstmt.executeUpdate();
+			if (i == 1) {
+				flag = true;
+			}
+		} catch (Exception e) {
+			LogUtil.e(e);
+		} finally {
+			close(conn, pstmt, null);
+		}
+		return flag;
+	}
+
+	/**
+	 * register user info first to get userId.
+	 */
+	@Override
+	public boolean userRegisterInfo(User u) {
 		boolean flag = false;
 		if (checkUserExist(u)) {
 			return flag;
 		} else {
 			Connection conn = new ConnectionOracle().getConnection();
 			PreparedStatement pstmt = null;
-			String sql = "insert into ticketuser values (u_id.nextval,?,?)";
+			String sql = "insert into t_user_info values (user_id_sequence.nextval,?,?,?,?,?)";
 			try {
 				pstmt = conn.prepareStatement(sql);
 				pstmt.setString(1, u.getUsername());
-				pstmt.setString(2, u.getPassword());
+				pstmt.setString(2, u.getUserIntro());
+				pstmt.setInt(3, u.getMsgCount());
+				pstmt.setInt(4, u.getFansCount());
+				pstmt.setInt(5, u.getFocusCount());
 				int i = pstmt.executeUpdate();
 				if (i == 1) {
 					flag = true;
+					u.setUserId(getUserId(u.getUsername()));
 				}
 			} catch (Exception e) {
 				LogUtil.e(e);
@@ -112,26 +147,30 @@ public class IUserDaoImpl implements IUserDao {
 		}
 	}
 
-	@Override
-	public int queryUid(User u) {
+	/**
+	 * get userId from userName
+	 * 
+	 * @param userName
+	 * @return userId, -1 when user not exist.
+	 */
+	public int getUserId(String userName) {
 		Connection conn = new ConnectionOracle().getConnection();
 		PreparedStatement pstmt = null;
+		String sql = "select user_id from t_user_info where user_name=?";
 		ResultSet rs = null;
-		int id = 0;
-		String sql = "select u_id from ticketuser where user_name=?";
 		try {
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, u.getUsername());
+			pstmt.setString(1, userName);
 			rs = pstmt.executeQuery();
 			if (rs.next()) {
-				id = rs.getInt(1);
+				return rs.getInt(1);
 			}
 		} catch (Exception e) {
 			LogUtil.e(e);
 		} finally {
 			close(conn, pstmt, rs);
 		}
-		return id;
+		return -1;
 	}
 
 	private void close(Connection conn, PreparedStatement pstmt, ResultSet rs) {
