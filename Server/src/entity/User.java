@@ -1,5 +1,7 @@
 package entity;
 
+import org.json.JSONObject;
+
 public class User {
 	private int userId;
 	private String account;
@@ -30,6 +32,19 @@ public class User {
 		this.msgCount = msgCount;
 		this.fansCount = fansCount;
 		this.focusCount = focusCount;
+	}
+
+	public User(int userId, String username, String userIntro) {
+		
+		this.userId = userId;
+		this.username = username;
+		this.userIntro = userIntro;
+	}
+
+	public User(int userId, String username) {
+		super();
+		this.userId = userId;
+		this.username = username;
 	}
 
 	public int getUserId() {

@@ -35,6 +35,13 @@ public class User {
         this.focusCount = focusCount;
     }
 
+    public User(int userId, String username, String userIntro) {
+        super();
+        this.userId = userId;
+        this.username = username;
+        this.userIntro = userIntro;
+    }
+
     public int getUserId() {
         return userId;
     }

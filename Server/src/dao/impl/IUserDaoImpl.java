@@ -144,6 +144,37 @@ public class IUserDaoImpl implements IUserDao {
 		}
 		return flag;
 	}
+	/**
+	 * update user data
+	 * 
+	 * @param conn
+	 * @param pstmt
+	 * @param rs
+	 */
+	public boolean updateUserData(int userId,String userName,String userIntro){
+		Connection conn = new ConnectionOracle().getConnection();
+		PreparedStatement pstmt = null;
+		String sql = "update t_user_info set user_name = ? ,  user_intro = ? where user_id = ?"; 
+		boolean result = false;
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1,userName);
+			pstmt.setString(2, userIntro);
+			pstmt.setInt(3, userId);
+			int i = pstmt.executeUpdate();
+			if(i == 1){
+				result = true;
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally{
+			close(conn,pstmt,null);
+		}
+		
+		return result;
+	}
+
 
 	/**
 	 * get userId from userName
@@ -171,6 +202,71 @@ public class IUserDaoImpl implements IUserDao {
 		return -1;
 	}
 
+	/**
+	 * search user
+	 * 
+	 * @param
+	 * @param
+	 * @param
+	 */
+	public List<User> searchUser(String keyword) {
+		List<User> resultUser = new ArrayList<User>();
+		Connection conn = new ConnectionOracle().getConnection();
+		PreparedStatement pstmt = null;
+		String sql = "select user_id,user_name from t_user_info where user_name  like ?";
+		ResultSet rs = null;
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, "%" + keyword + "%");
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				int uid = rs.getInt(1);
+				String userName = rs.getString(2);
+				User user = new User(uid, userName);
+				resultUser.add(user);
+			}
+		} catch (Exception e) {
+			LogUtil.e(e);
+		} finally {
+			close(conn, pstmt, rs);
+		}
+
+		return resultUser;
+	}
+
+	/**
+	 * edit user data
+	 * 
+	 * @param conn
+	 * @param pstmt
+	 * @param rs
+	 */
+	public User searchData(int userId) {
+		Connection conn = new ConnectionOracle().getConnection();
+		PreparedStatement pstmt = null;
+		String sql = "select user_id,user_name,user_intro from t_user_info where user_id =?";
+		ResultSet rs = null;
+		User user = new User(0, null, null);
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, userId);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				int uid = rs.getInt(1);
+				String userName = rs.getString(2);
+				String userIntro = rs.getString(3);
+				user = new User(uid, userName, userIntro);
+			}
+		} catch (Exception e) {
+			LogUtil.e(e);
+		} finally {
+			close(conn, pstmt, rs);
+		}
+
+		return user;
+	}
+
+	
 	private void close(Connection conn, PreparedStatement pstmt, ResultSet rs) {
 		try {
 			if (rs != null) {

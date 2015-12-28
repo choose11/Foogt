@@ -31,5 +31,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="home">主页</string>
     <string name="comment">评论</string>
+    <string name="no_this_user">查无此人</string>
+    <string name="network_is_bad">您的网络有点问题</string>
 
 </resources>
