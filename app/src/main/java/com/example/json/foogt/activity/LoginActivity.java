@@ -28,18 +28,19 @@ import java.net.URLConnection;
 public class LoginActivity extends AppCompatActivity {
     private final String TAG = "LoginActivity";
     private Button loginBtn, registerBtn;
-    private EditText editText,editText2;
+    private EditText editText, editText2;
     private String account;
     private String password;
-    private Handler handler=new Handler(){
+    private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            String re=msg.obj.toString();
+            String re = msg.obj.toString();
             System.out.println(re);
-            if (re.equals("登陆成功")){
-                System.out.println("成功啦");
-                Toast.makeText(LoginActivity.this,"登陆成功",Toast.LENGTH_LONG).show();
-            }else{
+            if (re.equals("登陆成功")) {
+                // TODO: 2015/12/28 get userId on Login
+                MenuActivity.actionStart(LoginActivity.this, 2);
+                finish();
+            } else {
                 System.out.println("没成功啊亲");
             }
         }
@@ -52,8 +53,8 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         loginBtn = (Button) findViewById(R.id.button);
         registerBtn = (Button) findViewById(R.id.button2);
-        editText= (EditText) findViewById(R.id.editText);
-        editText2= (EditText) findViewById(R.id.editText2);
+        editText = (EditText) findViewById(R.id.editText);
+        editText2 = (EditText) findViewById(R.id.editText2);
 
 
         //登陆按钮点击事件
@@ -85,15 +86,15 @@ public class LoginActivity extends AppCompatActivity {
 //                }.start();
                 account = editText.getText().toString();
                 password = editText2.getText().toString();
-                if (!TextUtils.isEmpty(account)&&!TextUtils.isEmpty(password)){
-                    String url= IConst.SERVLET_ADDR+"LoginServlet";
-                    String data="username="+account+"&"+"password="+password;
+                if (!TextUtils.isEmpty(account) && !TextUtils.isEmpty(password)) {
+                    String url = IConst.SERVLET_ADDR + "LoginServlet";
+                    String data = "username=" + account + "&" + "password=" + password;
                     HttpUtil.sendHttpRequest(url, "POST", data, new HttpCallbackListener() {
                         @Override
                         public void onFinish(String response) {
                             System.out.println(response);
-                            Message msg=new Message();
-                            msg.obj=response;
+                            Message msg = new Message();
+                            msg.obj = response;
                             handler.sendMessage(msg);
                         }
 

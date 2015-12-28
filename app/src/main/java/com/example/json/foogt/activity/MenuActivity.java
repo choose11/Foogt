@@ -32,6 +32,7 @@ public class MenuActivity extends AppCompatActivity
 
     private ImageView dataEditImg;
     private TextView fansTxt, focusTxt;
+    private int userId;
     static final int NUM_ITEMS = 2;
     CollectionPagerAdapter mPagerAdapter;
     ViewPager mViewPager;
@@ -41,6 +42,8 @@ public class MenuActivity extends AppCompatActivity
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
+
+        userId = getIntent().getIntExtra("userId", -1);
 
         //dataEditImg = (ImageView) findViewById(R.id.img_user_data_edit);
         //fansTxt = (TextView) findViewById(R.id.txt_user_fans);
@@ -62,7 +65,6 @@ public class MenuActivity extends AppCompatActivity
         mViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
-                System.out.println("position = " + position);
                 change(position);
             }
         });
@@ -125,7 +127,6 @@ public class MenuActivity extends AppCompatActivity
     };
 
 
-
     public void change(int position) {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         switch (position) {
@@ -149,12 +150,10 @@ public class MenuActivity extends AppCompatActivity
 
         @Override
         public Fragment getItem(int position) {
-            LogUtil.d("FragmentPagerAdapter", position + "");
-            System.out.println("FragmentPagerAdapter = " + position);
             Fragment fragment = null;
             switch (position) {
                 case 0:
-                    fragment = HomeFragment.newInstance();
+                    fragment = HomeFragment.newInstance(userId);
                     break;
                 case 1:
                     fragment = CommentFragment.newInstance();
@@ -184,7 +183,6 @@ public class MenuActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-
         } else {
             super.onBackPressed();
         }
@@ -196,7 +194,6 @@ public class MenuActivity extends AppCompatActivity
         mViewPager.clearOnPageChangeListeners();
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
@@ -221,8 +218,9 @@ public class MenuActivity extends AppCompatActivity
     登录后对接
      */
 
-    public static void actionStart(Context context) {
+    public static void actionStart(Context context, int userId) {
         Intent i = new Intent(context, MenuActivity.class);
+        i.putExtra("userId", userId);
         context.startActivity(i);
     }
 

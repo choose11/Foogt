@@ -90,8 +90,8 @@ public class IUserDaoImpl implements IUserDao {
 	}
 
 	/**
-	 * TODO: show method obviously userId is set after userRegisterInfo()
-	 * executed. so this method must execute after userRegisterInfo()
+	 * userId is set after userRegisterInfo() executed. so this method must
+	 * execute after userRegisterInfo()
 	 */
 	public boolean userRegisterAccount(User u) {
 		boolean flag = false;
