@@ -1,6 +1,8 @@
 package servlet;
+
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -9,11 +11,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.alibaba.fastjson.JSON;
 
-import entity.User;
-import entity.UserInfoMsg;
+import entity.BlogInfo;
 import factory.Factory;
 
-public class UserRegister extends HttpServlet {
+public class GetBlogs extends HttpServlet {
 
 	/**
 	 * The doGet method of the servlet. <br>
@@ -31,7 +32,21 @@ public class UserRegister extends HttpServlet {
 	 */
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		doPost(request, response);
+
+		response.setContentType("text/html");
+		PrintWriter out = response.getWriter();
+		response.setContentType("text/html;charset=UTF-8");
+		request.setCharacterEncoding("UTF-8");
+		int userId = Integer.parseInt(request.getParameter("userId"));
+		int page = Integer.parseInt(request.getParameter("page"));
+		/**
+		 * @page from 0
+		 */
+		List<BlogInfo> list = Factory.getIBlogService().selectBlogs(userId, 5,
+				page);
+		out.print(JSON.toJSON(list));
+		out.flush();
+		out.close();
 	}
 
 	/**
@@ -52,23 +67,7 @@ public class UserRegister extends HttpServlet {
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		response.setContentType("text/html;charset=UTF-8");
-		request.setCharacterEncoding("UTF-8");
-
-		PrintWriter out = response.getWriter();
-		String account = request.getParameter("account");
-		String password = request.getParameter("password");
-		User u = new User(account, password);
-		boolean result = Factory.getIUserService().userRegister(u);
-		UserInfoMsg msg = new UserInfoMsg();
-		msg.setResult(result);
-		if (result) {
-			msg.setUser(u);
-		}
-		String json = JSON.toJSONString(msg);
-		out.print(json);
-		out.flush();
-		out.close();
+		doGet(request, response);
 	}
 
 }

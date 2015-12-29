@@ -21,6 +21,10 @@
     <servlet-name>MsgInfo</servlet-name>
     <servlet-class>servlet.MsgInfo</servlet-class>
   </servlet>
+  <servlet>
+    <servlet-name>GetBlogs</servlet-name>
+    <servlet-class>servlet.GetBlogs</servlet-class>
+  </servlet>
 
 
  <servlet-mapping>
@@ -38,6 +42,10 @@
   <servlet-mapping>
     <servlet-name>MsgInfo</servlet-name>
     <url-pattern>/MsgInfo</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>GetBlogs</servlet-name>
+    <url-pattern>/GetBlogs</url-pattern>
   </servlet-mapping>
  <welcome-file-list>
   <welcome-file>index.jsp</welcome-file>

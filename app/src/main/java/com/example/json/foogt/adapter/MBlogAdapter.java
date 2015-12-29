@@ -9,6 +9,7 @@ import android.widget.TextView;
 import com.example.json.foogt.R;
 import com.example.json.foogt.entity.BlogInfo;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 /**
@@ -26,13 +27,14 @@ public class MBlogAdapter extends RecyclerView.Adapter<MBlogAdapter.ViewHolder> 
     public MBlogAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_blog, parent, false);
+        // TODO: 2015/12/28 what if parent is null , how to measure
         return new MBlogAdapter.ViewHolder(v);
     }
 
     @Override
     public void onBindViewHolder(MBlogAdapter.ViewHolder holder, int position) {
         holder.username.setText(list.get(position).getUsername());
-        holder.postTime.setText(list.get(position).getPostTime().toString());
+        holder.postTime.setText(new SimpleDateFormat("MM.dd hh:mm").format(list.get(position).getPostTime()));
         holder.msg.setText(list.get(position).getMsg());
     }
 
