@@ -54,4 +54,5 @@ public class IUserServiceImpl implements IUserService {
 		u.setPassword("passwd");
 		System.out.println("newLogin\t" + i.userLogin(u));
 	}
+
 }

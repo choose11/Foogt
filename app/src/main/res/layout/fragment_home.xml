@@ -1,23 +1,19 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             tools:context="com.example.json.foogt.fragment.HomeFragment">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              tools:context="com.example.json.foogt.fragment.HomeFragment">
 
-    <!-- TODO: Update blank fragment layout -->
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/layout_swipe"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/lv_home_msg"
-        android:layout_width="wrap_content"
-        android:layout_height="488dp"
-        android:layout_gravity="left|top"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="text首页"
-        android:id="@+id/textView4"
-        android:layout_gravity="center_horizontal|bottom"/>
-
-</FrameLayout>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_home_msg"
+            android:layout_width="wrap_content"
+            android:layout_height="488dp"
+            android:layout_gravity="left|top"/>
+    </android.support.v4.widget.SwipeRefreshLayout>
+</LinearLayout>

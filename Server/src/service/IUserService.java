@@ -1,5 +1,6 @@
 package service;
 
+
 import entity.User;
 
 public interface IUserService {
@@ -10,4 +11,5 @@ public interface IUserService {
 	public boolean userLogin(User u);
 
 	public boolean changePW(User u, String newPW);
+
 }

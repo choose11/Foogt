@@ -27,8 +27,8 @@ public class DBOperation {
 			+ "user_id int references t_user_info(user_id)" + ")";
 
 	public static final String createTUserInfo = "create table t_user_info("
-			+ "user_id int primary key," + "user_name varchar2(20) not null,"
-			+ "user_intro varchar2(20) not null," + "msg_count int,"
+			+ "user_id int primary key," + "user_name varchar2(140) not null,"
+			+ "user_intro varchar2(140) not null," + "msg_count int,"
 			+ "fans_count int," + "focus_count int" + ")";
 
 	public static final String createSequence = "create sequence user_id_sequence "
