@@ -14,7 +14,7 @@
 
     <ListView
         android:layout_width="match_parent"
-        android:layout_height="443dp"
+        android:layout_height="match_parent"
         android:id="@+id/lv_changeUser_user"
         android:layout_gravity="center_horizontal"
         />
@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="0.4"
         android:text="@string/exit_account"
-        android:id="@+id/button"
+        android:id="@+id/btn_change_user_quit"
         android:textSize="20sp"
         android:background="#e3e1e1"
         android:textColor="#fb2b32"/>

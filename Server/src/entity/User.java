@@ -46,6 +46,19 @@ public class User {
 		this.userId = userId;
 		this.username = username;
 	}
+	
+	
+
+	public User(int userId, String username, String userIntro, int msgCount,
+			int fansCount, int focusCount) {
+		super();
+		this.userId = userId;
+		this.username = username;
+		this.userIntro = userIntro;
+		this.msgCount = msgCount;
+		this.fansCount = fansCount;
+		this.focusCount = focusCount;
+	}
 
 	public int getUserId() {
 		return userId;

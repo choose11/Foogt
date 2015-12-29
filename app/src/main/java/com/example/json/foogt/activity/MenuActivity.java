@@ -21,17 +21,23 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.json.foogt.R;
+import com.example.json.foogt.entity.User;
 import com.example.json.foogt.fragment.CommentFragment;
 import com.example.json.foogt.fragment.HomeFragment;
+import com.example.json.foogt.util.HttpCallbackListener;
+import com.example.json.foogt.util.HttpUtil;
+import com.example.json.foogt.util.IConst;
+import com.example.json.foogt.util.Utility;
 
 public class MenuActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private ImageView dataEditImg;
-    private TextView fansTxt, focusTxt;
     private int userId;
+    private TextView fansTxt, focusTxt, userNameTxt, UserIntroMin;
     static final int NUM_ITEMS = 2;
     CollectionPagerAdapter mPagerAdapter;
     ViewPager mViewPager;
@@ -85,9 +91,22 @@ public class MenuActivity extends AppCompatActivity
          */
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
+            /** Called when a drawer has settled in a completely closed state. */
+            public void onDrawerClosed(View view) {
+
+            }
+
+            /** Called when a drawer has settled in a completely open state. */
+            public void onDrawerOpened(View drawerView) {
+                // TODO: 2015/12/29 未使用Intent传值
+                int userId = 12;
+                getUserData(userId);//从服务器拿到原始数据,做一次刷新
+            }
+        };
+
         drawer.setDrawerListener(toggle);
-        toggle.syncState();
+        toggle.syncState();//左上角按钮
 
         /*
         侧面的菜单的详细的。
@@ -95,13 +114,26 @@ public class MenuActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        // TODO: 2015/12/25 ，粉丝，关注，未完成。
+        /*
+        View headerView = navigationView.inflateHeaderView(R.layout.nav_header_menu);
+        添加导航试图，有这行就在xml文件中去掉app:headerLayout="@layout/nav_header_menu"，
+        否则将出现两个R.layout.nav_header_menu!!!!!
+         */
+        View headerView = navigationView.inflateHeaderView(R.layout.nav_header_menu);
+        dataEditImg = (ImageView) headerView.findViewById(R.id.img_user_data_edit);
+        dataEditImg.setOnClickListener(new onDateEditClickListener());
 
-        // TODO: 2015/12/25 修改个人信息，粉丝，关注，跳转失败。
-        // headerLayout linearLayoutUser = (headerLayout)drawer.findViewById(R.id.linear_user);
-        //dataEditImg = (ImageView) linearLayoutUser.findViewById(R.id.img_user_data_edit);
+        fansTxt = (TextView) headerView.findViewById(R.id.txt_user_fans);
+        focusTxt = (TextView) headerView.findViewById(R.id.txt_user_focus);
+        userNameTxt = (TextView) headerView.findViewById(R.id.txt_menu_userName);
+        UserIntroMin = (TextView) headerView.findViewById(R.id.txt_menu_userIntro);
 
+        fansTxt.setOnClickListener(new onFansClickListener());
+        focusTxt.setOnClickListener(new onFocusClickListener());
 
     }
+
 
     /*
     点击toolbar改变title
@@ -114,6 +146,7 @@ public class MenuActivity extends AppCompatActivity
             switch (item.getItemId()) {
                 case R.id.action_home:
                     toolbar.setTitle(R.string.home);
+                    // TODO: 2015/12/29 未实现点击跳转
 
                     break;
                 case R.id.action_comment:
@@ -193,6 +226,11 @@ public class MenuActivity extends AppCompatActivity
         mViewPager.clearOnPageChangeListeners();
     }
 
+    /**
+     * 跳转至各个界面
+     * @param item
+     * @return
+     */
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
@@ -201,11 +239,13 @@ public class MenuActivity extends AppCompatActivity
         if (id == R.id.nav_search) {
             SearchActivity.actionStart(MenuActivity.this);
         } else if (id == R.id.nav_collection) {
-            CollectionActivity.actionStart(MenuActivity.this);
+            // TODO: 2015/12/29 未知userId的实际参数名 ，暂时用12
+            CollectionActivity.actionStart(MenuActivity.this,12);
         } else if (id == R.id.nav_send) {
             SendBlogActivity.actionStart(MenuActivity.this,userId);
         } else if (id == R.id.nav_manage) {
-            ChangeUserActivity.actionStart(MenuActivity.this);
+            // TODO: 2015/12/29 未知userId的实际参数名 ，暂时用12.
+            ChangeUserActivity.actionStart(MenuActivity.this, 12);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -213,8 +253,8 @@ public class MenuActivity extends AppCompatActivity
         return true;
     }
 
-    /*
-    登录后对接
+    /**
+     * 登录后对接
      */
 
     public static void actionStart(Context context, int userId) {
@@ -224,5 +264,87 @@ public class MenuActivity extends AppCompatActivity
         context.startActivity(i);
     }
 
+    /**
+     * 修改资料页面跳转
+     */
+    public class onDateEditClickListener implements View.OnClickListener {
 
+        @Override
+        public void onClick(View v) {
+
+            // TODO: 2015/12/29 未拿到UserId
+            DataEditActivity.actionStart(MenuActivity.this, 12);
+        }
+    }
+
+    /**
+     * 点击进入粉丝界面
+     */
+    public class onFansClickListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            FansOrFocusActivity.actionStart(MenuActivity.this,12);
+        }
+    }
+
+    /**
+     * 点击进入关注界面
+     */
+    public class onFocusClickListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            FansOrFocusActivity.actionStart(MenuActivity.this,12);
+        }
+    }
+
+    /*
+    刚刚跳转时从服务器得到数据
+     */
+    public void getUserData(int userId) {
+        String url = IConst.SERVLET_ADDR + "SearchUserDataServlet";
+        String data = "userId=" + userId;
+        HttpUtil.sendHttpRequest(url, "POST", data, new HttpCallbackListener() {
+            @Override
+            public void onFinish(String response) {
+                User user = Utility.handleUserInfoResultResponse(response);
+                final String name = user.getUsername();
+                final String intro = user.getUserIntro();
+                System.out.println("intro = " + intro.length());
+                final int fansCount = user.getFansCount();
+                final int focusCount = user.getFocusCount();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (fansCount > 10000) {
+                            fansTxt.setText("粉丝:" + " " + (fansCount / 10000) + "万");
+                        } else {
+                            fansTxt.setText("粉丝:" + " " + fansCount);
+                        }
+                        if (focusCount > 10000) {
+                            focusTxt.setText("关注:" + " " + (focusCount / 10000) + "万");
+                        } else {
+                            focusTxt.setText("关注:" + " " + focusCount);
+                        }
+                        userNameTxt.setText(name);
+                        if (intro.length() > 40) {
+                            UserIntroMin.setText(intro.substring(0, 36) + "...");
+                        } else {
+                            UserIntroMin.setText(intro);
+                        }
+                    }
+                });
+
+            }
+
+            @Override
+            public void onError(Exception e) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(MenuActivity.this, R.string.network_is_bad, Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+        });
+    }
 }

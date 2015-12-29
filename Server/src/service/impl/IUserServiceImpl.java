@@ -86,7 +86,7 @@ public class IUserServiceImpl implements IUserService {
 		// System.out.println(string);
 		// }
 		// System.out.println(i.searchData(2).getUsername()+" : "+i.searchData(2).getUserIntro());
-
-		System.out.println(i.updateUserData(12, "张三", "今天写了好多啊"));
+		System.out.println(i.searchData(10).getUsername()+" : "+i.searchData(10).getUserIntro());
+		//System.out.println(i.updateUserData(12, "张三", "今天写了好多啊"));
 	}
 }

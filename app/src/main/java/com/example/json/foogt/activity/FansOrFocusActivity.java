@@ -10,17 +10,16 @@ import android.widget.ListView;
 
 import com.example.json.foogt.R;
 
-public class CollectionActivity extends AppCompatActivity {
-
+public class FansOrFocusActivity extends AppCompatActivity {
+    private ListView showFansOrFocusLv;
     private ActionBar bar;
-    private ListView showCollectionLv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_collection);
+        setContentView(R.layout.activity_fans_or_focus);
+        showFansOrFocusLv = (ListView) findViewById(R.id.lv_fansOrFocus_show);
 
-        showCollectionLv=(ListView)findViewById(R.id.lv_collection_show);
 
         bar = getSupportActionBar();
         if (bar != null) {
@@ -31,8 +30,12 @@ public class CollectionActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * 登录后对接
+     */
+
     public static void actionStart(Context context, int userId) {
-        Intent i = new Intent(context, CollectionActivity.class);
+        Intent i = new Intent(context, MenuActivity.class);
         i.putExtra("UserId", userId);
         context.startActivity(i);
     }

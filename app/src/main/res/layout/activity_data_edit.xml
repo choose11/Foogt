@@ -23,7 +23,6 @@
             android:layout_width="wrap_content"
             android:layout_height="49dp"
             android:padding="5sp"
-            android:text="New Text"
             android:textSize="30sp"/>
 
     </LinearLayout>
@@ -49,7 +48,6 @@
             android:layout_height="0sp"
             android:layout_weight="0.5"
             android:padding="5sp"
-            android:text="死亡如风"
             android:textSize="20sp"/>
     </LinearLayout>
 

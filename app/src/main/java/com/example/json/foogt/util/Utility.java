@@ -48,7 +48,7 @@ public class Utility {
         User u = null;
         try {
             JSONObject jsonObject = new JSONObject(response);
-            u = new User(jsonObject.getString("account"), null, jsonObject.getString("username"),
+            u = new User(null, null, jsonObject.getString("username"),
                     jsonObject.getString("userIntro"), jsonObject.getInt("msgCount"),
                     jsonObject.getInt("fansCount"), jsonObject.getInt("focusCount"));
             u.setUserId(jsonObject.getInt("userId"));
@@ -57,7 +57,7 @@ public class Utility {
             LogUtil.e(TAG, e.toString());
         }
         return u;
-    }
+    }//jsonObject.getString("account")--这行保留
 
     public static User handleUserDataResultResponse(String response) {
         User u = null;

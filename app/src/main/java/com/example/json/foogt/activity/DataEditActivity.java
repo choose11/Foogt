@@ -45,12 +45,13 @@ public class DataEditActivity extends AppCompatActivity {
             bar.setHomeButtonEnabled(true);
             bar.setTitle(R.string.changeIntroduction);
         }
+        /**
+         * 获取userId
+         */
+        Intent i = getIntent();
+        int userId = i.getExtras().getInt("UserId");
+        getUsername(userId);//从服务器拿到原始数据
 
-        //Intent i = getIntent();
-        //int userId = i.getExtras().getInt("UserId");
-        getUsername(12);
-
-        // TODO: 2015/12/24 按钮的方法未完成
         savebtn.setOnClickListener( new onSaveButtonClickListener());
 
         nicknameTxt.setOnClickListener(new View.OnClickListener() {
@@ -100,6 +101,8 @@ public class DataEditActivity extends AppCompatActivity {
                                     savebtn.setEnabled(false);
                                     System.out.println("introTxt.getText().toString().length() = " + introTxt.getText().toString().length());
                                     Toast.makeText(DataEditActivity.this,"超过140个字",Toast.LENGTH_LONG).show();
+                                }else{
+                                    savebtn.setEnabled(true);
                                 }
                             }
                         })
@@ -119,8 +122,9 @@ public class DataEditActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             String url = IConst.SERVLET_ADDR + "DataEditServlet";
-            // TODO: 2015/12/28 userId 使用传递来的值
-            String data = "userId="+12+"&"+"userName="+nicknameTxt.getText().toString()+"&"+"userIntro="+introTxt.getText().toString();
+            Intent i = getIntent();
+            final int userId = i.getExtras().getInt("UserId");
+            String data = "userId="+userId+"&"+"userName="+nicknameTxt.getText().toString()+"&"+"userIntro="+introTxt.getText().toString();
             HttpUtil.sendHttpRequest(url, "POST", data, new HttpCallbackListener() {
                 @Override
                 public void onFinish(final String response) {
@@ -130,7 +134,8 @@ public class DataEditActivity extends AppCompatActivity {
                             Toast.makeText(DataEditActivity.this, response+"修改成功", Toast.LENGTH_LONG).show();
                         }
                     });
-                    MenuActivity.actionStart(DataEditActivity.this);
+                    //MenuActivity.actionStart(DataEditActivity.this,userId);
+                    finish();
                 }
 
                 @Override

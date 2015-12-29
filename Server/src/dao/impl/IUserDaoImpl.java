@@ -166,7 +166,7 @@ public class IUserDaoImpl implements IUserDao {
 				result = true;
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			LogUtil.e(e);
 			e.printStackTrace();
 		}finally{
 			close(conn,pstmt,null);
@@ -244,7 +244,7 @@ public class IUserDaoImpl implements IUserDao {
 	public User searchData(int userId) {
 		Connection conn = new ConnectionOracle().getConnection();
 		PreparedStatement pstmt = null;
-		String sql = "select user_id,user_name,user_intro from t_user_info where user_id =?";
+		String sql = "select user_id,user_name,user_intro,msg_count,fans_count,focus_count from t_user_info where user_id =?";
 		ResultSet rs = null;
 		User user = new User(0, null, null);
 		try {
@@ -255,7 +255,10 @@ public class IUserDaoImpl implements IUserDao {
 				int uid = rs.getInt(1);
 				String userName = rs.getString(2);
 				String userIntro = rs.getString(3);
-				user = new User(uid, userName, userIntro);
+				int msgCount = rs.getInt(4);
+				int fansCount = rs.getInt(5);
+				int focusCount  =rs.getInt(6);
+				user = new User(uid, userName, userIntro,msgCount,fansCount,focusCount);
 			}
 		} catch (Exception e) {
 			LogUtil.e(e);
