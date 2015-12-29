@@ -10,9 +10,6 @@ public class User {
 	private int fansCount;
 	private int focusCount;
 
-	public User() {
-	}
-
 	/**
 	 * For register. default username is account.
 	 * 
@@ -97,6 +94,11 @@ public class User {
 
 	public void setFocusCount(int focusCount) {
 		this.focusCount = focusCount;
+	}
+
+	public User(int userId) {
+		super();
+		this.userId = userId;
 	}
 
 }

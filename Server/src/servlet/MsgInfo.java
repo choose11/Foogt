@@ -2,24 +2,25 @@ package servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.alibaba.fastjson.JSON;
-
 import dao.impl.IUserDaoImpl;
-import entity.User;
-import entity.UserInfoMsg;
+import entity.msgInfo;
 
-public class LoginServlet extends HttpServlet {
+public class MsgInfo extends HttpServlet {
 
 	/**
 	 * Constructor of the object.
 	 */
-	public LoginServlet() {
+	public MsgInfo() {
 		super();
 	}
 
@@ -43,29 +44,42 @@ public class LoginServlet extends HttpServlet {
 	 */
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
 		response.setContentType("text/html;charset=utf-8");
 		PrintWriter out = response.getWriter();
-		String username=request.getParameter("username");
-		String password=request.getParameter("password");
-		System.out.println(username+password);
-		request.setCharacterEncoding("utf-8");
-		User u=new User(username, password);
+		String userId1= request.getParameter("userId");
+		int userId=Integer.valueOf(userId1);
+		System.out.println(userId);
+		String content= request.getParameter("content");
+		System.out.println(content);
+		String type1= request.getParameter("type");
+		int type=Integer.valueOf(type1);
+		System.out.println(type);
+		String commentCount1= request.getParameter("commentCount");
+		int commentCount=Integer.valueOf(commentCount1);
+		System.out.println(commentCount);
+		String transferCount1= request.getParameter("transferCount");
+		int transferCount=Integer.valueOf(transferCount1);
+		System.out.println(transferCount);
+		String timeT= request.getParameter("timeT");
+		System.out.println(timeT);	
+//		 insert data and get msgId
+		msgInfo m=new msgInfo(userId, content, type, commentCount, transferCount, timeT);
 		IUserDaoImpl i=new IUserDaoImpl();
-		boolean result=i.userLogin(u);
-		System.out.println(result);
-		User u1 = i.selectUserId(username);
-		UserInfoMsg msg=new UserInfoMsg();
-		msg.setResult(result);
-		if (result==true) {
-			msg.setUser(u1);
-			System.out.println(u1.getUserId());
-			String json=JSON.toJSONString(msg);
-			out.println(json);
-			System.out.println("登陆成功");
-		}else {
-			out.println("登陆失败");
-		}		
+	msgInfo re=i.insertTMsgInfo(m);
+	int msgId=re.getMsgId();
+	//select follow_id 
+	IUserDaoImpl i1=new IUserDaoImpl();
+	List<Integer>l=  i1.selectFollowId(userId);
+		for (int j = 0; j < l.size(); j++) {
+			int followId= l.get(j);
+		boolean b=	i1.insertTUserMsgIndex(followId, userId, msgId, timeT);
+			if (b==true) {
+				System.out.println("成功");
+				continue;
+			}else if (b==false){
+			System.out.println("失败");
+			}
+		}
 		out.flush();
 		out.close();
 	}
@@ -83,7 +97,7 @@ public class LoginServlet extends HttpServlet {
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		doGet(request, response);
+	doGet(request, response);
 	}
 
 	/**

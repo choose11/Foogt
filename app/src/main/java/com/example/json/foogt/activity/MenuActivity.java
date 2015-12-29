@@ -25,7 +25,6 @@ import android.widget.TextView;
 import com.example.json.foogt.R;
 import com.example.json.foogt.fragment.CommentFragment;
 import com.example.json.foogt.fragment.HomeFragment;
-import com.example.json.foogt.util.LogUtil;
 
 public class MenuActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -78,7 +77,7 @@ public class MenuActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 // Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-                SendBlogActivity.actionStart(MenuActivity.this);
+                SendBlogActivity.actionStart(MenuActivity.this,userId);
             }
         });
         /*
@@ -204,7 +203,7 @@ public class MenuActivity extends AppCompatActivity
         } else if (id == R.id.nav_collection) {
             CollectionActivity.actionStart(MenuActivity.this);
         } else if (id == R.id.nav_send) {
-            SendBlogActivity.actionStart(MenuActivity.this);
+            SendBlogActivity.actionStart(MenuActivity.this,userId);
         } else if (id == R.id.nav_manage) {
             ChangeUserActivity.actionStart(MenuActivity.this);
         }
@@ -221,6 +220,7 @@ public class MenuActivity extends AppCompatActivity
     public static void actionStart(Context context, int userId) {
         Intent i = new Intent(context, MenuActivity.class);
         i.putExtra("userId", userId);
+        System.out.println(userId);
         context.startActivity(i);
     }
 

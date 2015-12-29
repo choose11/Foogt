@@ -11,8 +11,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
 import com.example.json.foogt.R;
 import com.example.json.foogt.entity.User;
+import com.example.json.foogt.entity.UserInfoMsg;
 import com.example.json.foogt.util.HttpCallbackListener;
 import com.example.json.foogt.util.HttpUtil;
 import com.example.json.foogt.util.IConst;
@@ -27,6 +29,7 @@ import java.net.URLConnection;
 
 public class LoginActivity extends AppCompatActivity {
     private final String TAG = "LoginActivity";
+    private int userId;
     private Button loginBtn, registerBtn;
     private EditText editText, editText2;
     private String account;
@@ -34,11 +37,11 @@ public class LoginActivity extends AppCompatActivity {
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            String re = msg.obj.toString();
+            boolean re = (boolean) msg.obj;
             System.out.println(re);
-            if (re.equals("登陆成功")) {
+            if (re==true) {
                 // TODO: 2015/12/28 get userId on Login
-                MenuActivity.actionStart(LoginActivity.this, 2);
+                MenuActivity.actionStart(LoginActivity.this,userId);
                 finish();
             } else {
                 System.out.println("没成功啊亲");
@@ -93,8 +96,11 @@ public class LoginActivity extends AppCompatActivity {
                         @Override
                         public void onFinish(String response) {
                             System.out.println(response);
+                            UserInfoMsg UserInfo= JSON.parseObject(response,UserInfoMsg.class);
+                            userId= UserInfo.getUser().getUserId();
+                            System.out.println(userId);
                             Message msg = new Message();
-                            msg.obj = response;
+                            msg.obj = UserInfo.isResult();
                             handler.sendMessage(msg);
                         }
 
