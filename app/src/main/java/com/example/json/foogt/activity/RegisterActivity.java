@@ -51,10 +51,12 @@ public class RegisterActivity extends AppCompatActivity {
 
         bar = getSupportActionBar();
         //// TODO: 2015/12/25 warning
-        bar.setDisplayHomeAsUpEnabled(true);
-        bar.setDisplayShowHomeEnabled(true);
-        bar.setHomeButtonEnabled(true);
-        bar.setTitle("注册");
+        if(bar!=null){
+            bar.setDisplayHomeAsUpEnabled(true);
+            bar.setDisplayShowHomeEnabled(true);
+            bar.setHomeButtonEnabled(true);
+            bar.setTitle(R.string.register);
+        }
 
         accountEdit = (EditText) findViewById(R.id.edit_register_account);
         passwordEdit = (EditText) findViewById(R.id.edit_register_pwd);

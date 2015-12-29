@@ -25,6 +25,24 @@
     <servlet-name>GetBlogs</servlet-name>
     <servlet-class>servlet.GetBlogs</servlet-class>
   </servlet>
+    <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>SearchUserServlet</servlet-name>
+    <servlet-class>servlet.SearchUserServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>DataEditServlet</servlet-name>
+    <servlet-class>servlet.DataEditServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>SearchUserDataServlet</servlet-name>
+    <servlet-class>servlet.SearchUserDataServlet</servlet-class>
+  </servlet>
 
 
  <servlet-mapping>
@@ -46,6 +64,18 @@
   <servlet-mapping>
     <servlet-name>GetBlogs</servlet-name>
     <url-pattern>/GetBlogs</url-pattern>
+  </servlet-mapping>
+    <servlet-mapping>
+    <servlet-name>SearchUserServlet</servlet-name>
+    <url-pattern>/SearchUserServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>DataEditServlet</servlet-name>
+    <url-pattern>/DataEditServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>SearchUserDataServlet</servlet-name>
+    <url-pattern>/SearchUserDataServlet</url-pattern>
   </servlet-mapping>
  <welcome-file-list>
   <welcome-file>index.jsp</welcome-file>
