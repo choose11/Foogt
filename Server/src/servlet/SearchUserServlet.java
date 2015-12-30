@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONArray;
 
+import com.alibaba.fastjson.JSON;
 import com.sun.xml.internal.bind.v2.TODO;
 
 import entity.User;
@@ -57,7 +58,7 @@ public class SearchUserServlet extends HttpServlet {
 		JSONArray jsonArray = new JSONArray();
 		TODO://null值得判断
 		for (User u : user) {
-			jsonArray.put(u.getJsonObject());
+			jsonArray.put(JSON.toJSON(u));
 		}
 		out.write(jsonArray.toString());
 		out.flush();

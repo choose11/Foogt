@@ -1,93 +1,109 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="com.example.json.foogt.activity.LoginActivity"
-    android:weightSum="1">
+    android:orientation="vertical">
 
-    <LinearLayout
-        android:orientation="horizontal"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal">
-
-
-
-    </LinearLayout>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="用户登录"
-        android:id="@+id/textView"
-        android:layout_gravity="center_horizontal"/>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_weight="0.04">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="用户名"
-            android:id="@+id/textView2"/>
+            android:layout_gravity="center"
+            android:text="@string/login_welcome"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="40sp"/>
+    </FrameLayout>
 
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/editText"
-            android:layout_gravity="center_horizontal"/>
 
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
+    <TableLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal">
+        >
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="用户密码"
-            android:id="@+id/textView3"/>
-
-        <EditText
+        <TableRow
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/editText2"
-            android:layout_gravity="center_horizontal"/>
+            android:layout_height="match_parent">
 
-    </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="@string/username"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textSize="20sp"
+                android:padding="20sp"/>
+
+            <EditText
+                android:id="@+id/edit_login_userName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="8"
+                android:ems="10"
+                android:padding="5sp"/>
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="@string/login_pwd"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textSize="20sp"
+                android:padding="20sp"/>
+
+            <EditText
+                android:id="@+id/edit_login_pwd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="8"
+                android:ems="10"
+                android:inputType="textPassword"
+                android:padding="5sp"/>
+        </TableRow>
+
+    </TableLayout>
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal">
+        android:layout_weight="0.05"
+        android:orientation="horizontal"
+
+        android:gravity="bottom|center_horizontal"
+        >
 
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="130sp"
             android:layout_height="wrap_content"
-            android:text="登陆"
-            android:id="@+id/button"/>
+            android:layout_gravity="center_vertical"
+            android:text="@string/register"
+            android:id="@+id/btn_login_register"
+            android:textSize="20sp"
+            android:background="#585cde"
+            android:textColor="#fefcfc"
+            />
 
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="130sp"
             android:layout_height="wrap_content"
-            android:text="注册"
-            android:id="@+id/button2"
-            android:layout_gravity="center_horizontal"/>
+            android:layout_gravity="center_vertical"
+            android:text="@string/login"
+            android:id="@+id/btn_login_login"
+            android:textSize="20sp"
+            android:background="#585cde"
+            android:textColor="#fefcfc"/>
+
+
     </LinearLayout>
-
-
 
 
 </LinearLayout>

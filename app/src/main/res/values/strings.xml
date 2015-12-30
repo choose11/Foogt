@@ -10,7 +10,9 @@
     <string name="input_name_hint">请输您的注册账号</string>
     <string name="register_pwd">注册密码</string>
     <string name="register">注册</string>
+    <string name="login">登录</string>
     <string name="register_welcome">欢迎注册</string>
+    <string name="login_welcome">欢迎登陆</string>
     <string name="exit_account">退出当前帐号</string>
     <string name="account_management">账号管理</string>
     <string name="account_exist">账号已存在</string>
@@ -33,5 +35,6 @@
     <string name="comment">评论</string>
     <string name="no_this_user">查无此人</string>
     <string name="network_is_bad">您的网络有点问题</string>
+    <string name="login_pwd">登陆密码</string>
 
 </resources>

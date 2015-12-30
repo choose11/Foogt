@@ -31,7 +31,7 @@ public class LoginActivity extends AppCompatActivity {
     private final String TAG = "LoginActivity";
     private int userId;
     private Button loginBtn, registerBtn;
-    private EditText editText, editText2;
+    private EditText countEdit, pwdEdit;
     private String account;
     private String password;
     private Handler handler = new Handler() {
@@ -54,10 +54,10 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        loginBtn = (Button) findViewById(R.id.button);
-        registerBtn = (Button) findViewById(R.id.button2);
-        editText = (EditText) findViewById(R.id.editText);
-        editText2 = (EditText) findViewById(R.id.editText2);
+        loginBtn = (Button) findViewById(R.id.btn_login_login);
+        registerBtn = (Button) findViewById(R.id.btn_login_register);
+        countEdit = (EditText) findViewById(R.id.edit_login_userName);
+        pwdEdit = (EditText) findViewById(R.id.edit_login_pwd);
 
 
         //登陆按钮点击事件
@@ -87,15 +87,14 @@ public class LoginActivity extends AppCompatActivity {
 //                        }
 //                    }
 //                }.start();
-                account = editText.getText().toString();
-                password = editText2.getText().toString();
+                account = countEdit.getText().toString();
+                password = pwdEdit.getText().toString();
                 if (!TextUtils.isEmpty(account) && !TextUtils.isEmpty(password)) {
                     String url = IConst.SERVLET_ADDR + "LoginServlet";
                     String data = "username=" + account + "&" + "password=" + password;
                     HttpUtil.sendHttpRequest(url, "POST", data, new HttpCallbackListener() {
                         @Override
                         public void onFinish(String response) {
-                            System.out.println(response);
                             UserInfoMsg UserInfo= JSON.parseObject(response,UserInfoMsg.class);
                             userId= UserInfo.getUser().getUserId();
                             System.out.println(userId);

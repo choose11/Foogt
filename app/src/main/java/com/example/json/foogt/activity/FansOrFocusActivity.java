@@ -13,7 +13,7 @@ import com.example.json.foogt.R;
 public class FansOrFocusActivity extends AppCompatActivity {
     private ListView showFansOrFocusLv;
     private ActionBar bar;
-
+    private String type="";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,7 +26,15 @@ public class FansOrFocusActivity extends AppCompatActivity {
             bar.setDisplayHomeAsUpEnabled(true);
             bar.setDisplayShowHomeEnabled(true);
             bar.setHomeButtonEnabled(true);
-            bar.setTitle(R.string.changeIntroduction);
+
+        }
+
+        Intent i = getIntent();
+        String type = i.getStringExtra("Type");
+        if(type.equals("粉丝")){
+            bar.setTitle(R.string.fans);
+        }else{
+            bar.setTitle(R.string.focus);
         }
     }
 
@@ -34,9 +42,10 @@ public class FansOrFocusActivity extends AppCompatActivity {
      * 登录后对接
      */
 
-    public static void actionStart(Context context, int userId) {
-        Intent i = new Intent(context, MenuActivity.class);
+    public static void actionStart(Context context, int userId,String type) {
+        Intent i = new Intent(context, FansOrFocusActivity.class);
         i.putExtra("UserId", userId);
+        i.putExtra("Type",type);
         context.startActivity(i);
     }
 

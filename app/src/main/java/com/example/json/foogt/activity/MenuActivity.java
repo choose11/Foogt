@@ -48,11 +48,9 @@ public class MenuActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
 
+
         userId = getIntent().getIntExtra("userId", -1);
 
-        //dataEditImg = (ImageView) findViewById(R.id.img_user_data_edit);
-        //fansTxt = (TextView) findViewById(R.id.txt_user_fans);
-        // focusTxt=(TextView)findViewById(R.id.txt_user_focus);
 
         /*
         Toolbar最上层的一栏
@@ -99,8 +97,6 @@ public class MenuActivity extends AppCompatActivity
 
             /** Called when a drawer has settled in a completely open state. */
             public void onDrawerOpened(View drawerView) {
-                // TODO: 2015/12/29 未使用Intent传值
-                int userId = 12;
                 getUserData(userId);//从服务器拿到原始数据,做一次刷新
             }
         };
@@ -239,13 +235,11 @@ public class MenuActivity extends AppCompatActivity
         if (id == R.id.nav_search) {
             SearchActivity.actionStart(MenuActivity.this);
         } else if (id == R.id.nav_collection) {
-            // TODO: 2015/12/29 未知userId的实际参数名 ，暂时用12
-            CollectionActivity.actionStart(MenuActivity.this,12);
+            CollectionActivity.actionStart(MenuActivity.this,userId);
         } else if (id == R.id.nav_send) {
             SendBlogActivity.actionStart(MenuActivity.this,userId);
         } else if (id == R.id.nav_manage) {
-            // TODO: 2015/12/29 未知userId的实际参数名 ，暂时用12.
-            ChangeUserActivity.actionStart(MenuActivity.this, 12);
+            ChangeUserActivity.actionStart(MenuActivity.this, userId);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -271,9 +265,7 @@ public class MenuActivity extends AppCompatActivity
 
         @Override
         public void onClick(View v) {
-
-            // TODO: 2015/12/29 未拿到UserId
-            DataEditActivity.actionStart(MenuActivity.this, 12);
+            DataEditActivity.actionStart(MenuActivity.this, userId);
         }
     }
 
@@ -283,7 +275,7 @@ public class MenuActivity extends AppCompatActivity
     public class onFansClickListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            FansOrFocusActivity.actionStart(MenuActivity.this,12);
+            FansOrFocusActivity.actionStart(MenuActivity.this,userId,"粉丝");
         }
     }
 
@@ -293,7 +285,7 @@ public class MenuActivity extends AppCompatActivity
     public class onFocusClickListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            FansOrFocusActivity.actionStart(MenuActivity.this,12);
+            FansOrFocusActivity.actionStart(MenuActivity.this,userId,"关注");
         }
     }
 
