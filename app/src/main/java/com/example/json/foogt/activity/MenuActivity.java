@@ -32,13 +32,15 @@ import com.example.json.foogt.util.HttpUtil;
 import com.example.json.foogt.util.IConst;
 import com.example.json.foogt.util.Utility;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MenuActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private ImageView dataEditImg;
     private int userId;
     private TextView fansTxt, focusTxt, userNameTxt, UserIntroMin;
-    static final int NUM_ITEMS = 2;
     CollectionPagerAdapter mPagerAdapter;
     ViewPager mViewPager;
 
@@ -62,16 +64,10 @@ public class MenuActivity extends AppCompatActivity
         /*
         pageAdapter适配器
          */
-        mPagerAdapter = new CollectionPagerAdapter(getSupportFragmentManager());
         mViewPager = (ViewPager) findViewById(R.id.pager);
-        mViewPager.setAdapter(mPagerAdapter);
-        mViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-            @Override
-            public void onPageSelected(int position) {
-                change(position);
-            }
-        });
-
+        if (mViewPager != null) {
+            setupViewpager(mViewPager);
+        }
 
         /*
         圆形按钮
@@ -81,7 +77,7 @@ public class MenuActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 // Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-                SendBlogActivity.actionStart(MenuActivity.this,userId);
+                SendBlogActivity.actionStart(MenuActivity.this, userId);
             }
         });
         /*
@@ -118,16 +114,29 @@ public class MenuActivity extends AppCompatActivity
          */
         View headerView = navigationView.inflateHeaderView(R.layout.nav_header_menu);
         dataEditImg = (ImageView) headerView.findViewById(R.id.img_user_data_edit);
-        dataEditImg.setOnClickListener(new onDateEditClickListener());
-
         fansTxt = (TextView) headerView.findViewById(R.id.txt_user_fans);
         focusTxt = (TextView) headerView.findViewById(R.id.txt_user_focus);
         userNameTxt = (TextView) headerView.findViewById(R.id.txt_menu_userName);
         UserIntroMin = (TextView) headerView.findViewById(R.id.txt_menu_userIntro);
 
-        fansTxt.setOnClickListener(new onFansClickListener());
-        focusTxt.setOnClickListener(new onFocusClickListener());
+        OnDrawerItemClickListener listener = new OnDrawerItemClickListener();
+        dataEditImg.setOnClickListener(listener);
+        fansTxt.setOnClickListener(listener);
+        focusTxt.setOnClickListener(listener);
 
+    }
+
+    private void setupViewpager(ViewPager viewPager) {
+        mPagerAdapter = new CollectionPagerAdapter(getSupportFragmentManager());
+        mPagerAdapter.addFragment(HomeFragment.newInstance(userId), getResources().getString(R.string.home));
+        mPagerAdapter.addFragment(CommentFragment.newInstance(), getResources().getString(R.string.comment));
+        viewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
+                change(position);
+            }
+        });
+        viewPager.setAdapter(mPagerAdapter);
     }
 
 
@@ -157,20 +166,15 @@ public class MenuActivity extends AppCompatActivity
 
     public void change(int position) {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        switch (position) {
-            case 0:
-                toolbar.setTitle(R.string.home);
-                break;
-            case 1:
-                toolbar.setTitle(R.string.comment);
-                break;
-        }
+        toolbar.setTitle(mPagerAdapter.getPageTitle(position));
     }
 
     /*
   自定义page
    */
     public class CollectionPagerAdapter extends FragmentPagerAdapter {
+        private final List<Fragment> mFragments = new ArrayList<>();
+        private final List<String> mFragmentTitles = new ArrayList<>();
 
         public CollectionPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -178,21 +182,22 @@ public class MenuActivity extends AppCompatActivity
 
         @Override
         public Fragment getItem(int position) {
-            Fragment fragment = null;
-            switch (position) {
-                case 0:
-                    fragment = HomeFragment.newInstance(userId);
-                    break;
-                case 1:
-                    fragment = CommentFragment.newInstance();
-                    break;
-            }
-            return fragment;
+            return mFragments.get(position);
+        }
+
+        public void addFragment(Fragment fragment, String title) {
+            mFragments.add(fragment);
+            mFragmentTitles.add(title);
         }
 
         @Override
         public int getCount() {
-            return NUM_ITEMS;
+            return mFragments.size();
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return mFragmentTitles.get(position);
         }
     }
 
@@ -200,7 +205,6 @@ public class MenuActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
         return true;
-        //return super.onCreateOptionsMenu(menu);
     }
 
     /*
@@ -224,7 +228,8 @@ public class MenuActivity extends AppCompatActivity
 
     /**
      * 跳转至各个界面
-     * @param item
+     *
+     * @param item selected NavigationItem
      * @return
      */
     @Override
@@ -235,9 +240,9 @@ public class MenuActivity extends AppCompatActivity
         if (id == R.id.nav_search) {
             SearchActivity.actionStart(MenuActivity.this);
         } else if (id == R.id.nav_collection) {
-            CollectionActivity.actionStart(MenuActivity.this,userId);
+            CollectionActivity.actionStart(MenuActivity.this, userId);
         } else if (id == R.id.nav_send) {
-            SendBlogActivity.actionStart(MenuActivity.this,userId);
+            SendBlogActivity.actionStart(MenuActivity.this, userId);
         } else if (id == R.id.nav_manage) {
             ChangeUserActivity.actionStart(MenuActivity.this, userId);
         }
@@ -258,34 +263,32 @@ public class MenuActivity extends AppCompatActivity
         context.startActivity(i);
     }
 
-    /**
-     * 修改资料页面跳转
-     */
-    public class onDateEditClickListener implements View.OnClickListener {
+
+    public class OnDrawerItemClickListener implements View.OnClickListener {
 
         @Override
         public void onClick(View v) {
-            DataEditActivity.actionStart(MenuActivity.this, userId);
-        }
-    }
+            switch (v.getId()) {
+                /**
+                 * 修改资料页面跳转
+                 */
+                case R.id.img_user_data_edit:
+                    DataEditActivity.actionStart(MenuActivity.this, userId);
+                    break;
+                /**
+                 * 点击进入粉丝界面
+                 */
+                case R.id.txt_user_fans:
+                    FansOrFocusActivity.actionStart(MenuActivity.this, userId, "粉丝");
+                    break;
+                /**
+                 * 点击进入关注界面
+                 */
+                case R.id.txt_user_focus:
+                    FansOrFocusActivity.actionStart(MenuActivity.this, userId, "关注");
+                    break;
+            }
 
-    /**
-     * 点击进入粉丝界面
-     */
-    public class onFansClickListener implements View.OnClickListener {
-        @Override
-        public void onClick(View v) {
-            FansOrFocusActivity.actionStart(MenuActivity.this,userId,"粉丝");
-        }
-    }
-
-    /**
-     * 点击进入关注界面
-     */
-    public class onFocusClickListener implements View.OnClickListener {
-        @Override
-        public void onClick(View v) {
-            FansOrFocusActivity.actionStart(MenuActivity.this,userId,"关注");
         }
     }
 
