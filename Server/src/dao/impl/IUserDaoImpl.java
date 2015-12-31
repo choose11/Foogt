@@ -144,6 +144,7 @@ public class IUserDaoImpl implements IUserDao {
 		}
 		return flag;
 	}
+
 	/**
 	 * update user data
 	 * 
@@ -151,30 +152,29 @@ public class IUserDaoImpl implements IUserDao {
 	 * @param pstmt
 	 * @param rs
 	 */
-	public boolean updateUserData(int userId,String userName,String userIntro){
+	public boolean updateUserData(int userId, String userName, String userIntro) {
 		Connection conn = new ConnectionOracle().getConnection();
 		PreparedStatement pstmt = null;
-		String sql = "update t_user_info set user_name = ? ,  user_intro = ? where user_id = ?"; 
+		String sql = "update t_user_info set user_name = ? ,  user_intro = ? where user_id = ?";
 		boolean result = false;
 		try {
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1,userName);
+			pstmt.setString(1, userName);
 			pstmt.setString(2, userIntro);
 			pstmt.setInt(3, userId);
 			int i = pstmt.executeUpdate();
-			if(i == 1){
+			if (i == 1) {
 				result = true;
 			}
 		} catch (SQLException e) {
 			LogUtil.e(e);
 			e.printStackTrace();
-		}finally{
-			close(conn,pstmt,null);
+		} finally {
+			close(conn, pstmt, null);
 		}
-		
+
 		return result;
 	}
-
 
 	/**
 	 * get userId from userName
@@ -205,19 +205,23 @@ public class IUserDaoImpl implements IUserDao {
 	/**
 	 * search user
 	 * 
+	 * limit result < IConst.SEARCH_USER_LIMIT
+	 * 
 	 * @param
 	 * @param
 	 * @param
 	 */
-	public List<User> searchUser(String keyword) {
+	public List<User> searchUser(String keyword,int limit) {
 		List<User> resultUser = new ArrayList<User>();
 		Connection conn = new ConnectionOracle().getConnection();
 		PreparedStatement pstmt = null;
-		String sql = "select user_id,user_name from t_user_info where user_name  like ?";
+		String sql = "select user_id,user_name from t_user_info "
+				+ "where user_name  like ? " + "and rownum <= ?";
 		ResultSet rs = null;
 		try {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, "%" + keyword + "%");
+			pstmt.setInt(2, limit);
 			rs = pstmt.executeQuery();
 			while (rs.next()) {
 				int uid = rs.getInt(1);
@@ -257,8 +261,9 @@ public class IUserDaoImpl implements IUserDao {
 				String userIntro = rs.getString(3);
 				int msgCount = rs.getInt(4);
 				int fansCount = rs.getInt(5);
-				int focusCount  =rs.getInt(6);
-				user = new User(uid, userName, userIntro,msgCount,fansCount,focusCount);
+				int focusCount = rs.getInt(6);
+				user = new User(uid, userName, userIntro, msgCount, fansCount,
+						focusCount);
 			}
 		} catch (Exception e) {
 			LogUtil.e(e);
@@ -269,7 +274,135 @@ public class IUserDaoImpl implements IUserDao {
 		return user;
 	}
 
-	
+	// 插入消息元并且获得msgId
+	public msgInfo insertTMsgInfo(msgInfo m) {
+		Connection conn = new ConnectionOracle().getConnection();
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		msgInfo m1 = null;
+		String sql = "insert into t_msg_info values(?,msg_id_sequence.nextval,?,?,?,?,to_date(?,'yyyy-MM-dd-HH-mi-ss'))";
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, m.getUserId());
+			ps.setString(2, m.getContent());
+			ps.setInt(3, m.getType());
+			ps.setInt(4, m.getCommentCount());
+			ps.setInt(5, m.getTransferCount());
+			ps.setString(6, m.getTimeT());
+			System.out.println("传输完毕");
+			int i = ps.executeUpdate();
+			ps = conn
+					.prepareStatement("select msg_id_sequence.currval from dual");
+			rs = ps.executeQuery();
+			while (rs.next()) {
+				int msgId = rs.getInt(1);
+				m1 = new msgInfo(msgId);
+				System.out.println(m1.getMsgId());
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			close(conn, ps, null);
+		}
+		return m1;
+	}
+
+	// select user_id from t_user_account
+	public User selectUserId(String username) {
+		Connection conn = new ConnectionOracle().getConnection();
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		User u = null;
+		String sql = "select user_id from t_user_account where account=?";
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, username);
+			rs = ps.executeQuery();
+			while (rs.next()) {
+				int userId = rs.getInt(1);
+				u = new User(userId);
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			close(conn, ps, rs);
+		}
+		return u;
+	}
+
+	// select follow_id from t_user_relation
+	public List<Integer> selectFollowId(int userId) {
+		List<Integer> l = new ArrayList<Integer>();
+		Connection conn = new ConnectionOracle().getConnection();
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		String sql = "select follow_id from t_user_relation where user_id=?and type=0";
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, userId);
+			rs = ps.executeQuery();
+			while (rs.next()) {
+				int followId = rs.getInt(1);
+				l.add(followId);
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			close(conn, ps, rs);
+		}
+		return l;
+	}
+
+	// insert into t_user_msg_index values()
+	public boolean insertTUserMsgIndex(int followId, int authorId, int msgId,
+			String timeT) {
+		Connection conn = new ConnectionOracle().getConnection();
+		PreparedStatement ps = null;
+		String sql = "insert into t_user_msg_index values(?,?,?,to_date(?,'yyyy-MM-dd-HH-mi-ss'))";
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, followId);
+			ps.setInt(2, authorId);
+			ps.setInt(3, msgId);
+			ps.setString(4, timeT);
+			int i = ps.executeUpdate();
+			return true;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		} finally {
+			close(conn, ps, null);
+		}
+	}
+
+	public boolean insertTUserRelation(int uid, int fuid, int type) {
+		Connection conn = new ConnectionOracle().getConnection();
+		PreparedStatement pstmt = null;
+		String sql = "insert into t_user_relation values(?,?,?)";
+		boolean result = false;
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, uid);
+			pstmt.setInt(2, fuid);
+			pstmt.setInt(3, type);
+			int i = pstmt.executeUpdate();
+			if (i == 1) {
+				result = true;
+			}
+		} catch (SQLException e) {
+			LogUtil.e(e);
+			e.printStackTrace();
+		} finally {
+			close(conn, pstmt, null);
+		}
+
+		return result;
+	}
+
 	private void close(Connection conn, PreparedStatement pstmt, ResultSet rs) {
 		try {
 			if (rs != null) {
@@ -284,107 +417,5 @@ public class IUserDaoImpl implements IUserDao {
 		} catch (SQLException e) {
 			LogUtil.e(e);
 		}
-	}
-
-	//插入消息元并且获得msgId
-		public msgInfo insertTMsgInfo(msgInfo m){
-			Connection conn=new ConnectionOracle().getConnection();
-			PreparedStatement ps=null;			
-			ResultSet rs=null;
-			msgInfo m1 = null;
-			String sql="insert into t_msg_info values(?,msg_id_sequence.nextval,?,?,?,?,to_date(?,'yyyy-MM-dd-HH-mi-ss'))";
-			try {
-				ps=conn.prepareStatement(sql);
-				ps.setInt(1, m.getUserId());
-				ps.setString(2, m.getContent());
-				ps.setInt(3, m.getType());
-				ps.setInt(4, m.getCommentCount());
-				ps.setInt(5, m.getTransferCount());
-				ps.setString(6,m.getTimeT());
-				System.out.println("传输完毕");
-				int i=ps.executeUpdate();
-				ps=conn.prepareStatement("select msg_id_sequence.currval from dual");
-				rs=ps.executeQuery();
-				while (rs.next()) {
-					int msgId= rs.getInt(1);
-					m1=new msgInfo(msgId);
-					System.out.println(m1.getMsgId());		
-				}	
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();	
-			}finally{
-				close(conn, ps, null);
-			}
-			return m1;
-		}
-	//select user_id from  t_user_account
-		public User selectUserId(String username){
-			Connection conn= new ConnectionOracle().getConnection();
-			PreparedStatement ps=null;
-			ResultSet rs=null;
-			User u = null;
-			String sql="select user_id from t_user_account where account=?";
-			try {
-				ps=conn.prepareStatement(sql);
-				ps.setString(1, username);
-				rs=ps.executeQuery();
-				while (rs.next()) {
-					int userId=rs.getInt(1);
-					 u=new User(userId);
-				}
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}finally{
-				close(conn, ps, rs);
-			}
-			return u;
-		}
-//		select follow_id from t_user_relation
-		public List<Integer> selectFollowId(int userId){
-			List<Integer>l=new ArrayList<Integer>();
-			Connection conn=new ConnectionOracle().getConnection();
-			PreparedStatement ps=null;
-			ResultSet rs=null;
-			String sql="select follow_id from t_user_relation where user_id=?and type=0";
-			try {
-				ps=conn.prepareStatement(sql);
-				ps.setInt(1, userId);
-				rs=ps.executeQuery();
-				while (rs.next()) {
-				int followId= rs.getInt(1);
-				l.add(followId);
-				}
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}finally{
-				close(conn, ps, rs);
-			}
-			return l;
-		}
-	
-		//insert into t_user_msg_index values()
-	public boolean insertTUserMsgIndex(int followId,int authorId,int msgId, String timeT){
-		Connection conn=new ConnectionOracle().getConnection();
-		PreparedStatement ps=null;
-		String sql="insert into t_user_msg_index values(?,?,?,to_date(?,'yyyy-MM-dd-HH-mi-ss'))";
-		try {
-			ps=conn.prepareStatement(sql);
-			ps.setInt(1, followId);
-			ps.setInt(2, authorId);
-			ps.setInt(3, msgId);
-			ps.setString(4, timeT);
-			int i=ps.executeUpdate();
-			return true;
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return false;
-		}finally{
-			close(conn, ps, null);
-		}
-		
 	}
 }

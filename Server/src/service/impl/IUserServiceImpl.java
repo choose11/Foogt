@@ -9,6 +9,10 @@ import entity.User;
 
 public class IUserServiceImpl implements IUserService {
 
+	public static final int SEARCH_USER_LIMIT = 5;
+	public static final int USER_RELATION_FAN = 0;
+	public static final int USER_RELATION_FOCUS = 1;
+
 	IUserDao dao = null;
 
 	public IUserServiceImpl() {
@@ -40,14 +44,14 @@ public class IUserServiceImpl implements IUserService {
 		}
 	}
 
-	/*
+	/**
 	 * search user,request a List
 	 */
 	public List<User> searchUser(String keyword) {
-		return dao.searchUser(keyword);
+		return dao.searchUser(keyword, SEARCH_USER_LIMIT);
 	}
 
-	/*
+	/**
 	 * edit user data
 	 * 
 	 * @see service.IUserService#dataEdit(int)
@@ -64,6 +68,21 @@ public class IUserServiceImpl implements IUserService {
 	public boolean updateUserData(int userId, String userName, String userIntro) {
 
 		return dao.updateUserData(userId, userName, userIntro);
+	}
+
+	/**
+	 * Add Focus User.
+	 * 
+	 * @param cuid
+	 *            currentUserId
+	 * @param fuid
+	 *            focusUserId
+	 */
+	public boolean insertTUserRelation(int cuid, int fuid) {
+		boolean i1 = dao.insertTUserRelation(cuid, fuid, USER_RELATION_FOCUS);
+		boolean i2 = dao.insertTUserRelation(fuid, cuid, USER_RELATION_FAN);
+		// TODO: 事务
+		return i1 && i2;
 	}
 
 	/**
@@ -86,7 +105,8 @@ public class IUserServiceImpl implements IUserService {
 		// System.out.println(string);
 		// }
 		// System.out.println(i.searchData(2).getUsername()+" : "+i.searchData(2).getUserIntro());
-		System.out.println(i.searchData(10).getUsername()+" : "+i.searchData(10).getUserIntro());
-		//System.out.println(i.updateUserData(12, "张三", "今天写了好多啊"));
+		System.out.println(i.searchData(10).getUsername() + " : "
+				+ i.searchData(10).getUserIntro());
+		// System.out.println(i.updateUserData(12, "张三", "今天写了好多啊"));
 	}
 }

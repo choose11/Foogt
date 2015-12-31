@@ -18,4 +18,6 @@ public interface IUserService {
 	public User searchData(int userId);
 
 	public boolean updateUserData(int userId, String userName, String userIntro);
+	
+	public boolean insertTUserRelation(int cuid,int fuid);
 }

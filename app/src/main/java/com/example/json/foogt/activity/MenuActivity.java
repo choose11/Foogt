@@ -238,7 +238,7 @@ public class MenuActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_search) {
-            SearchActivity.actionStart(MenuActivity.this);
+            SearchActivity.actionStart(MenuActivity.this, userId);
         } else if (id == R.id.nav_collection) {
             CollectionActivity.actionStart(MenuActivity.this, userId);
         } else if (id == R.id.nav_send) {

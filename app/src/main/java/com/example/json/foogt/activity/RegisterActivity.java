@@ -37,10 +37,10 @@ import java.util.Map;
 public class RegisterActivity extends AppCompatActivity {
 
     private final String TAG = "RegisterActivity";
-    EditText accountEdit;
-    EditText passwordEdit;
-    Button registerBtn;
-    RequestQueue mQueue;
+    private EditText accountEdit;
+    private EditText passwordEdit;
+    private Button registerBtn;
+    private RequestQueue mQueue;
 
     private ActionBar bar;
 

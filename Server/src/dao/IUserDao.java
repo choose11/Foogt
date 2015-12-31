@@ -15,10 +15,11 @@ public interface IUserDao {
 
 	public boolean changePW(User u, String newPW);
 
-	public List<User> searchUser(String keyword);
-	
-	public User searchData(int userId);
-	
-	public boolean updateUserData(int userId,String userName,String userIntro);
+	public List<User> searchUser(String keyword, int limit);
 
+	public User searchData(int userId);
+
+	public boolean updateUserData(int userId, String userName, String userIntro);
+
+	public boolean insertTUserRelation(int cuid, int fuid, int type);
 }
