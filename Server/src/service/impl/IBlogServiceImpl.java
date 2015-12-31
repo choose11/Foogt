@@ -18,4 +18,7 @@ public class IBlogServiceImpl implements IBlogService {
 		return dao.selectBlogs(userId,pageSize,page);
 	}
 
+	public List<BlogInfo> selectUserOwnBlogs(int userId, int pageSize, int page){
+		return dao.selectUserOwnBlogs(userId, pageSize, page);
+	};
 }

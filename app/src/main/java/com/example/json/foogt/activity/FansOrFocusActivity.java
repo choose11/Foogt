@@ -29,9 +29,9 @@ public class FansOrFocusActivity extends AppCompatActivity {
 
         }
 
-        Intent i = getIntent();
-        String type = i.getStringExtra("Type");
-        if(type.equals("粉丝")){
+//        Intent i = getIntent();
+
+        if(getIntent().getStringExtra("Type").equals("粉丝")){
             bar.setTitle(R.string.fans);
         }else{
             bar.setTitle(R.string.focus);

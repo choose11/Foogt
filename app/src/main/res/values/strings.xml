@@ -40,5 +40,7 @@
     <string name="long_press_to_focus">长按关注</string>
     <string name="do_not_show_again">不再提醒</string>
     <string name="loading">Loading...</string>
+    <string name="weibo">微博</string>
+    <string name="user_own_blog">原创微博</string>
 
 </resources>

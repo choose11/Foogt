@@ -27,7 +27,7 @@ public class CollectionActivity extends AppCompatActivity {
             bar.setDisplayHomeAsUpEnabled(true);
             bar.setDisplayShowHomeEnabled(true);
             bar.setHomeButtonEnabled(true);
-            bar.setTitle(R.string.changeIntroduction);
+            bar.setTitle(R.string.user_coll);
         }
     }
 

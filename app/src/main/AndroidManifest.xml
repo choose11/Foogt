@@ -9,21 +9,14 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity
-            android:name=".activity.LoginActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
+        android:theme="@style/AppTheme" >
+        <activity android:name=".activity.LoginActivity">
         </activity>
-        <activity android:name=".activity.RegisterActivity">
+        <activity android:name=".activity.RegisterActivity" >
         </activity>
-        <activity android:name=".activity.DataEditActivity">
+        <activity android:name=".activity.DataEditActivity" >
         </activity>
-        <activity android:name=".activity.ChangeUserActivity">
+        <activity android:name=".activity.ChangeUserActivity" >
         </activity>
         <activity android:name=".activity.SearchActivity" >
         </activity>
@@ -32,11 +25,20 @@
         <activity
             android:name=".activity.MenuActivity"
             android:label="@string/title_activity_menu"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
         </activity>
         <activity android:name=".activity.CollectionActivity" >
         </activity>
         <activity android:name=".activity.FansOrFocusActivity" >
+        </activity>
+        <activity android:name=".activity.UserBlogActivity" >
+
         </activity>
     </application>
 

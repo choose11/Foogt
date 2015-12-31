@@ -7,5 +7,7 @@ import entity.BlogInfo;
 public interface IBlogService {
 
 	public List<BlogInfo> selectBlogs(int userId, int pageSize, int page);
+	
+	public List<BlogInfo> selectUserOwnBlogs(int userId, int pageSize, int page);
 
 }
