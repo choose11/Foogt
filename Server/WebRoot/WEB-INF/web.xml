@@ -43,6 +43,11 @@
     <servlet-name>SearchUserDataServlet</servlet-name>
     <servlet-class>servlet.SearchUserDataServlet</servlet-class>
   </servlet>
+  <servlet>
+    <servlet-name>Focus</servlet-name>
+    <servlet-class>servlet.Focus</servlet-class>
+  </servlet>
+
 
 
  <servlet-mapping>
@@ -76,6 +81,10 @@
   <servlet-mapping>
     <servlet-name>SearchUserDataServlet</servlet-name>
     <url-pattern>/SearchUserDataServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>Focus</servlet-name>
+    <url-pattern>/Focus</url-pattern>
   </servlet-mapping>
  <welcome-file-list>
   <welcome-file>index.jsp</welcome-file>

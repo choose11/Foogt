@@ -36,5 +36,8 @@
     <string name="no_this_user">查无此人</string>
     <string name="network_is_bad">您的网络有点问题</string>
     <string name="login_pwd">登陆密码</string>
+    <string name="focus_user_success">已关注</string>
+    <string name="long_press_to_focus">长按关注</string>
+    <string name="do_not_show_again">不再提醒</string>
 
 </resources>
