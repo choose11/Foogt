@@ -13,7 +13,7 @@ import com.alibaba.fastjson.JSON;
 import entity.User;
 import factory.Factory;
 
-public class SearchUserDataServlet extends HttpServlet {
+public class SearchUserAccount extends HttpServlet {
 
 	/**
 	 * The doGet method of the servlet. <br>
@@ -32,7 +32,19 @@ public class SearchUserDataServlet extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		doPost(request, response);
+		response.setContentType("text/html;charset=UTF-8");
+		request.setCharacterEncoding("UTF-8");
+
+		PrintWriter out = response.getWriter();
+
+		String userId = request.getParameter("userId");
+		User user = Factory.getIUserService().searchAccount(
+				Integer.parseInt(userId));
+		String json = JSON.toJSONString(user);
+		out.print(json);
+		log(json);
+		out.flush();
+		out.close();
 	}
 
 	/**
@@ -53,18 +65,7 @@ public class SearchUserDataServlet extends HttpServlet {
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		response.setContentType("text/html;charset=UTF-8");
-		request.setCharacterEncoding("UTF-8");
-
-		PrintWriter out = response.getWriter();
-		String userId = request.getParameter("userId");
-		User user = Factory.getIUserService().searchData(
-				Integer.parseInt(userId));
-		String json = JSON.toJSONString(user);
-		out.print(json);
-		System.out.println(json);
-		out.flush();
-		out.close();
+		doGet(request, response);
 	}
 
 }

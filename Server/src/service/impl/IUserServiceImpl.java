@@ -84,6 +84,15 @@ public class IUserServiceImpl implements IUserService {
 		// TODO: 事务
 		return i1 && i2;
 	}
+	
+	/**
+	 * search user account
+	 */
+	@Override
+	public User searchAccount(int userId) {
+		
+		return dao.searchAccount(userId);
+	}
 
 	/**
 	 * Test Mod
@@ -109,4 +118,5 @@ public class IUserServiceImpl implements IUserService {
 				+ i.searchData(10).getUserIntro());
 		// System.out.println(i.updateUserData(12, "张三", "今天写了好多啊"));
 	}
+
 }

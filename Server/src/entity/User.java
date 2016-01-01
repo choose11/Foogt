@@ -46,8 +46,12 @@ public class User {
 		this.userId = userId;
 		this.username = username;
 	}
-	
-	
+
+	public User(String account,int userId) {
+		super();
+		this.userId = userId;
+		this.account = account;
+	}
 
 	public User(int userId, String username, String userIntro, int msgCount,
 			int fansCount, int focusCount) {

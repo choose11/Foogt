@@ -274,6 +274,37 @@ public class IUserDaoImpl implements IUserDao {
 		return user;
 	}
 
+	/**
+	 * search account and userId
+	 * 
+	 * @param conn
+	 * @param pstmt
+	 * @param rs
+	 */
+	public User searchAccount(int userId) {
+		Connection conn = new ConnectionOracle().getConnection();
+		PreparedStatement pstmt = null;
+		String sql = "select account,user_id from t_user_account where user_id =?";
+		ResultSet rs = null;
+		User user = null;
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, userId);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				String account = rs.getString(1);
+				int uid = rs.getInt(2);
+				user = new User(account, uid);
+			}
+		} catch (Exception e) {
+			LogUtil.e(e);
+		} finally {
+			close(conn, pstmt, rs);
+		}
+
+		return user;
+	}
+
 	// 插入消息元并且获得msgId
 	public msgInfo insertTMsgInfo(msgInfo m) {
 		Connection conn = new ConnectionOracle().getConnection();
@@ -371,7 +402,7 @@ public class IUserDaoImpl implements IUserDao {
 			int i = ps.executeUpdate();
 			return true;
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 			return false;
 		} finally {

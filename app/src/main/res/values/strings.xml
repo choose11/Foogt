@@ -42,5 +42,6 @@
     <string name="loading">Loading...</string>
     <string name="weibo">微博</string>
     <string name="user_own_blog">原创微博</string>
+    <string name="add_new_user">添加一个新账户</string>
 
 </resources>

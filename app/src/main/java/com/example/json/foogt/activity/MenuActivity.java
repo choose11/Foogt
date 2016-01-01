@@ -58,8 +58,8 @@ public class MenuActivity extends AppCompatActivity
         setContentView(R.layout.activity_menu);
 
 
-        //userId = getIntent().getIntExtra("userId", -1);
-        userId=1;
+        userId = getIntent().getIntExtra("userId", -1);
+        //userId=1;
 
         /*
         Toolbar最上层的一栏

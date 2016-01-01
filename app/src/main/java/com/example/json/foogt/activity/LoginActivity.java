@@ -1,6 +1,10 @@
 package com.example.json.foogt.activity;
 
 
+import android.content.Context;
+import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -13,6 +17,7 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.example.json.foogt.R;
+import com.example.json.foogt.Sqlite.MySqliteOpenHelper;
 import com.example.json.foogt.entity.User;
 import com.example.json.foogt.entity.UserInfoMsg;
 import com.example.json.foogt.util.HttpCallbackListener;
@@ -34,14 +39,21 @@ public class LoginActivity extends AppCompatActivity {
     private EditText countEdit, pwdEdit;
     private String account;
     private String password;
+
+    private MySqliteOpenHelper helper;
+    private SQLiteDatabase db;
+    private String dbName = "user";
+    private int version = 1;
+
+
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             boolean re = (boolean) msg.obj;
             System.out.println(re);
-            if (re==true) {
+            if (re == true) {
                 // TODO: 2015/12/28 get userId on Login
-                MenuActivity.actionStart(LoginActivity.this,userId);
+                MenuActivity.actionStart(LoginActivity.this, userId);
                 finish();
             } else {
                 System.out.println("没成功啊亲");
@@ -59,6 +71,8 @@ public class LoginActivity extends AppCompatActivity {
         countEdit = (EditText) findViewById(R.id.edit_login_userName);
         pwdEdit = (EditText) findViewById(R.id.edit_login_pwd);
 
+        helper = new MySqliteOpenHelper(LoginActivity.this, dbName, null, version);
+        db = helper.getWritableDatabase();
 
         //登陆按钮点击事件
         loginBtn.setOnClickListener(new View.OnClickListener() {
@@ -95,12 +109,18 @@ public class LoginActivity extends AppCompatActivity {
                     HttpUtil.sendHttpRequest(url, "POST", data, new HttpCallbackListener() {
                         @Override
                         public void onFinish(String response) {
-                            UserInfoMsg UserInfo= JSON.parseObject(response,UserInfoMsg.class);
-                            userId= UserInfo.getUser().getUserId();
+                            UserInfoMsg UserInfo = JSON.parseObject(response, UserInfoMsg.class);
+                            userId = UserInfo.getUser().getUserId();
                             System.out.println(userId);
                             Message msg = new Message();
                             msg.obj = UserInfo.isResult();
                             handler.sendMessage(msg);
+
+
+                            /**
+                             * 存数据到sqlite
+                             */
+                            SaveData(account);
                         }
 
                         @Override
@@ -127,4 +147,33 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
+
+    /**
+     * 保存数据
+     */
+    public void SaveData(String account) {
+        boolean flag = false;
+        String testAccount = "select * from user where account=?";
+        Cursor c = db.rawQuery(testAccount, new String[]{account});
+        c.getColumnCount();
+        System.out.println("c = " + c);
+        while (c.moveToFirst()) {
+            flag = true;
+        }
+        c.close();
+        if (!flag) {
+            String sql = "insert into user values(?,?)";
+            db.execSQL(sql, new Object[]{account, password});
+        }
+    }
+
+    /**
+     * 对接账号添加
+     */
+
+    public static void actionStart(Context context) {
+        Intent i = new Intent(context, LoginActivity.class);
+        context.startActivity(i);
+    }
+
 }
