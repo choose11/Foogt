@@ -62,7 +62,7 @@ public class SearchUserDataServlet extends HttpServlet {
 				Integer.parseInt(userId));
 		String json = JSON.toJSONString(user);
 		out.print(json);
-		System.out.println(json);
+		System.out.println("userData:"+json);
 		out.flush();
 		out.close();
 	}

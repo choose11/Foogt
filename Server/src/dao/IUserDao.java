@@ -22,6 +22,10 @@ public interface IUserDao {
 	public User searchAccount(int userId);
 
 	public boolean updateUserData(int userId, String userName, String userIntro);
+	
+	public List<User> searchFans(int userId, int pageSize, int page);
+
+	public List<User> searchFocus(int userId, int pageSize, int page);
 
 	public boolean insertTUserRelation(int cuid, int fuid, int type);
 }

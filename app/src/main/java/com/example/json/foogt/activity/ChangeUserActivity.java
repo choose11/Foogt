@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
+import com.example.json.foogt.ActivityCollector.ActivityCollector;
 import com.example.json.foogt.R;
 import com.example.json.foogt.Sqlite.MySqliteOpenHelper;
 import com.example.json.foogt.entity.User;
@@ -48,6 +49,7 @@ public class ChangeUserActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_user);
+        ActivityCollector.addActivity(this);
         userlv = (ListView) findViewById(R.id.lv_changeUser_user);
         quitBtn = (Button) findViewById(R.id.btn_change_user_quit);
         addBtn = (Button) findViewById(R.id.btn_change_user_add);
@@ -119,9 +121,10 @@ public class ChangeUserActivity extends AppCompatActivity {
      */
     private void getAccount(int userId) {
 
-        String url = IConst.SERVLET_ADDR + "LoginServlet";
-        String data = "userId=" + userId;
-        HttpUtil.sendHttpRequest(url, "GET", data, new HttpCallbackListener() {
+        String url = IConst.SERVLET_ADDR + "SearchUserAccount";
+        String data = "userId=" + userId+"";
+        // TODO: 2016/1/3 "post可以  GET不行（服务器java.lang.NumberFormatException: null）userd值不对"
+        HttpUtil.sendHttpRequest(url, "POST", data, new HttpCallbackListener() {
             @Override
             public void onFinish(String response) {
                 User user = Utility.handleUserAccountResultResponse(response);
@@ -147,8 +150,9 @@ public class ChangeUserActivity extends AppCompatActivity {
      */
     private void judgeNext(String account) {
         if (!checkOtherUser(account)) {
+            ActivityCollector.finishAll();
             LoginActivity.actionStart(ChangeUserActivity.this);
-            finish();
+
         } else {
             loginNext(account);
         }
@@ -167,9 +171,8 @@ public class ChangeUserActivity extends AppCompatActivity {
                         UserInfoMsg UserInfo = JSON.parseObject(response, UserInfoMsg.class);
                         int userId = UserInfo.getUser().getUserId();
                         Toast.makeText(ChangeUserActivity.this, userId + "" + "已登陆", Toast.LENGTH_LONG).show();
+                        ActivityCollector.finishAll();
                         MenuActivity.actionStart(ChangeUserActivity.this, userId);
-                        finish();
-                        // TODO: 2016/1/1 待测试多次登陆后的界面回退
                     }
                 });
             }
@@ -177,7 +180,6 @@ public class ChangeUserActivity extends AppCompatActivity {
 
             @Override
             public void onError(Exception e) {
-                e.printStackTrace();
                 LogUtil.e(TAG, e.toString());
                 runOnUiThread(new Runnable() {
                     @Override
@@ -209,21 +211,19 @@ public class ChangeUserActivity extends AppCompatActivity {
      */
     private void loginNext(String account) {
 
-        deleteOldUser(account);
+        //deleteOldUser(account);
 
         String sql = "select * from user";
         Cursor c = db.rawQuery(sql, null);
 
-        while (c.moveToNext()) {
-            for (int i = 0; i >= 1; i++) {
+
+        while (c.moveToFirst()) {
                 String account1 = c.getString(c.getColumnIndex("account"));
                 String pwd = c.getString(c.getColumnIndex("pwd"));
                 String url = IConst.SERVLET_ADDR + "LoginServlet";
                 System.out.println("url = " + url);
                 String data = "username=" + account1 + "&" + "password=" + pwd;
                 reLogin(url, data);
-
-            }
             break;
         }
         c.close();

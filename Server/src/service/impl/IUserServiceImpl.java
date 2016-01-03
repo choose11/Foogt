@@ -90,8 +90,26 @@ public class IUserServiceImpl implements IUserService {
 	 */
 	@Override
 	public User searchAccount(int userId) {
-		
+
 		return dao.searchAccount(userId);
+	}
+
+	/**
+	 * seatch focus
+	 */
+	@Override
+	public List<User> searchFocus(int userId, int pageSize, int page) {
+		
+		return dao.searchFocus(userId,  pageSize,  page);
+	}
+
+	/**
+	 *search fans 
+	 */
+	@Override
+	public List<User> searchFans(int userId, int pageSize, int page) {
+
+		return dao.searchFans(userId,  pageSize,  page);
 	}
 
 	/**
@@ -114,9 +132,10 @@ public class IUserServiceImpl implements IUserService {
 		// System.out.println(string);
 		// }
 		// System.out.println(i.searchData(2).getUsername()+" : "+i.searchData(2).getUserIntro());
-		System.out.println(i.searchData(10).getUsername() + " : "
-				+ i.searchData(10).getUserIntro());
+		//System.out.println(i.searchData(10).getUsername() + " : "
+		//		+ i.searchData(10).getUserIntro());
 		// System.out.println(i.updateUserData(12, "张三", "今天写了好多啊"));
+		
 	}
 
 }

@@ -24,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.json.foogt.ActivityCollector.ActivityCollector;
 import com.example.json.foogt.R;
 import com.example.json.foogt.entity.User;
 import com.example.json.foogt.fragment.CommentFragment;
@@ -57,6 +58,7 @@ public class MenuActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
 
+        ActivityCollector.addActivity(this);
 
         userId = getIntent().getIntExtra("userId", -1);
         //userId=1;

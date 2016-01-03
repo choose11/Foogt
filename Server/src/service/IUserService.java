@@ -22,4 +22,8 @@ public interface IUserService {
 	public boolean updateUserData(int userId, String userName, String userIntro);
 	
 	public boolean insertTUserRelation(int cuid,int fuid);
+	
+	public List<User> searchFocus(int userId, int pageSize, int page);
+	
+	public List<User> searchFans(int userId, int pageSize, int page);
 }
