@@ -239,6 +239,66 @@ public class IUserDaoImpl implements IUserDao {
 	}
 
 	/**
+	 * search focus
+	 */
+	public List<User> searchFocus(int userId, int pageSize, int page) {
+		List<User> focus = new ArrayList<User>();
+		Connection conn = new ConnectionOracle().getConnection();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = "select ui.user_id,ui.user_name,ui.user_intro from t_user_info ui where ui.user_id in( select follow_id from(select rownum rn,follow_id from( select follow_id from (select follow_id from t_user_relation  where user_id =? and type=1 order by follow_id desc) where rownum<=? ) ) where rn>?)";
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, userId);
+			pstmt.setInt(2, (page + 1) * pageSize);
+			pstmt.setInt(3, page * pageSize);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				int uid = rs.getInt(1);
+				String userName = rs.getString(2);
+				String userInfo = rs.getString(3);
+				User user = new User(uid, userName, userInfo);
+				focus.add(user);
+			}
+		} catch (SQLException e) {
+			LogUtil.e(e);
+		} finally {
+			close(conn, pstmt, rs);
+		}
+		return focus;
+	}
+
+	/**
+	 * search fans
+	 */
+	public List<User> searchFans(int userId, int pageSize, int page) {
+		List<User> fans = new ArrayList<User>();
+		Connection conn = new ConnectionOracle().getConnection();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = "select ui.user_id,ui.user_name,ui.user_intro from t_user_info ui where   ui.user_id in(select user_id from (select rownum rn,user_id from( select user_id  from (select user_id from t_user_relation  where follow_id =? and type=0 order by user_id desc) where rownum<=? )	)	where rn>?)";
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, userId);
+			pstmt.setInt(2, (page + 1) * pageSize);
+			pstmt.setInt(3, page * pageSize);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				int uid = rs.getInt(1);
+				String userName = rs.getString(2);
+				String userInfo = rs.getString(3);
+				User user = new User(uid, userName, userInfo);
+				fans.add(user);
+			}
+		} catch (SQLException e) {
+			LogUtil.e(e);
+		} finally {
+			close(conn, pstmt, rs);
+		}
+		return fans;
+	}
+
+	/**
 	 * edit user data
 	 * 
 	 * @param conn
@@ -264,6 +324,37 @@ public class IUserDaoImpl implements IUserDao {
 				int focusCount = rs.getInt(6);
 				user = new User(uid, userName, userIntro, msgCount, fansCount,
 						focusCount);
+			}
+		} catch (Exception e) {
+			LogUtil.e(e);
+		} finally {
+			close(conn, pstmt, rs);
+		}
+
+		return user;
+	}
+
+	/**
+	 * search account and userId
+	 * 
+	 * @param conn
+	 * @param pstmt
+	 * @param rs
+	 */
+	public User searchAccount(int userId) {
+		Connection conn = new ConnectionOracle().getConnection();
+		PreparedStatement pstmt = null;
+		String sql = "select account,user_id from t_user_account where user_id =?";
+		ResultSet rs = null;
+		User user = null;
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, userId);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				String account = rs.getString(1);
+				int uid = rs.getInt(2);
+				user = new User(account, uid);
 			}
 		} catch (Exception e) {
 			LogUtil.e(e);
@@ -371,7 +462,7 @@ public class IUserDaoImpl implements IUserDao {
 			int i = ps.executeUpdate();
 			return true;
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 			return false;
 		} finally {

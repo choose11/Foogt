@@ -57,7 +57,7 @@ public class Utility {
             LogUtil.e(TAG, e.toString());
         }
         return u;
-    }//jsonObject.getString("account")--这行保留
+    }
 
     public static User handleUserDataResultResponse(String response) {
         User u = null;
@@ -65,6 +65,19 @@ public class Utility {
             JSONObject jsonObject = new JSONObject(response);
             u = new User(jsonObject.getInt("userId"),jsonObject.getString("username"),
                     jsonObject.getString("userIntro"));
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+            LogUtil.e(TAG, e.toString());
+        }
+        return u;
+    }
+
+    public static User handleUserAccountResultResponse(String response) {
+        User u = null;
+        try {
+            JSONObject jsonObject = new JSONObject(response);
+            u = new User(jsonObject.getString("account"),jsonObject.getInt("userId"));
 
         } catch (JSONException e) {
             e.printStackTrace();

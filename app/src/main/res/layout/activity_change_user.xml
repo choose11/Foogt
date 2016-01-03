@@ -5,28 +5,35 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:weightSum="1"
     android:padding="5sp"
+    android:paddingBottom="5sp"
     android:paddingLeft="5sp"
-    android:paddingTop="5sp"
     android:paddingRight="5sp"
-    android:paddingBottom="5sp">
+    android:paddingTop="5sp"
+    android:weightSum="1">
 
     <ListView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
         android:id="@+id/lv_changeUser_user"
-        android:layout_gravity="center_horizontal"
-        />
-
-    <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0.4"
-        android:text="@string/exit_account"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="0.97"/>
+
+    <Button
+        android:id="@+id/btn_change_user_add"
+        android:layout_width="match_parent"
+        android:layout_height="50sp"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/add_new_user"
+        android:background="#00ffffff"/>
+
+    <Button
         android:id="@+id/btn_change_user_quit"
-        android:textSize="20sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:background="#e3e1e1"
-        android:textColor="#fb2b32"/>
+        android:text="@string/exit_account"
+        android:textColor="#fb2b32"
+        android:textSize="20sp"/>
 
 </LinearLayout>

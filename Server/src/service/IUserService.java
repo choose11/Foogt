@@ -17,7 +17,13 @@ public interface IUserService {
 
 	public User searchData(int userId);
 
+	public User searchAccount(int userId);
+
 	public boolean updateUserData(int userId, String userName, String userIntro);
 	
 	public boolean insertTUserRelation(int cuid,int fuid);
+	
+	public List<User> searchFocus(int userId, int pageSize, int page);
+	
+	public List<User> searchFans(int userId, int pageSize, int page);
 }

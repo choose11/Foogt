@@ -10,6 +10,7 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -23,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.json.foogt.ActivityCollector.ActivityCollector;
 import com.example.json.foogt.R;
 import com.example.json.foogt.entity.User;
 import com.example.json.foogt.fragment.CommentFragment;
@@ -30,17 +32,23 @@ import com.example.json.foogt.fragment.HomeFragment;
 import com.example.json.foogt.util.HttpCallbackListener;
 import com.example.json.foogt.util.HttpUtil;
 import com.example.json.foogt.util.IConst;
+import com.example.json.foogt.util.LogUtil;
 import com.example.json.foogt.util.Utility;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.net.ssl.ManagerFactoryParameters;
 
 public class MenuActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private ImageView dataEditImg;
     private int userId;
-    private TextView fansTxt, focusTxt, userNameTxt, UserIntroMin;
+
+    private TextView fansTxt, focusTxt, countMsgTxt, userNameTxt, UserIntroMin;
+    static final int NUM_ITEMS = 2;
+
     CollectionPagerAdapter mPagerAdapter;
     ViewPager mViewPager;
 
@@ -50,9 +58,10 @@ public class MenuActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
 
+        ActivityCollector.addActivity(this);
 
         userId = getIntent().getIntExtra("userId", -1);
-
+        //userId=1;
 
         /*
         Toolbar最上层的一栏
@@ -116,13 +125,17 @@ public class MenuActivity extends AppCompatActivity
         dataEditImg = (ImageView) headerView.findViewById(R.id.img_user_data_edit);
         fansTxt = (TextView) headerView.findViewById(R.id.txt_user_fans);
         focusTxt = (TextView) headerView.findViewById(R.id.txt_user_focus);
+        countMsgTxt = (TextView) headerView.findViewById(R.id.txt_user_count);
         userNameTxt = (TextView) headerView.findViewById(R.id.txt_menu_userName);
         UserIntroMin = (TextView) headerView.findViewById(R.id.txt_menu_userIntro);
+
 
         OnDrawerItemClickListener listener = new OnDrawerItemClickListener();
         dataEditImg.setOnClickListener(listener);
         fansTxt.setOnClickListener(listener);
         focusTxt.setOnClickListener(listener);
+        countMsgTxt.setOnClickListener(listener);
+
 
     }
 
@@ -274,19 +287,35 @@ public class MenuActivity extends AppCompatActivity
                  */
                 case R.id.img_user_data_edit:
                     DataEditActivity.actionStart(MenuActivity.this, userId);
+                    /**
+                     * 重新获取到drawer 在跳转之后关闭侧面菜单，详见onNavigationItemSelected
+                     */
+                    DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+                    drawer.closeDrawer(GravityCompat.START);
+                    break;
+                /**
+                 * 点击进入自己的微博
+                 *
+                 */
+                case R.id.txt_user_count:
+                    UserBlogActivity.actionStart(MenuActivity.this,userId);
+                    LogUtil.i("hehehe", "sdfsdfsfas");
                     break;
                 /**
                  * 点击进入粉丝界面
                  */
                 case R.id.txt_user_fans:
                     FansOrFocusActivity.actionStart(MenuActivity.this, userId, "粉丝");
+                    LogUtil.i("fensi", "sdfsdfsfas");
                     break;
                 /**
                  * 点击进入关注界面
                  */
                 case R.id.txt_user_focus:
                     FansOrFocusActivity.actionStart(MenuActivity.this, userId, "关注");
+                    LogUtil.i("guanzhu", "sdfsdfsfas");
                     break;
+
             }
 
         }
@@ -304,7 +333,7 @@ public class MenuActivity extends AppCompatActivity
                 User user = Utility.handleUserInfoResultResponse(response);
                 final String name = user.getUsername();
                 final String intro = user.getUserIntro();
-                System.out.println("intro = " + intro.length());
+                final int msgCount = user.getMsgCount();
                 final int fansCount = user.getFansCount();
                 final int focusCount = user.getFocusCount();
                 runOnUiThread(new Runnable() {
@@ -319,6 +348,11 @@ public class MenuActivity extends AppCompatActivity
                             focusTxt.setText("关注:" + " " + (focusCount / 10000) + "万");
                         } else {
                             focusTxt.setText("关注:" + " " + focusCount);
+                        }
+                        if (msgCount > 10000) {
+                            countMsgTxt.setText("微博:" + " " + (msgCount / 10000) + "万");
+                        } else {
+                            countMsgTxt.setText("微博:" + " " + msgCount);
                         }
                         userNameTxt.setText(name);
                         if (intro.length() > 40) {

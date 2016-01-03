@@ -21,70 +21,64 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.json.foogt.R;
 import com.example.json.foogt.adapter.MBlogAdapter;
-import com.example.json.foogt.adapter.MFriendAdapter;
 import com.example.json.foogt.entity.BlogInfo;
-import com.example.json.foogt.entity.User;
 import com.example.json.foogt.util.IConst;
 import com.example.json.foogt.util.LogUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class FansOrFocusActivity extends AppCompatActivity {
+public class UserBlogActivity extends AppCompatActivity {
 
-    private ActionBar bar;
+    private static final String TAG = "MyBlog";
     private int userId;
-    private String type = "";
-    private ArrayList<User> list;
+    private ArrayList<BlogInfo> list;
     private RecyclerView rv;
     private SwipeRefreshLayout sw;
-    private MFriendAdapter adapter;
+    private MBlogAdapter adapter;
     private RequestQueue mQueue;
     private int currentPage;
     private int lastVisibleItem;
     private LinearLayoutManager layoutManager;
-    private boolean havaMoreFriends;
-    private String TAG = "FansOrFocusActivity";
-
+    private boolean havaMoreBlogs;
+    private ActionBar bar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_fans_or_focus);
+        setContentView(R.layout.activity_user_blog);
 
         bar = getSupportActionBar();
+
         if (bar != null) {
             bar.setDisplayHomeAsUpEnabled(true);
             bar.setDisplayShowHomeEnabled(true);
             bar.setHomeButtonEnabled(true);
-
+            bar.setTitle(R.string.user_own_blog);
         }
 
-        Intent i = getIntent();
-        userId = i.getIntExtra("UserId", userId);
-
-        if (getIntent().getStringExtra("Type").equals("粉丝")) {
-            bar.setTitle(R.string.fans);
-        } else {
-            bar.setTitle(R.string.focus);
-        }
+        userId = getIntent().getIntExtra("userId", -1);
+        LogUtil.i("userId",userId+"" );
+        //userId = 1;
 
         mQueue = Volley.newRequestQueue(this);
-        havaMoreFriends = true;
+        havaMoreBlogs = true;
 
-        rv = (RecyclerView) findViewById(R.id.rv_fansOrFocus_intro);
-        sw = (SwipeRefreshLayout) findViewById(R.id.layout_userFansOrFocus_swipe);
+        rv = (RecyclerView) findViewById(R.id.rv_User_msg);
+        sw = (SwipeRefreshLayout) findViewById(R.id.layout_userBlog_swipe);
 
         layoutManager = new LinearLayoutManager(this);
         rv.setLayoutManager(layoutManager);
         list = new ArrayList<>();
-        adapter = new MFriendAdapter(list);
+        adapter = new MBlogAdapter(list);
         rv.setAdapter(adapter);
+
 
         rv.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
+
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                     lastVisibleItem = layoutManager.findLastVisibleItemPosition();
                     if (lastVisibleItem + 1 == adapter.getItemCount()) {
@@ -93,6 +87,7 @@ public class FansOrFocusActivity extends AppCompatActivity {
                 }
             }
         });
+
         sw.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -109,35 +104,29 @@ public class FansOrFocusActivity extends AppCompatActivity {
     public void load(final int page) {
         if (page == 0) {
             list.clear();
-            havaMoreFriends = true;
+            havaMoreBlogs = true;
         }
-        if (!havaMoreFriends) {
+        if (!havaMoreBlogs) {
             return;
         }
         if (!sw.isRefreshing()) {
             sw.setRefreshing(true);
         }
 
-        String url ;
-        if (getIntent().getStringExtra("Type").equals("粉丝")) {
-            url = IConst.SERVLET_ADDR + "GetFans?userId=" + userId + "&page=" + page;
-        } else {
-            url = IConst.SERVLET_ADDR + "GetFocus?userId=" + userId + "&page=" + page;
-        }
-
+        String url = IConst.SERVLET_ADDR + "GetUserOwnBlogs?userId=" + userId + "&page=" + page;
         StringRequest stringRequest = new StringRequest(url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                List<User> results = JSON.parseObject(response, new TypeReference<List<User>>() {
+                List<BlogInfo> results = JSON.parseObject(response, new TypeReference<List<BlogInfo>>() {
                 });
                 LogUtil.i(TAG, results.size() + "");
                 if (results.size() > 0) {
                     currentPage = page;
-                    for (User b : results) {
+                    for (BlogInfo b : results) {
                         list.add(b);
                     }
                 } else {
-                    havaMoreFriends = false;
+                    havaMoreBlogs = false;
                 }
                 runOnUiThread(new Runnable() {
                     @Override
@@ -155,7 +144,7 @@ public class FansOrFocusActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(FansOrFocusActivity.this, R.string.http_fail, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(UserBlogActivity.this, R.string.http_fail, Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -163,20 +152,9 @@ public class FansOrFocusActivity extends AppCompatActivity {
         mQueue.add(stringRequest);
     }
 
-    /**
-     * 登录后对接
-     */
-
-    public static void actionStart(Context context, int userId, String type) {
-        Intent i = new Intent(context, FansOrFocusActivity.class);
-        i.putExtra("UserId", userId);
-        i.putExtra("Type", type);
-        context.startActivity(i);
-    }
-
     /*
- 点击按钮结束当前界面
-  */
+  点击按钮结束当前界面
+   */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -186,5 +164,15 @@ public class FansOrFocusActivity extends AppCompatActivity {
         }
         //return super.onOptionsItemSelected(item);
         return true;
+    }
+
+    /**
+     * 登录后对接
+     */
+
+    public static void actionStart(Context context, int userId) {
+        Intent i = new Intent(context, UserBlogActivity.class);
+        i.putExtra("userId", userId);
+        context.startActivity(i);
     }
 }

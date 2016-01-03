@@ -50,7 +50,7 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
 
         bar = getSupportActionBar();
-        //// TODO: 2015/12/25 warning
+
         if(bar!=null){
             bar.setDisplayHomeAsUpEnabled(true);
             bar.setDisplayShowHomeEnabled(true);

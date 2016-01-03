@@ -2,18 +2,21 @@ package servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.JSONArray;
+
 import com.alibaba.fastjson.JSON;
 
 import entity.User;
 import factory.Factory;
 
-public class SearchUserDataServlet extends HttpServlet {
+public class GetFans extends HttpServlet {
 
 	/**
 	 * The doGet method of the servlet. <br>
@@ -57,12 +60,16 @@ public class SearchUserDataServlet extends HttpServlet {
 		request.setCharacterEncoding("UTF-8");
 
 		PrintWriter out = response.getWriter();
-		String userId = request.getParameter("userId");
-		User user = Factory.getIUserService().searchData(
-				Integer.parseInt(userId));
-		String json = JSON.toJSONString(user);
-		out.print(json);
-		System.out.println("userData:"+json);
+		String UserId = request.getParameter("userId");
+		String page = request.getParameter("page");
+		List<User> user = Factory.getIUserService().searchFans(Integer.parseInt(UserId),  10, Integer.parseInt(page) );
+
+		JSONArray jsonArray = new JSONArray();
+		
+		for (User u : user) {
+			jsonArray.put(JSON.toJSON(u));
+		}
+		out.write(jsonArray.toString());
 		out.flush();
 		out.close();
 	}
