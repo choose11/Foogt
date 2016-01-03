@@ -38,7 +38,6 @@ git log //È·ÈÏdevelopÀïÃæµÄcommitÒÑ¾­±»ºÏ²¢µ½×Ô¼ºµÄcommitÀúÊ·ÖÐ£¬×Ô¼ºµÄÐÂcommitÊ
 git checkout develop
 git merge --no-ff myBranch
 git push origin develop
-//Òª²»ÒªÉ¾µô×Ô¼ºµÄ·ÖÖ§È»ºó»ùÓÚdevelopµÄ×îÐÂcommitÖØ½¨£¬´ý²âÊÔ
  ```
 5. [oracle ·ÖÒ³ Ð§ÂÊ](http://blog.csdn.net/sfdev/article/details/2801712)
  > ×¢Òâ£ºµ±ROWNUM×÷Îª²éÑ¯Ìõ¼þÊ±£¬ËûÊÇÔÚorder byÖ®Ç°Ö´ÐÐ£¬ËùÒÔÒªÌØ±ðÐ¡ÐÄ£»
