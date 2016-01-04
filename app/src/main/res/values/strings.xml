@@ -43,5 +43,10 @@
     <string name="weibo">微博</string>
     <string name="user_own_blog">原创微博</string>
     <string name="add_new_user">添加一个新账户</string>
+    <string name="collection">collection</string>
+    <string name="repost">转发</string>
+    <string name="submit">提交</string>
+    <string name="comment_success">评论成功</string>
+    <string name="comment_failed">评论失败</string>
 
 </resources>

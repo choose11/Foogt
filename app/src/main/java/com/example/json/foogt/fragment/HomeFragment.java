@@ -19,10 +19,12 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.json.foogt.R;
+import com.example.json.foogt.activity.CommentBlogActivity;
 import com.example.json.foogt.adapter.MBlogAdapter;
 import com.example.json.foogt.entity.BlogInfo;
 import com.example.json.foogt.util.IConst;
 import com.example.json.foogt.util.LogUtil;
+import com.example.json.foogt.util.Utility;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,17 +35,27 @@ import java.util.List;
  * Use the {@link HomeFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class HomeFragment extends Fragment implements Response.Listener<String>, Response.ErrorListener, SwipeRefreshLayout.OnRefreshListener {
+public class HomeFragment extends Fragment implements
+        Response.ErrorListener,
+        SwipeRefreshLayout.OnRefreshListener,
+        MBlogAdapter.OnItemClickListener {
     private static final String ARG_USER_ID = "userId";
+    private static final String ARG_TYPE = "type";
     private static final String TAG = "HomeFragment";
+    public static final int HOME = 0;
+    public static final int COLLECTION = 1;
+
     private int userId;
+    private String loadBaseUrl;
+    private int currentPage;
+    private int lastVisibleItem;
+    private int type;
+
     private RecyclerView rv;
     private SwipeRefreshLayout sw;
     private MBlogAdapter adapter;
     private ArrayList<BlogInfo> list;
     private RequestQueue mQueue;
-    private int currentPage;
-    private int lastVisibleItem;
     private LinearLayoutManager layoutManager;
 
     private OnFragmentInteractionListener mListener;
@@ -55,10 +67,11 @@ public class HomeFragment extends Fragment implements Response.Listener<String>,
      * @param userId UserId of current User
      * @return A new instance of fragment HomeFragment.
      */
-    public static HomeFragment newInstance(int userId) {
+    public static HomeFragment newInstance(int userId, int type) {
         HomeFragment fragment = new HomeFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_USER_ID, userId);
+        args.putInt(ARG_TYPE, type);
         fragment.setArguments(args);
         return fragment;
     }
@@ -72,6 +85,12 @@ public class HomeFragment extends Fragment implements Response.Listener<String>,
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             userId = getArguments().getInt(ARG_USER_ID);
+            type = getArguments().getInt(ARG_TYPE);
+            if (type == HOME) {
+                loadBaseUrl = IConst.SERVLET_ADDR + "GetBlogs";
+            } else if (type == COLLECTION) {
+                loadBaseUrl = IConst.SERVLET_ADDR + "GetCollections";
+            }
         }
         mQueue = Volley.newRequestQueue(getContext());
     }
@@ -88,7 +107,11 @@ public class HomeFragment extends Fragment implements Response.Listener<String>,
         layoutManager = new LinearLayoutManager(getContext());
         rv.setLayoutManager(layoutManager);
         list = new ArrayList<>();
-        adapter = new MBlogAdapter(list);
+        if (type == HOME) {
+            adapter = new MBlogAdapter(list, this);
+        } else {
+            adapter = new MBlogAdapter(list, null);
+        }
         rv.setAdapter(adapter);
         rv.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -120,7 +143,6 @@ public class HomeFragment extends Fragment implements Response.Listener<String>,
         }
     }
 
-
     @Override
     public void onDetach() {
         super.onDetach();
@@ -128,30 +150,28 @@ public class HomeFragment extends Fragment implements Response.Listener<String>,
     }
 
     @Override
-    public void onResponse(String response) {
-        List<BlogInfo> results = JSON.parseObject(response, new TypeReference<List<BlogInfo>>() {
-        });
-        LogUtil.i(TAG, "results size" + results.size());
-        if (results.size() > 0) {
-            currentPage++;
-            list.addAll(results);
-            LogUtil.d(TAG, "list size" + list.size());
-        } else {
-            adapter.setHaveMoreBlogs(false);
-        }
-        adapter.notifyDataSetChanged();
-        hideProgress();
-        //auto load more, until "Loading" TAG is not visible on screen or no more blog to load.
-        //if LastVisibleItemPosition == LastCompletelyVisibleItemPosition,"Loading" TAG may visible.
-        if (layoutManager.findLastVisibleItemPosition() == layoutManager.findLastCompletelyVisibleItemPosition()) {
-            load(currentPage);
-        }
-    }
-
-    @Override
     public void onErrorResponse(VolleyError error) {
         hideProgress();
         Toast.makeText(getContext(), R.string.http_fail, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onCollectClick(int msgId) {
+        collectBlog(msgId);
+    }
+
+    @Override
+    public void onCommentClick(BlogInfo msg) {
+        LogUtil.d(TAG, "onCommentClick");
+        for(BlogInfo b:list){
+            LogUtil.d(TAG,"BlogInfo"+ b.getAuthorId());
+        }
+        CommentBlogActivity.actionStart(getActivity(), msg, userId);
+    }
+
+    @Override
+    public void onRepostClick(BlogInfo msg) {
+
     }
 
     /**
@@ -179,9 +199,16 @@ public class HomeFragment extends Fragment implements Response.Listener<String>,
         if (!adapter.isHaveMoreBlogs()) {
             return;
         }
-        String url = IConst.SERVLET_ADDR + "GetBlogs?userId=" + userId + "&page=" + page;
+        String url = loadBaseUrl + "?userId=" + userId + "&page=" + page;
         LogUtil.d(TAG, url);
-        StringRequest stringRequest = new StringRequest(url, this, this);
+        StringRequest stringRequest = new StringRequest(url, new GetBlogsListener(), this);
+        mQueue.add(stringRequest);
+    }
+
+    private void collectBlog(int msgId) {
+        LogUtil.d(TAG, "msgID=" + msgId);
+        String url = IConst.SERVLET_ADDR + "Collection?uid=" + userId + "&msgId=" + msgId;
+        StringRequest stringRequest = new StringRequest(url, new CollectListener(), this);
         mQueue.add(stringRequest);
     }
 
@@ -191,5 +218,42 @@ public class HomeFragment extends Fragment implements Response.Listener<String>,
 
     private void hideProgress() {
         sw.setRefreshing(false);
+    }
+
+
+    public class GetBlogsListener implements Response.Listener<String> {
+
+        @Override
+        public void onResponse(String response) {
+            List<BlogInfo> results = JSON.parseObject(response, new TypeReference<List<BlogInfo>>() {
+            });
+            LogUtil.i(TAG, "results size" + results.size());
+            if (results.size() > 0) {
+                currentPage++;
+                list.addAll(results);
+                LogUtil.d(TAG, "list size" + list.size());
+            } else {
+                adapter.setHaveMoreBlogs(false);
+            }
+            adapter.notifyDataSetChanged();
+            hideProgress();
+            //auto load more, until "Loading" TAG is not visible on screen or no more blog to load.
+            //if LastVisibleItemPosition == LastCompletelyVisibleItemPosition,"Loading" TAG may visible.
+            if (layoutManager.findLastVisibleItemPosition() == layoutManager.findLastCompletelyVisibleItemPosition()) {
+                load(currentPage);
+            }
+        }
+    }
+
+    private class CollectListener implements Response.Listener<String> {
+        @Override
+        public void onResponse(String response) {
+            boolean result = Utility.handleBooleanResultResponse(response);
+            if (result) {
+                LogUtil.d(TAG, "Collect Success");
+            } else {
+                LogUtil.d(TAG, "Collect Failed");
+            }
+        }
     }
 }

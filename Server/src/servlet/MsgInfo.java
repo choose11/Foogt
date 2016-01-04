@@ -12,8 +12,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import service.IBlogService;
+import service.IUserService;
+
 import dao.impl.IUserDaoImpl;
 import entity.msgInfo;
+import factory.Factory;
 
 public class MsgInfo extends HttpServlet {
 
@@ -64,15 +68,15 @@ public class MsgInfo extends HttpServlet {
 		System.out.println(timeT);	
 //		 insert data and get msgId
 		msgInfo m=new msgInfo(userId, content, type, commentCount, transferCount, timeT);
-		IUserDaoImpl i=new IUserDaoImpl();
-	msgInfo re=i.insertTMsgInfo(m);
-	int msgId=re.getMsgId();
-	//select follow_id 
-	IUserDaoImpl i1=new IUserDaoImpl();
-	List<Integer>l=  i1.selectFollowId(userId);
+		IBlogService blogService = Factory.getIBlogService();
+		IUserService userService = Factory.getIUserService();
+		msgInfo re = blogService.insertTMsgInfo(m);
+		int msgId=re.getMsgId();
+		//select follow_id 
+		List<Integer>l=  userService.selectFollowId(userId);
 		for (int j = 0; j < l.size(); j++) {
 			int followId= l.get(j);
-		boolean b=	i1.insertTUserMsgIndex(followId, userId, msgId, timeT);
+		boolean b=	blogService.insertTUserMsgIndex(followId, userId, msgId, timeT);
 			if (b==true) {
 				System.out.println("成功");
 				continue;

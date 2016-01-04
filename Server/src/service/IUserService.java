@@ -26,4 +26,6 @@ public interface IUserService {
 	public List<User> searchFocus(int userId, int pageSize, int page);
 	
 	public List<User> searchFans(int userId, int pageSize, int page);
+	
+	public List<Integer> selectFollowId(int userId);
 }

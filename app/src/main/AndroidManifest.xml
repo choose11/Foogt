@@ -1,44 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="com.example.json.foogt"
-          xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.json.foogt" >
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".activity.LoginActivity">
+        android:theme="@style/AppTheme" >
+        <activity android:name=".activity.LoginActivity" >
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.RegisterActivity">
+        <activity android:name=".activity.RegisterActivity" >
         </activity>
-        <activity android:name=".activity.DataEditActivity">
+        <activity android:name=".activity.DataEditActivity" >
         </activity>
-        <activity android:name=".activity.ChangeUserActivity">
+        <activity android:name=".activity.ChangeUserActivity" >
         </activity>
-        <activity android:name=".activity.SearchActivity">
+        <activity android:name=".activity.SearchActivity" >
         </activity>
-        <activity android:name=".activity.SendBlogActivity">
+        <activity android:name=".activity.SendBlogActivity" >
         </activity>
         <activity
             android:name=".activity.MenuActivity"
             android:label="@string/title_activity_menu"
-            android:theme="@style/AppTheme.NoActionBar">
-
+            android:theme="@style/AppTheme.NoActionBar" >
         </activity>
-        <activity android:name=".activity.CollectionActivity">
+        <activity android:name=".activity.CollectionActivity" >
         </activity>
-        <activity android:name=".activity.FansOrFocusActivity">
+        <activity android:name=".activity.FansOrFocusActivity" >
         </activity>
-        <activity android:name=".activity.UserBlogActivity">
-
+        <activity android:name=".activity.UserBlogActivity" >
+        </activity>
+        <activity android:name=".activity.CommentBlogActivity" >
         </activity>
     </application>
 

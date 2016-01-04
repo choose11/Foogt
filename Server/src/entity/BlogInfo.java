@@ -6,40 +6,61 @@ import java.util.Date;
  * Created by Mzz on 2015/12/28.
  */
 public class BlogInfo {
-    private String username;
-    private Date postTime;
-    private String msg;
+	private int authorId;
+	private int msgId;
+	private String username;
+	private Date postTime;
+	private String msg;
 
-    public BlogInfo() {
-    }
+	public BlogInfo() {
+	}
 
-    public BlogInfo(String username, Date postTime, String msg) {
-        this.username = username;
-        this.postTime = postTime;
-        this.msg = msg;
-    }
+	public BlogInfo(int msgId, String username, Date postTime, String msg,
+			int authorId) {
+		this.msgId = msgId;
+		this.username = username;
+		this.postTime = postTime;
+		this.msg = msg;
+		this.authorId = authorId;
+	}
 
-    public Date getPostTime() {
-        return postTime;
-    }
+	public Date getPostTime() {
+		return postTime;
+	}
 
-    public void setPostTime(Date postTime) {
-        this.postTime = postTime;
-    }
+	public void setPostTime(Date postTime) {
+		this.postTime = postTime;
+	}
 
-    public String getUsername() {
-        return username;
-    }
+	public String getUsername() {
+		return username;
+	}
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+	public void setUsername(String username) {
+		this.username = username;
+	}
 
-    public String getMsg() {
-        return msg;
-    }
+	public String getMsg() {
+		return msg;
+	}
 
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
+	public void setMsg(String msg) {
+		this.msg = msg;
+	}
+
+	public int getMsgId() {
+		return msgId;
+	}
+
+	public void setMsgId(int msgId) {
+		this.msgId = msgId;
+	}
+
+	public int getAuthorId() {
+		return authorId;
+	}
+
+	public void setAuthorId(int authorId) {
+		this.authorId = authorId;
+	}
 }
