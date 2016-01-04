@@ -58,7 +58,7 @@ public class UserBlogActivity extends AppCompatActivity {
         }
 
         userId = getIntent().getIntExtra("userId", -1);
-        LogUtil.i("userId",userId+"" );
+        LogUtil.i("userId", userId + "");
         //userId = 1;
 
         mQueue = Volley.newRequestQueue(this);
@@ -70,7 +70,7 @@ public class UserBlogActivity extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(this);
         rv.setLayoutManager(layoutManager);
         list = new ArrayList<>();
-        adapter = new MBlogAdapter(list);
+        adapter = new MBlogAdapter(list, null);
         rv.setAdapter(adapter);
 
 

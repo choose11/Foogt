@@ -6,6 +6,8 @@ import java.util.Date;
  * Created by Mzz on 2015/12/28.
  */
 public class BlogInfo {
+    private int authorId;
+    private int msgId;
     private String username;
     private Date postTime;
     private String msg;
@@ -41,5 +43,21 @@ public class BlogInfo {
 
     public void setMsg(String msg) {
         this.msg = msg;
+    }
+
+    public int getMsgId() {
+        return msgId;
+    }
+
+    public void setMsgId(int msgId) {
+        this.msgId = msgId;
+    }
+
+    public int getAuthorId() {
+        return authorId;
+    }
+
+    public void setAuthorId(int autorId) {
+        this.authorId = autorId;
     }
 }

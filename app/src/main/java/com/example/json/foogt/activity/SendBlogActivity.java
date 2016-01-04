@@ -42,6 +42,7 @@ public class SendBlogActivity extends AppCompatActivity {
         send_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // TODO: 2016/1/4 msg length
                 content=contentEdit.getText().toString();
                 System.out.println(content);
                 SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd-hh-mm-ss");

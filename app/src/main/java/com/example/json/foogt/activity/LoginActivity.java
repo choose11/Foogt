@@ -78,29 +78,6 @@ public class LoginActivity extends AppCompatActivity {
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                new Thread() {
-//                    @Override
-//                    public void run() {
-//                        account = editText.getText().toString();
-//                        password = editText2.getText().toString();
-//                        String path = "http://10.25.246.100:8080/Foogt/servlet/LoginServlet?username=" + account + "&password=" + password + "";
-//                        System.out.println(path);
-//                        try {
-//                            URL url = new URL(path);
-//                            URLConnection conn = url.openConnection();
-//                            conn.setConnectTimeout(5000);
-//                            conn.setRequestProperty("User-Agent", "Mozilla/4.0");
-//                            InputStream is = conn.getInputStream();
-//                            BufferedReader br = new BufferedReader(new InputStreamReader(is, "utf-8"));
-//                            String result = br.readLine();
-//                            Message msg = new Message();
-//                            msg.obj = result;
-//                            handler.sendMessage(msg);
-//                        } catch (Exception e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                }.start();
                 account = countEdit.getText().toString();
                 password = pwdEdit.getText().toString();
                 if (!TextUtils.isEmpty(account) && !TextUtils.isEmpty(password)) {

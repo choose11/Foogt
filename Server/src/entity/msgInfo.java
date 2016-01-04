@@ -1,8 +1,11 @@
 package entity;
 
-import java.sql.Date;
 
 public class msgInfo {
+	public static final int NEW = 0;
+	public static final int COMMENT = 1;
+	public static final int REPOST = 2;
+	
 	private int userId;
 	private int msgId;
 	private String content;

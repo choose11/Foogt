@@ -19,14 +19,17 @@ public class IUserServiceImpl implements IUserService {
 		dao = new IUserDaoImpl();
 	}
 
+	@Override
 	public boolean changePW(User u, String newPW) {
 		return dao.changePW(u, newPW);
 	}
 
+	@Override
 	public boolean checkAccountExist(User u) {
 		return dao.checkAccountExist(u);
 	}
 
+	@Override
 	public boolean userLogin(User u) {
 		return dao.userLogin(u);
 	}
@@ -34,6 +37,7 @@ public class IUserServiceImpl implements IUserService {
 	/**
 	 * register user info first to get userId, then register account.
 	 */
+	@Override
 	public boolean userRegister(User u) {
 		if (!dao.checkAccountExist(u)) {
 			// here checked so dao don't need to check again
@@ -47,6 +51,7 @@ public class IUserServiceImpl implements IUserService {
 	/**
 	 * search user,request a List
 	 */
+	@Override
 	public List<User> searchUser(String keyword) {
 		return dao.searchUser(keyword, SEARCH_USER_LIMIT);
 	}
@@ -56,7 +61,7 @@ public class IUserServiceImpl implements IUserService {
 	 * 
 	 * @see service.IUserService#dataEdit(int)
 	 */
-
+	@Override
 	public User searchData(int userId) {
 
 		return dao.searchData(userId);
@@ -65,6 +70,7 @@ public class IUserServiceImpl implements IUserService {
 	/**
 	 * save use data
 	 */
+	@Override
 	public boolean updateUserData(int userId, String userName, String userIntro) {
 
 		return dao.updateUserData(userId, userName, userIntro);
@@ -78,13 +84,14 @@ public class IUserServiceImpl implements IUserService {
 	 * @param fuid
 	 *            focusUserId
 	 */
+	@Override
 	public boolean insertTUserRelation(int cuid, int fuid) {
 		boolean i1 = dao.insertTUserRelation(cuid, fuid, USER_RELATION_FOCUS);
 		boolean i2 = dao.insertTUserRelation(fuid, cuid, USER_RELATION_FAN);
 		// TODO: 事务
 		return i1 && i2;
 	}
-	
+
 	/**
 	 * search user account
 	 */
@@ -99,19 +106,24 @@ public class IUserServiceImpl implements IUserService {
 	 */
 	@Override
 	public List<User> searchFocus(int userId, int pageSize, int page) {
-		
-		return dao.searchFocus(userId,  pageSize,  page);
+
+		return dao.searchFocus(userId, pageSize, page);
 	}
 
 	/**
-	 *search fans 
+	 *search fans
 	 */
 	@Override
 	public List<User> searchFans(int userId, int pageSize, int page) {
 
-		return dao.searchFans(userId,  pageSize,  page);
+		return dao.searchFans(userId, pageSize, page);
 	}
 
+	@Override
+	public List<Integer> selectFollowId(int userId) {
+		return dao.selectFollowId(userId);
+	}
+	
 	/**
 	 * Test Mod
 	 * 
@@ -132,10 +144,10 @@ public class IUserServiceImpl implements IUserService {
 		// System.out.println(string);
 		// }
 		// System.out.println(i.searchData(2).getUsername()+" : "+i.searchData(2).getUserIntro());
-		//System.out.println(i.searchData(10).getUsername() + " : "
-		//		+ i.searchData(10).getUserIntro());
+		// System.out.println(i.searchData(10).getUsername() + " : "
+		// + i.searchData(10).getUserIntro());
 		// System.out.println(i.updateUserData(12, "张三", "今天写了好多啊"));
-		
+
 	}
 
 }

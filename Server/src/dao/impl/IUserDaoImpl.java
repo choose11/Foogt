@@ -14,7 +14,7 @@ import entity.User;
 import entity.msgInfo;
 
 public class IUserDaoImpl implements IUserDao {
-
+	@Override
 	public boolean changePW(User u, String newPW) {
 		Connection conn = new ConnectionOracle().getConnection();
 		PreparedStatement pstmt = null;
@@ -47,6 +47,7 @@ public class IUserDaoImpl implements IUserDao {
 	/**
 	 * @return true if account exist
 	 */
+	@Override
 	public boolean checkAccountExist(User u) {
 		Connection conn = new ConnectionOracle().getConnection();
 		PreparedStatement pstmt = null;
@@ -67,7 +68,7 @@ public class IUserDaoImpl implements IUserDao {
 		}
 		return flag;
 	}
-
+	@Override
 	public boolean userLogin(User u) {
 		Connection conn = new ConnectionOracle().getConnection();
 		PreparedStatement pstmt = null;
@@ -95,6 +96,7 @@ public class IUserDaoImpl implements IUserDao {
 	 * userId is set after userRegisterInfo() executed. so this method must
 	 * execute after userRegisterInfo()
 	 */
+	@Override
 	public boolean userRegisterAccount(User u) {
 		boolean flag = false;
 		Connection conn = new ConnectionOracle().getConnection();
@@ -120,6 +122,7 @@ public class IUserDaoImpl implements IUserDao {
 	/**
 	 * register user info first to get userId.
 	 */
+	@Override
 	public boolean userRegisterInfo(User u) {
 		boolean flag = false;
 		Connection conn = new ConnectionOracle().getConnection();
@@ -152,6 +155,7 @@ public class IUserDaoImpl implements IUserDao {
 	 * @param pstmt
 	 * @param rs
 	 */
+	@Override
 	public boolean updateUserData(int userId, String userName, String userIntro) {
 		Connection conn = new ConnectionOracle().getConnection();
 		PreparedStatement pstmt = null;
@@ -182,6 +186,7 @@ public class IUserDaoImpl implements IUserDao {
 	 * @param userName
 	 * @return userId, -1 when user not exist.
 	 */
+	@Override
 	public int getUserId(String userName) {
 		Connection conn = new ConnectionOracle().getConnection();
 		PreparedStatement pstmt = null;
@@ -211,6 +216,7 @@ public class IUserDaoImpl implements IUserDao {
 	 * @param
 	 * @param
 	 */
+	@Override
 	public List<User> searchUser(String keyword,int limit) {
 		List<User> resultUser = new ArrayList<User>();
 		Connection conn = new ConnectionOracle().getConnection();
@@ -241,6 +247,7 @@ public class IUserDaoImpl implements IUserDao {
 	/**
 	 * search focus
 	 */
+	@Override
 	public List<User> searchFocus(int userId, int pageSize, int page) {
 		List<User> focus = new ArrayList<User>();
 		Connection conn = new ConnectionOracle().getConnection();
@@ -271,6 +278,7 @@ public class IUserDaoImpl implements IUserDao {
 	/**
 	 * search fans
 	 */
+	@Override
 	public List<User> searchFans(int userId, int pageSize, int page) {
 		List<User> fans = new ArrayList<User>();
 		Connection conn = new ConnectionOracle().getConnection();
@@ -305,6 +313,7 @@ public class IUserDaoImpl implements IUserDao {
 	 * @param pstmt
 	 * @param rs
 	 */
+	@Override
 	public User searchData(int userId) {
 		Connection conn = new ConnectionOracle().getConnection();
 		PreparedStatement pstmt = null;
@@ -341,6 +350,7 @@ public class IUserDaoImpl implements IUserDao {
 	 * @param pstmt
 	 * @param rs
 	 */
+	@Override
 	public User searchAccount(int userId) {
 		Connection conn = new ConnectionOracle().getConnection();
 		PreparedStatement pstmt = null;
@@ -365,41 +375,10 @@ public class IUserDaoImpl implements IUserDao {
 		return user;
 	}
 
-	// 插入消息元并且获得msgId
-	public msgInfo insertTMsgInfo(msgInfo m) {
-		Connection conn = new ConnectionOracle().getConnection();
-		PreparedStatement ps = null;
-		ResultSet rs = null;
-		msgInfo m1 = null;
-		String sql = "insert into t_msg_info values(?,msg_id_sequence.nextval,?,?,?,?,to_date(?,'yyyy-MM-dd-HH-mi-ss'))";
-		try {
-			ps = conn.prepareStatement(sql);
-			ps.setInt(1, m.getUserId());
-			ps.setString(2, m.getContent());
-			ps.setInt(3, m.getType());
-			ps.setInt(4, m.getCommentCount());
-			ps.setInt(5, m.getTransferCount());
-			ps.setString(6, m.getTimeT());
-			System.out.println("传输完毕");
-			int i = ps.executeUpdate();
-			ps = conn
-					.prepareStatement("select msg_id_sequence.currval from dual");
-			rs = ps.executeQuery();
-			while (rs.next()) {
-				int msgId = rs.getInt(1);
-				m1 = new msgInfo(msgId);
-				System.out.println(m1.getMsgId());
-			}
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			close(conn, ps, null);
-		}
-		return m1;
-	}
+	
 
 	// select user_id from t_user_account
+	@Override
 	public User selectUserId(String username) {
 		Connection conn = new ConnectionOracle().getConnection();
 		PreparedStatement ps = null;
@@ -424,6 +403,7 @@ public class IUserDaoImpl implements IUserDao {
 	}
 
 	// select follow_id from t_user_relation
+	@Override
 	public List<Integer> selectFollowId(int userId) {
 		List<Integer> l = new ArrayList<Integer>();
 		Connection conn = new ConnectionOracle().getConnection();
@@ -447,29 +427,7 @@ public class IUserDaoImpl implements IUserDao {
 		return l;
 	}
 
-	// insert into t_user_msg_index values()
-	public boolean insertTUserMsgIndex(int followId, int authorId, int msgId,
-			String timeT) {
-		Connection conn = new ConnectionOracle().getConnection();
-		PreparedStatement ps = null;
-		String sql = "insert into t_user_msg_index values(?,?,?,to_date(?,'yyyy-MM-dd-HH-mi-ss'))";
-		try {
-			ps = conn.prepareStatement(sql);
-			ps.setInt(1, followId);
-			ps.setInt(2, authorId);
-			ps.setInt(3, msgId);
-			ps.setString(4, timeT);
-			int i = ps.executeUpdate();
-			return true;
-		} catch (Exception e) {
-
-			e.printStackTrace();
-			return false;
-		} finally {
-			close(conn, ps, null);
-		}
-	}
-
+	@Override
 	public boolean insertTUserRelation(int uid, int fuid, int type) {
 		Connection conn = new ConnectionOracle().getConnection();
 		PreparedStatement pstmt = null;

@@ -14,7 +14,7 @@ import com.alibaba.fastjson.JSON;
 import entity.BlogInfo;
 import factory.Factory;
 
-public class GetBlogs extends HttpServlet {
+public class GetCollections extends HttpServlet {
 
 	/**
 	 * The doGet method of the servlet. <br>
@@ -33,17 +33,14 @@ public class GetBlogs extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		response.setContentType("text/html");
-		PrintWriter out = response.getWriter();
 		response.setContentType("text/html;charset=UTF-8");
 		request.setCharacterEncoding("UTF-8");
+
 		int userId = Integer.parseInt(request.getParameter("userId"));
 		int page = Integer.parseInt(request.getParameter("page"));
-		/**
-		 * @page from 0
-		 */
-		List<BlogInfo> list = Factory.getIBlogService().selectBlogs(userId,
+		List<BlogInfo> list = Factory.getIBlogService().getCollections(userId,
 				page);
+		PrintWriter out = response.getWriter();
 		out.print(JSON.toJSON(list));
 		out.flush();
 		out.close();
