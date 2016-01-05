@@ -88,7 +88,7 @@ public class IUserServiceImpl implements IUserService {
 	public boolean insertTUserRelation(int cuid, int fuid) {
 		boolean i1 = dao.insertTUserRelation(cuid, fuid, USER_RELATION_FOCUS);
 		boolean i2 = dao.insertTUserRelation(fuid, cuid, USER_RELATION_FAN);
-		// TODO: 事务
+		
 		return i1 && i2;
 	}
 

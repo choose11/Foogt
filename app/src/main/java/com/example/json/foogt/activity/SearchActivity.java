@@ -72,17 +72,20 @@ public class SearchActivity extends AppCompatActivity {
                 R.layout.item_user,
                 new String[]{"username"},
                 new int[]{R.id.txt_search_username});
-        // TODO: 2015/12/28 微博搜索的内容未填充满
+
         resultLv.setAdapter(adapter);
+
+        userId = getIntent().getIntExtra("userId", -1);
         resultLv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(SearchActivity.this, "测试", Toast.LENGTH_LONG).show();
+               int friendId = Integer.parseInt(list.get(position).get("userId"));
+                PeopleActivity.actionStart(SearchActivity.this,userId,friendId);
             }
         });
         resultLv.setOnItemLongClickListener(new FocusUserListener());
         mQueue = Volley.newRequestQueue(SearchActivity.this);
-        userId = getIntent().getIntExtra("userId", -1);
+
         if (PreferenceManager.getDefaultSharedPreferences(SearchActivity.this).getBoolean("SnackBar_first", true)) {
             Snackbar.make(root, R.string.long_press_to_focus, Snackbar.LENGTH_LONG).setAction(R.string.do_not_show_again, new View.OnClickListener() {
                 @Override
@@ -119,6 +122,8 @@ public class SearchActivity extends AppCompatActivity {
 
         @Override
         public void onClick(View v) {
+
+
             /*
             progressDialog
              */
@@ -139,8 +144,10 @@ public class SearchActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             progressDialog.dismiss();
+
                             List<Map<String, String>> data = Utility.handleSearchUserRequestResponse(response);
                             if (data.size() > 0) {
+                                list.clear();
                                 list.addAll(data);
                                 adapter.notifyDataSetChanged();
                             } else {

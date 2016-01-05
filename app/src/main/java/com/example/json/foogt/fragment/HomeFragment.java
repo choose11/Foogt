@@ -42,12 +42,15 @@ public class HomeFragment extends Fragment implements
         SwipeRefreshLayout.OnRefreshListener,
         MBlogAdapter.OnItemClickListener {
     private static final String ARG_USER_ID = "userId";
+    private static final String ARG_FRIEND_ID = "friendId";
     private static final String ARG_TYPE = "type";
     private static final String TAG = "HomeFragment";
     public static final int HOME = 0;
     public static final int COLLECTION = 1;
+    public static final int PEOPLEBLOG = 2;
 
     private int userId;
+    private int friendId;
     private String loadBaseUrl;
     private int currentPage;
     private int lastVisibleItem;
@@ -80,6 +83,16 @@ public class HomeFragment extends Fragment implements
         return fragment;
     }
 
+    public static HomeFragment newInstance(int userId, int friendId, int type) {
+        HomeFragment fragment = new HomeFragment();
+        Bundle args = new Bundle();
+        args.putInt(ARG_USER_ID, userId);
+        args.putInt(ARG_FRIEND_ID, friendId);
+        args.putInt(ARG_TYPE, type);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -89,6 +102,7 @@ public class HomeFragment extends Fragment implements
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             userId = getArguments().getInt(ARG_USER_ID);
+            friendId = getArguments().getInt(ARG_FRIEND_ID);
             type = getArguments().getInt(ARG_TYPE);
             //according to fragment type to define base url.
             // base url is used for load data from server
@@ -96,6 +110,8 @@ public class HomeFragment extends Fragment implements
                 loadBaseUrl = IConst.SERVLET_ADDR + "GetBlogs";
             } else if (type == COLLECTION) {
                 loadBaseUrl = IConst.SERVLET_ADDR + "GetCollections";
+            } else {
+                loadBaseUrl = IConst.SERVER_ADDR + "GetUserOwnBlogs";
             }
         }
         //volley request queue
@@ -118,8 +134,11 @@ public class HomeFragment extends Fragment implements
         list = new ArrayList<>();
         if (type == HOME) {
             adapter = new MBlogAdapter(list, this, imageLoader);
-        } else {
+        } else if(type == COLLECTION){
             adapter = new MBlogAdapter(list, null, imageLoader);
+         }else {
+            adapter = new MBlogAdapter(list, null, imageLoader);
+
         }
         rv.setAdapter(adapter);
         rv.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -130,7 +149,12 @@ public class HomeFragment extends Fragment implements
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                     lastVisibleItem = layoutManager.findLastVisibleItemPosition();
                     if (lastVisibleItem + 1 == adapter.getItemCount()) {
-                        load(currentPage);
+
+                        if (type == PEOPLEBLOG) {
+                            peopleLoad(currentPage);
+                        } else {
+                            load(currentPage);
+                        }
                     }
                 }
             }
@@ -147,7 +171,11 @@ public class HomeFragment extends Fragment implements
     @Override
     public void onRefresh() {
         currentPage = 0;
-        load(currentPage);
+        if(type == PEOPLEBLOG){
+            peopleLoad(currentPage);
+        }else {
+            load(currentPage);
+        }
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -225,7 +253,25 @@ public class HomeFragment extends Fragment implements
         mQueue.add(stringRequest);
     }
 
+
     //collect blog. send data to server
+
+    public void peopleLoad(final int page) {
+        LogUtil.d(TAG, "Loading Page " + page);
+        if (page == 0) {
+            showProgress();
+            list.clear();
+            adapter.setHaveMoreBlog(true);
+        }
+        if (!adapter.isHaveMoreBlog()) {
+            return;
+        }
+        String url = loadBaseUrl + "?userId=" + friendId + "&page=" + page;
+        LogUtil.d(TAG, url);
+        StringRequest stringRequest = new StringRequest(url, new GetBlogsListener(), this);
+        mQueue.add(stringRequest);
+    }
+
     private void collectBlog(int msgId) {
         LogUtil.d(TAG, "msgID=" + msgId);
         String url = IConst.SERVLET_ADDR + "Collection?uid=" + userId + "&msgId=" + msgId;
@@ -255,6 +301,7 @@ public class HomeFragment extends Fragment implements
                 list.addAll(results);
                 LogUtil.d(TAG, "list size" + list.size());
             } else {
+                currentPage++;
                 adapter.setHaveMoreBlog(false);
             }
             adapter.notifyDataSetChanged();
