@@ -1,19 +1,22 @@
 package servlet;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.util.Date;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.json.JSONObject;
-
 import factory.Factory;
 
-public class Comment extends HttpServlet {
+public class GetHeadIMG extends HttpServlet {
 
 	/**
 	 * The doGet method of the servlet. <br>
@@ -32,21 +35,7 @@ public class Comment extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		response.setContentType("text/html;charset=UTF-8");
-		request.setCharacterEncoding("UTF-8");
-
-		int userId = Integer.parseInt(request.getParameter("userId"));
-		int msgId = Integer.parseInt(request.getParameter("msgId"));
-		int authorId = Integer.parseInt(request.getParameter("msgAuthorId"));
-		String comment = request.getParameter("comment");
-		Date time = new Date();
-		boolean result = Factory.getIBlogService().commentBlog(userId, msgId,
-				authorId, comment, time);
-
-		PrintWriter out = response.getWriter();
-		out.print(new JSONObject().put("result", result));
-		out.flush();
-		out.close();
+		doPost(request, response);
 	}
 
 	/**
@@ -67,7 +56,32 @@ public class Comment extends HttpServlet {
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		doGet(request, response);
+		request.setCharacterEncoding("UTF-8");
+
+		ServletContext cntx = getServletContext();
+		int uid = Integer.valueOf(request.getParameter("uid"));
+		boolean result = Factory.getIUserService().checkHeadImg(uid);
+		String filename;
+		if (result) {
+			filename = cntx.getRealPath("HeaderImgs/" + "uid" + ".png");
+		} else {
+			filename = cntx.getRealPath("HeaderImgs/default.jpg");
+		}
+		File f = new File(filename);
+		String mime = cntx.getMimeType(filename);
+		response.setContentType(mime);
+		response.setContentLength((int) f.length());
+
+		FileInputStream fin = new FileInputStream(f);
+		OutputStream out = response.getOutputStream();
+
+		byte[] buf = new byte[1024];
+		int count = 0;
+		while ((count = fin.read(buf)) >= 0) {
+			out.write(buf, 0, count);
+		}
+		out.close();
+		fin.close();
 	}
 
 }

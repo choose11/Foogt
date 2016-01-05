@@ -70,7 +70,7 @@ public class UserBlogActivity extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(this);
         rv.setLayoutManager(layoutManager);
         list = new ArrayList<>();
-        adapter = new MBlogAdapter(list, null);
+        adapter = new MBlogAdapter(list, null, null);
         rv.setAdapter(adapter);
 
 

@@ -22,10 +22,12 @@ public class DBOperation {
 	public static final String dropTUserMsgIndex = "drop table t_user_msg_index";
 
 	public static final String dropTBlogCollection = "drop table TBlogCollection";
-	
+
 	public static final String dropSequenceBlogCollection = "drop sequence blog_collection_sequence";
-	
+
 	public static final String dropTMsgMsgRelation = "drop table t_msg_msg_relation";
+
+	public static final String dropTUserHeadImgPath = "drop table t_user_head_img";
 
 	public static final String createTUserAccount = "create table t_user_account("
 			+ "account varchar2(20) primary key,"
@@ -72,15 +74,16 @@ public class DBOperation {
 			+ "collection_id int primary key, "
 			+ "user_id int references t_user_info(user_id), "
 			+ "msg_id int references t_msg_info(msg_id)" + ") ";
-	
-	public static final String createTMsgMsgRelation = "create table t_msg_msg_relation(" +
-			"reference_id int references t_user_info(user_id), " +
-			"reference_msg_id int references t_msg_info(msg_id), " +
-			"referenced_id int, " +
-			"referenced_msg_id int, " +
-			"type int, " +
-			"time_t date" +
-			")";
+
+	public static final String createTMsgMsgRelation = "create table t_msg_msg_relation("
+			+ "reference_id int references t_user_info(user_id), "
+			+ "reference_msg_id int references t_msg_info(msg_id), "
+			+ "referenced_id int, "
+			+ "referenced_msg_id int, "
+			+ "type int, "
+			+ "time_t date" + ")";
+	public static final String createTUserHeadImgPath = "create table t_user_head_img( "
+			+ "user_id int references t_user_info(user_id)" + ")";
 
 	private static void close(Connection conn, Statement stmt, ResultSet rs) {
 		try {
@@ -111,8 +114,9 @@ public class DBOperation {
 			// stmt.execute(createTUserRelation);
 			// stmt.execute(createTUserMsgIndex);
 			// stmt.execute(createSequenceBlogCollection);
-//			stmt.execute(createTBlogCollection);
-			stmt.execute(createTMsgMsgRelation);
+			// stmt.execute(createTBlogCollection);
+			// stmt.execute(createTMsgMsgRelation);
+			stmt.execute(createTUserHeadImgPath);
 
 			System.out.println("Complete");
 		} catch (Exception e) {
@@ -132,9 +136,10 @@ public class DBOperation {
 			// stmt.execute(dropSequence);
 			// stmt.execute(dropSequenceMsgId);
 			// stmt.execute(dropTUserRelation);
-//			stmt.execute(dropTUserMsgIndex);
-//			stmt.execute(dropTBlogCollection);
-			stmt.execute(dropSequenceBlogCollection );
+			// stmt.execute(dropTUserMsgIndex);
+			// stmt.execute(dropTBlogCollection);
+			// stmt.execute(dropSequenceBlogCollection );
+			stmt.execute(dropTUserHeadImgPath);
 			System.out.println("Complete");
 		} catch (Exception e) {
 			e.printStackTrace();

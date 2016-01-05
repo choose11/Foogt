@@ -32,7 +32,7 @@ public class CommentBlogActivity extends AppCompatActivity implements Response.E
     private int userId;
     private Button submit;
     private EditText comment;
-    private RequestQueue mqueue;
+    private RequestQueue mQueue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +55,7 @@ public class CommentBlogActivity extends AppCompatActivity implements Response.E
         blogMsg.setText(msg.getMsg());
 
         submit.setOnClickListener(new OnSubmitClickListener());
-        mqueue = Volley.newRequestQueue(this);
+        mQueue = Volley.newRequestQueue(this);
     }
 
     public static void actionStart(Context context, BlogInfo msg, int userId) {
@@ -81,7 +81,7 @@ public class CommentBlogActivity extends AppCompatActivity implements Response.E
             String url = IConst.SERVLET_ADDR + "Comment?userId=" + userId + "&msgAuthorId=" + msg.getAuthorId() + "&msgId=" + msg.getMsgId() + "&comment=" + comm;
             StringRequest stringRequest = new StringRequest(url, new OnCommentListener(), CommentBlogActivity.this);
             LogUtil.d(TAG, url);
-            mqueue.add(stringRequest);
+            mQueue.add(stringRequest);
         }
     }
 

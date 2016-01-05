@@ -16,12 +16,14 @@ import com.alibaba.fastjson.TypeReference;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.json.foogt.R;
 import com.example.json.foogt.activity.CommentBlogActivity;
 import com.example.json.foogt.adapter.MBlogAdapter;
 import com.example.json.foogt.entity.BlogInfo;
+import com.example.json.foogt.util.BitmapCache;
 import com.example.json.foogt.util.IConst;
 import com.example.json.foogt.util.LogUtil;
 import com.example.json.foogt.util.Utility;
@@ -57,6 +59,7 @@ public class HomeFragment extends Fragment implements
     private ArrayList<BlogInfo> list;
     private RequestQueue mQueue;
     private LinearLayoutManager layoutManager;
+    private ImageLoader imageLoader;
 
     private OnFragmentInteractionListener mListener;
 
@@ -65,6 +68,7 @@ public class HomeFragment extends Fragment implements
      * this fragment using the provided parameters.
      *
      * @param userId UserId of current User
+     * @param type   if this fragment is init for home or collection activity
      * @return A new instance of fragment HomeFragment.
      */
     public static HomeFragment newInstance(int userId, int type) {
@@ -86,13 +90,18 @@ public class HomeFragment extends Fragment implements
         if (getArguments() != null) {
             userId = getArguments().getInt(ARG_USER_ID);
             type = getArguments().getInt(ARG_TYPE);
+            //according to fragment type to define base url.
+            // base url is used for load data from server
             if (type == HOME) {
                 loadBaseUrl = IConst.SERVLET_ADDR + "GetBlogs";
             } else if (type == COLLECTION) {
                 loadBaseUrl = IConst.SERVLET_ADDR + "GetCollections";
             }
         }
+        //volley request queue
         mQueue = Volley.newRequestQueue(getContext());
+        //user head img loader. use bitmap cache
+        imageLoader = new ImageLoader(mQueue, new BitmapCache());
     }
 
     @Override
@@ -108,9 +117,9 @@ public class HomeFragment extends Fragment implements
         rv.setLayoutManager(layoutManager);
         list = new ArrayList<>();
         if (type == HOME) {
-            adapter = new MBlogAdapter(list, this);
+            adapter = new MBlogAdapter(list, this, imageLoader);
         } else {
-            adapter = new MBlogAdapter(list, null);
+            adapter = new MBlogAdapter(list, null, imageLoader);
         }
         rv.setAdapter(adapter);
         rv.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -126,10 +135,15 @@ public class HomeFragment extends Fragment implements
                 }
             }
         });
+        //first time. load data.
         onRefresh();
         return v;
     }
 
+    /**
+     * refresh data.
+     * set current page = 0
+     */
     @Override
     public void onRefresh() {
         currentPage = 0;
@@ -149,26 +163,30 @@ public class HomeFragment extends Fragment implements
         mListener = null;
     }
 
+    // net error listener
     @Override
     public void onErrorResponse(VolleyError error) {
         hideProgress();
         Toast.makeText(getContext(), R.string.http_fail, Toast.LENGTH_SHORT).show();
     }
 
+    // implementation of MBlogAdapter.OnItemClickListener
     @Override
     public void onCollectClick(int msgId) {
         collectBlog(msgId);
     }
 
+    // implementation of MBlogAdapter.OnItemClickListener
     @Override
     public void onCommentClick(BlogInfo msg) {
         LogUtil.d(TAG, "onCommentClick");
-        for(BlogInfo b:list){
-            LogUtil.d(TAG,"BlogInfo"+ b.getAuthorId());
+        for (BlogInfo b : list) {
+            LogUtil.d(TAG, "BlogInfo" + b.getAuthorId());
         }
         CommentBlogActivity.actionStart(getActivity(), msg, userId);
     }
 
+    // implementation of MBlogAdapter.OnItemClickListener
     @Override
     public void onRepostClick(BlogInfo msg) {
 
@@ -189,22 +207,25 @@ public class HomeFragment extends Fragment implements
         public void onFragmentInteraction(Uri uri);
     }
 
+    //load data from server
     public void load(final int page) {
         LogUtil.d(TAG, "Loading Page " + page);
         if (page == 0) {
             showProgress();
             list.clear();
-            adapter.setHaveMoreBlogs(true);
+            adapter.setHaveMoreBlog(true);
         }
-        if (!adapter.isHaveMoreBlogs()) {
+        if (!adapter.isHaveMoreBlog()) {
             return;
         }
         String url = loadBaseUrl + "?userId=" + userId + "&page=" + page;
         LogUtil.d(TAG, url);
+        //volley request
         StringRequest stringRequest = new StringRequest(url, new GetBlogsListener(), this);
         mQueue.add(stringRequest);
     }
 
+    //collect blog. send data to server
     private void collectBlog(int msgId) {
         LogUtil.d(TAG, "msgID=" + msgId);
         String url = IConst.SERVLET_ADDR + "Collection?uid=" + userId + "&msgId=" + msgId;
@@ -212,6 +233,7 @@ public class HomeFragment extends Fragment implements
         mQueue.add(stringRequest);
     }
 
+    //show refresh progress
     private void showProgress() {
         sw.setRefreshing(true);
     }
@@ -220,7 +242,7 @@ public class HomeFragment extends Fragment implements
         sw.setRefreshing(false);
     }
 
-
+    //on get blog data from server
     public class GetBlogsListener implements Response.Listener<String> {
 
         @Override
@@ -233,7 +255,7 @@ public class HomeFragment extends Fragment implements
                 list.addAll(results);
                 LogUtil.d(TAG, "list size" + list.size());
             } else {
-                adapter.setHaveMoreBlogs(false);
+                adapter.setHaveMoreBlog(false);
             }
             adapter.notifyDataSetChanged();
             hideProgress();
@@ -245,15 +267,12 @@ public class HomeFragment extends Fragment implements
         }
     }
 
+    //handle server response.
     private class CollectListener implements Response.Listener<String> {
         @Override
         public void onResponse(String response) {
             boolean result = Utility.handleBooleanResultResponse(response);
-            if (result) {
-                LogUtil.d(TAG, "Collect Success");
-            } else {
-                LogUtil.d(TAG, "Collect Failed");
-            }
+            Toast.makeText(getContext(), result ? "Success" : "Failed", Toast.LENGTH_SHORT).show();
         }
     }
 }

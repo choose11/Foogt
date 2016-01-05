@@ -35,4 +35,6 @@ public interface IUserDao {
 	public User selectUserId(String username);
 
 	public int getUserId(String userName);
+	
+	public boolean checkHeadImg(int uid);
 }
