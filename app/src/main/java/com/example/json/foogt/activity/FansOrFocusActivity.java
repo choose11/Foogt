@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -60,8 +61,7 @@ public class FansOrFocusActivity extends AppCompatActivity {
 
         }
 
-        Intent i = getIntent();
-        userId = i.getIntExtra("UserId", userId);
+        userId = getIntent().getIntExtra("userId", -1);
 
         if (getIntent().getStringExtra("Type").equals("粉丝")) {
             bar.setTitle(R.string.fans);
@@ -80,6 +80,8 @@ public class FansOrFocusActivity extends AppCompatActivity {
         list = new ArrayList<>();
         adapter = new MFriendAdapter(list);
         rv.setAdapter(adapter);
+
+
 
         rv.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -102,6 +104,8 @@ public class FansOrFocusActivity extends AppCompatActivity {
         currentPage = 0;
         load(currentPage);
     }
+
+
 
     /**
      * method  --  load();
@@ -162,6 +166,7 @@ public class FansOrFocusActivity extends AppCompatActivity {
         });
         mQueue.add(stringRequest);
     }
+
 
     /**
      * 登录后对接

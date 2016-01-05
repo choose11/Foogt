@@ -31,6 +31,7 @@
             android:name=".activity.MenuActivity"
             android:label="@string/title_activity_menu"
             android:theme="@style/AppTheme.NoActionBar" >
+
         </activity>
         <activity android:name=".activity.CollectionActivity" >
         </activity>
@@ -39,6 +40,18 @@
         <activity android:name=".activity.UserBlogActivity" >
         </activity>
         <activity android:name=".activity.CommentBlogActivity" >
+
+        </activity>
+        <activity android:name=".activity.CollectionActivity" >
+        </activity>
+        <activity android:name=".activity.FansOrFocusActivity" >
+        </activity>
+        <activity android:name=".activity.UserBlogActivity" >
+        </activity>
+        <activity android:name=".activity.PeopleActivity"
+                  android:theme="@style/AppTheme.NoActionBar">
+
+
         </activity>
     </application>
 
