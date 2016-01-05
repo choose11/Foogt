@@ -4,17 +4,17 @@
               android:layout_height="match_parent"
               android:orientation="vertical">
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <ImageView
+        <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/img_blog_user_profile"
-            android:layout_width="70sp"
-            android:layout_height="70sp"
-            android:padding="25sp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center_horizontal"
+            android:padding="5dp"
             />
 
         <LinearLayout
@@ -28,8 +28,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingLeft="5dp"
+                style="@style/Base.TextAppearance.AppCompat.SearchResult.Title"
                 android:text="赵文彬"
-                android:textSize="25sp"/>
+                />
 
             <TextView
                 android:id="@+id/txt_blog_time"
@@ -37,7 +38,7 @@
                 android:layout_height="wrap_content"
                 android:padding="5dp"
                 android:text="今天 10:10"
-                android:textAppearance="?android:attr/textAppearanceSmall"/>
+                />
 
         </LinearLayout>
 
@@ -54,11 +55,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:paddingLeft="80sp"
-        android:paddingRight="10sp"
+        android:paddingLeft="50dp"
+        android:paddingRight="10dp"
         android:paddingTop="5sp"
         android:text="Large T由此可以看出，服务器返回给我们的数据确实是JSON格式的，并且onResponse()方法中携带的参数也正是一个JSONObject对象，之后只需要从JSONObject对象取出我们想要得到的那部分数据就可以了。ext"
-        android:textSize="15sp"
         />
 
     <LinearLayout

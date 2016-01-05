@@ -451,6 +451,29 @@ public class IUserDaoImpl implements IUserDao {
 
 		return result;
 	}
+	
+	@Override
+	public boolean checkHeadImg(int uid) {
+		Connection conn = new ConnectionOracle().getConnection();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = "select user_id from t_user_head_img where user_id=?";
+		boolean result = false;
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, uid);
+			rs = pstmt.executeQuery();
+			if (rs.next()) {
+				result = true;
+			}
+		} catch (SQLException e) {
+			LogUtil.e(e);
+			e.printStackTrace();
+		} finally {
+			close(conn, pstmt, null);
+		}
+		return result;
+	}
 
 	private void close(Connection conn, PreparedStatement pstmt, ResultSet rs) {
 		try {
@@ -467,4 +490,5 @@ public class IUserDaoImpl implements IUserDao {
 			LogUtil.e(e);
 		}
 	}
+
 }

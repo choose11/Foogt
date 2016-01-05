@@ -124,6 +124,12 @@ public class IUserServiceImpl implements IUserService {
 		return dao.selectFollowId(userId);
 	}
 	
+
+	@Override
+	public boolean checkHeadImg(int uid) {
+		return dao.checkHeadImg(uid);
+	}
+	
 	/**
 	 * Test Mod
 	 * 

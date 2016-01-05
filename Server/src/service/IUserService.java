@@ -28,4 +28,6 @@ public interface IUserService {
 	public List<User> searchFans(int userId, int pageSize, int page);
 	
 	public List<Integer> selectFollowId(int userId);
+	
+	public boolean checkHeadImg(int uid);
 }
