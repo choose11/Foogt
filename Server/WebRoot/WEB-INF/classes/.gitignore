@@ -1,4 +1,10 @@
 /dao
+<<<<<<< Updated upstream
 /db
 /servlet
 /service
+=======
+/entity
+/service
+/servlet
+>>>>>>> Stashed changes
