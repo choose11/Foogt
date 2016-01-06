@@ -6,6 +6,8 @@
     android:orientation="vertical"
     android:weightSum="1">
 
+    <include
+        layout="@layout/toolbar_main"/>
 
     <EditText
         android:id="@+id/edit_send_content"
@@ -19,12 +21,12 @@
         android:id="@+id/img_picture_add"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:src="@android:drawable/ic_menu_gallery"
-        android:layout_weight="0.14"/>
+        android:layout_weight="0.14"
+        android:src="@android:drawable/ic_menu_gallery"/>
 
     <Button
+        android:id="@+id/send"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="发送"
-        android:id="@+id/send"/>
+        android:text="发送"/>
 </LinearLayout>

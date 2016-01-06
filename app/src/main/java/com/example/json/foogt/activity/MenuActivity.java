@@ -47,7 +47,6 @@ public class MenuActivity extends AppCompatActivity
     private int userId;
 
     private TextView fansTxt, focusTxt, countMsgTxt, userNameTxt, UserIntroMin;
-    static final int NUM_ITEMS = 2;
 
     CollectionPagerAdapter mPagerAdapter;
     ViewPager mViewPager;
