@@ -3,6 +3,8 @@ package com.example.json.foogt.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SyncStatusObserver;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.example.json.foogt.R;
 import com.example.json.foogt.util.HttpCallbackListener;
@@ -27,6 +30,19 @@ public class SendBlogActivity extends AppCompatActivity {
     private ImageView addImg;
     private int userId;
     private String content,timeT;
+    private Handler handler=new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            String re= msg.obj.toString();
+            if (re.equals("s")){
+                Toast.makeText(SendBlogActivity.this,"发送微博成功",Toast.LENGTH_LONG).show();
+                finish();
+            }else{
+                Toast.makeText(SendBlogActivity.this,"发送微博失败",Toast.LENGTH_LONG).show();
+                finish();
+            }
+        }
+    };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,7 +50,6 @@ public class SendBlogActivity extends AppCompatActivity {
         contentEdit = (EditText)findViewById(R.id.edit_send_content);
         addImg = (ImageView)findViewById(R.id.img_picture_add);
         send_btn= (Button) findViewById(R.id.send);
-
         userId=getIntent().getIntExtra("userId", -1);
         System.out.println(userId);
 
@@ -55,7 +70,9 @@ public class SendBlogActivity extends AppCompatActivity {
                 HttpUtil.sendHttpRequest(url, "POST", data, new HttpCallbackListener() {
                     @Override
                     public void onFinish(String response) {
-
+                        Message msg=new Message();
+                        msg.obj=response;
+                        handler.sendMessage(msg);
                     }
 
                     @Override

@@ -134,6 +134,10 @@ public class MBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 } else if (v.getId() == R.id.btn_repost) {
                     //click repost
                 }
+            } else if (v.getId() == R.id.btn_repost) {
+                if (mOnClickListener != null) {
+                    mOnClickListener.onRepostClick(list.get(itemPosition));
+                }
             }
         }
     }

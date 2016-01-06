@@ -48,5 +48,8 @@
     <string name="submit">提交</string>
     <string name="comment_success">评论成功</string>
     <string name="comment_failed">评论失败</string>
+    <string name="transfer_sussess">转发成功</string>
+    <string name="transfer_failed">转发失败</string>
+    <string name="title_activity_transfer">TransferActivity</string>
 
 </resources>

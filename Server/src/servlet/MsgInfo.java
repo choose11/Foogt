@@ -72,17 +72,19 @@ public class MsgInfo extends HttpServlet {
 		IUserService userService = Factory.getIUserService();
 		msgInfo re = blogService.insertTMsgInfo(m);
 		int msgId=re.getMsgId();
+		//insert youself messageIndex
+		boolean b1=blogService.insertTUserMsgIndex(userId, userId, msgId, timeT);
 		//select follow_id 
 		List<Integer>l=  userService.selectFollowId(userId);
 		for (int j = 0; j < l.size(); j++) {
 			int followId= l.get(j);
 		boolean b=	blogService.insertTUserMsgIndex(followId, userId, msgId, timeT);
-			if (b==true) {
-				System.out.println("成功");
-				continue;
-			}else if (b==false){
-			System.out.println("失败");
-			}
+	}
+		if (b1==true) {
+			System.out.println("s");
+			out.println("s");
+		}else if (b1==false){
+		out.println("f");
 		}
 		out.flush();
 		out.close();

@@ -1,5 +1,6 @@
 package com.example.json.foogt.fragment;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -21,6 +22,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.json.foogt.R;
 import com.example.json.foogt.activity.CommentBlogActivity;
+import com.example.json.foogt.activity.TransferActivity;
 import com.example.json.foogt.adapter.MBlogAdapter;
 import com.example.json.foogt.entity.BlogInfo;
 import com.example.json.foogt.util.BitmapCache;
@@ -217,7 +219,16 @@ public class HomeFragment extends Fragment implements
     // implementation of MBlogAdapter.OnItemClickListener
     @Override
     public void onRepostClick(BlogInfo msg) {
-
+        LogUtil.d(TAG, "onRepostClick");
+        for(BlogInfo b:list){
+            LogUtil.d(TAG,"BlogInfo"+ b.getAuthorId());
+        }
+        System.out.println(msg.getAuthorId());
+        if (userId==msg.getAuthorId()){
+            Toast.makeText(getActivity(),"自己转发自己的微博？你是不是傻？",Toast.LENGTH_LONG).show();
+        }else {
+            TransferActivity.actionStart(getActivity(), msg, userId);
+                }
     }
 
     /**
