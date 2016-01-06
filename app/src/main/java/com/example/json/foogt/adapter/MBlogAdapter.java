@@ -133,9 +133,6 @@ public class MBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     mOnClickListener.onCommentClick(list.get(itemPosition));
                 } else if (v.getId() == R.id.btn_repost) {
                     //click repost
-                }
-            } else if (v.getId() == R.id.btn_repost) {
-                if (mOnClickListener != null) {
                     mOnClickListener.onRepostClick(list.get(itemPosition));
                 }
             }
@@ -153,6 +150,7 @@ public class MBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     /**
      * according to position to return itemViewType.
      * itemViewType is used to decide which view to return in onCreateViewHolder
+     *
      * @param position item position
      * @return
      */

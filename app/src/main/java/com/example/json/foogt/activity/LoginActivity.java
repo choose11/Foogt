@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -18,19 +19,11 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import com.example.json.foogt.R;
 import com.example.json.foogt.Sqlite.MySqliteOpenHelper;
-import com.example.json.foogt.entity.User;
 import com.example.json.foogt.entity.UserInfoMsg;
 import com.example.json.foogt.util.HttpCallbackListener;
 import com.example.json.foogt.util.HttpUtil;
 import com.example.json.foogt.util.IConst;
 import com.example.json.foogt.util.LogUtil;
-import com.example.json.foogt.util.Utility;
-
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLConnection;
 
 public class LoginActivity extends AppCompatActivity {
     private final String TAG = "LoginActivity";
@@ -70,57 +63,22 @@ public class LoginActivity extends AppCompatActivity {
         registerBtn = (Button) findViewById(R.id.btn_login_register);
         countEdit = (EditText) findViewById(R.id.edit_login_userName);
         pwdEdit = (EditText) findViewById(R.id.edit_login_pwd);
+        // Find the toolbar view inside the activity layout
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        // Sets the Toolbar to act as the ActionBar for this Activity window.
+        // Make sure the toolbar exists in the activity and is not null
+        setSupportActionBar(toolbar);
 
         helper = new MySqliteOpenHelper(LoginActivity.this, dbName, null, version);
         db = helper.getWritableDatabase();
 
         //登陆按钮点击事件
-        loginBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                account = countEdit.getText().toString();
-                password = pwdEdit.getText().toString();
-                if (!TextUtils.isEmpty(account) && !TextUtils.isEmpty(password)) {
-                    String url = IConst.SERVLET_ADDR + "LoginServlet";
-                    String data = "username=" + account + "&" + "password=" + password;
-                    HttpUtil.sendHttpRequest(url, "POST", data, new HttpCallbackListener() {
-                        @Override
-                        public void onFinish(String response) {
-                            UserInfoMsg UserInfo = JSON.parseObject(response, UserInfoMsg.class);
-                            userId = UserInfo.getUser().getUserId();
-                            System.out.println(userId);
-                            Message msg = new Message();
-                            msg.obj = UserInfo.isResult();
-                            handler.sendMessage(msg);
-
-
-                            /**
-                             * 存数据到sqlite
-                             */
-                            SaveData(account);
-                        }
-
-                        @Override
-                        public void onError(Exception e) {
-                            e.printStackTrace();
-                            LogUtil.e(TAG, e.toString());
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Toast.makeText(LoginActivity.this, R.string.http_fail, Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                        }
-                    });
-                }
-            }
-        });
+        loginBtn.setOnClickListener(new OnSubmitListener());
 
         registerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 RegisterActivity.actionStart(LoginActivity.this);
-
             }
         });
     }
@@ -153,4 +111,45 @@ public class LoginActivity extends AppCompatActivity {
         context.startActivity(i);
     }
 
+    class OnSubmitListener implements View.OnClickListener {
+
+        @Override
+        public void onClick(View v) {
+            account = countEdit.getText().toString();
+            password = pwdEdit.getText().toString();
+            if (!TextUtils.isEmpty(account) && !TextUtils.isEmpty(password)) {
+                String url = IConst.SERVLET_ADDR + "LoginServlet";
+                String data = "username=" + account + "&" + "password=" + password;
+                HttpUtil.sendHttpRequest(url, "POST", data, new HttpCallbackListener() {
+                    @Override
+                    public void onFinish(String response) {
+                        UserInfoMsg UserInfo = JSON.parseObject(response, UserInfoMsg.class);
+                        userId = UserInfo.getUser().getUserId();
+                        System.out.println(userId);
+                        Message msg = new Message();
+                        msg.obj = UserInfo.isResult();
+                        handler.sendMessage(msg);
+
+
+                        /**
+                         * 存数据到sqlite
+                         */
+                        SaveData(account);
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        e.printStackTrace();
+                        LogUtil.e(TAG, e.toString());
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(LoginActivity.this, R.string.http_fail, Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                });
+            }
+        }
+    }
 }

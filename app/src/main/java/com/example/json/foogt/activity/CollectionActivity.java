@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.example.json.foogt.R;
@@ -21,6 +22,11 @@ public class CollectionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_collection);
 
+        // Find the toolbar view inside the activity layout
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        // Sets the Toolbar to act as the ActionBar for this Activity window.
+        // Make sure the toolbar exists in the activity and is not null
+        setSupportActionBar(toolbar);
         bar = getSupportActionBar();
         if (bar != null) {
             bar.setDisplayHomeAsUpEnabled(true);
@@ -29,10 +35,10 @@ public class CollectionActivity extends AppCompatActivity {
             bar.setTitle(R.string.user_coll);
         }
 
-        userId = getIntent().getIntExtra("userId",-1);
+        userId = getIntent().getIntExtra("userId", -1);
 
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.layout_root, HomeFragment.newInstance(userId,HomeFragment.COLLECTION)).commit();
+                .replace(R.id.layout_root, HomeFragment.newInstance(userId, HomeFragment.COLLECTION)).commit();
     }
 
     public static void actionStart(Context context, int userId) {

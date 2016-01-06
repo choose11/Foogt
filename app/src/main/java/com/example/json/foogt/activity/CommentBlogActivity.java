@@ -2,9 +2,12 @@ package com.example.json.foogt.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -49,6 +52,19 @@ public class CommentBlogActivity extends AppCompatActivity implements Response.E
         TextView blogUserName = (TextView) findViewById(R.id.txt_blog_name);
         TextView blogPostTime = (TextView) findViewById(R.id.txt_blog_time);
         TextView blogMsg = (TextView) findViewById(R.id.txt_blog_msg);
+        // Find the toolbar view inside the activity layout
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        // Sets the Toolbar to act as the ActionBar for this Activity window.
+        // Make sure the toolbar exists in the activity and is not null
+        setSupportActionBar(toolbar);
+        ActionBar bar = getSupportActionBar();
+        if (bar != null) {
+            // TODO: 2016/1/6 listener
+            bar.setDisplayHomeAsUpEnabled(true);
+            bar.setDisplayShowHomeEnabled(true);
+            bar.setHomeButtonEnabled(true);
+            bar.setTitle(R.string.comment);
+        }
 
         blogUserName.setText(msg.getUsername());
         blogPostTime.setText(new SimpleDateFormat("MM.dd hh:mm").format(msg.getPostTime()));
@@ -58,16 +74,27 @@ public class CommentBlogActivity extends AppCompatActivity implements Response.E
         mQueue = Volley.newRequestQueue(this);
     }
 
-    public static void actionStart(Context context, BlogInfo msg, int userId) {
-        Intent i = new Intent(context, CommentBlogActivity.class);
-        i.putExtra("blogInfo", JSON.toJSON(msg).toString());
-        i.putExtra("userId", userId);
-        context.startActivity(i);
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+        }
+        //return super.onOptionsItemSelected(item);
+        return true;
     }
 
     @Override
     public void onErrorResponse(VolleyError error) {
         Toast.makeText(getApplicationContext(), R.string.http_fail, Toast.LENGTH_SHORT).show();
+    }
+
+    public static void actionStart(Context context, BlogInfo msg, int userId) {
+        Intent i = new Intent(context, CommentBlogActivity.class);
+        i.putExtra("blogInfo", JSON.toJSON(msg).toString());
+        i.putExtra("userId", userId);
+        context.startActivity(i);
     }
 
     private class OnSubmitClickListener implements View.OnClickListener {
