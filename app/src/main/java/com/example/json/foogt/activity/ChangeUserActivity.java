@@ -3,6 +3,7 @@ package com.example.json.foogt.activity;
 import android.accounts.Account;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.ActionBar;
@@ -44,6 +45,7 @@ public class ChangeUserActivity extends AppCompatActivity {
     private SQLiteDatabase db;
     private final String TAG = "ChangeUserActivity";
     private int userId;
+    SharedPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -151,8 +153,8 @@ public class ChangeUserActivity extends AppCompatActivity {
     private void judgeNext(String account) {
         if (!checkOtherUser(account)) {
             ActivityCollector.finishAll();
-            LoginActivity.actionStart(ChangeUserActivity.this);
-
+            MenuActivity.actionStart(ChangeUserActivity.this, -1);
+            deleteShared();
         } else {
             loginNext(account);
         }
@@ -173,6 +175,8 @@ public class ChangeUserActivity extends AppCompatActivity {
                         Toast.makeText(ChangeUserActivity.this, userId + "" + "已登陆", Toast.LENGTH_LONG).show();
                         ActivityCollector.finishAll();
                         MenuActivity.actionStart(ChangeUserActivity.this, userId);
+                        saveSharedPreferencesUserId(userId);
+
                     }
                 });
             }
@@ -287,6 +291,27 @@ public class ChangeUserActivity extends AppCompatActivity {
         context.startActivity(i);
     }
 
+    /**
+     * 更改登录用户的Sharedpreference 的值为-1
+     */
+    private void deleteShared(){
+        preferences = getSharedPreferences("userId"
+                , MODE_PRIVATE);
+        //int userId = preferences.getInt("userId", 0);
+
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt("userId", -1);
+        editor.apply();
+    }
+    private void saveSharedPreferencesUserId(int userId){
+        preferences = getSharedPreferences("userId"
+                , MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt("userId", userId);
+        // 提交修改
+        editor.apply();
+        //editor.commit();
+    }
     @Override
     public void finish() {
         super.finish();

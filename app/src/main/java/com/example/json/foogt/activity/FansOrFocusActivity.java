@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -133,12 +134,14 @@ public class FansOrFocusActivity extends AppCompatActivity {
         } else {
             url = IConst.SERVLET_ADDR + "GetFocus?userId=" + userId + "&page=" + page;
         }
+
         LogUtil.d(TAG, url);
         StringRequest stringRequest = new StringRequest(url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 List<User> results = JSON.parseObject(response, new TypeReference<List<User>>() {
                 });
+                System.out.println("results = " + results);
                 LogUtil.i(TAG, results.size() + "");
                 if (results.size() > 0) {
                     currentPage = page;

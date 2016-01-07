@@ -2,6 +2,7 @@ package servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -10,26 +11,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.alibaba.fastjson.JSON;
 
-import dao.impl.IUserDaoImpl;
-import entity.User;
-import entity.UserInfoMsg;
+import entity.BlogInfo;
+import factory.Factory;
 
-public class LoginServlet extends HttpServlet {
-
-	/**
-	 * Constructor of the object.
-	 */
-	public LoginServlet() {
-		super();
-	}
-
-	/**
-	 * Destruction of the servlet. <br>
-	 */
-	public void destroy() {
-		super.destroy(); // Just puts "destroy" string in log
-		// Put your code here
-	}
+public class GetHotBlogs extends HttpServlet {
 
 	/**
 	 * The doGet method of the servlet. <br>
@@ -48,25 +33,16 @@ public class LoginServlet extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		response.setContentType("text/html;charset=utf-8");
+		response.setContentType("text/html");
 		PrintWriter out = response.getWriter();
-		String username = request.getParameter("username");
-		String password = request.getParameter("password");
-		System.out.println(username + password);
-		request.setCharacterEncoding("utf-8");
-		User u = new User(username, password);
-		IUserDaoImpl i = new IUserDaoImpl();
-		boolean result = i.userLogin(u);
-		System.out.println(result);
-		User u1 = i.selectUserId(username);
-		UserInfoMsg msg = new UserInfoMsg();
-		msg.setResult(result);
-		if (result == true) {
-			msg.setUser(u1);
-		}
-		String json = JSON.toJSONString(msg);
-		out.println(json);
-		log("denglu chenggong");
+		response.setContentType("text/html;charset=UTF-8");
+		request.setCharacterEncoding("UTF-8");
+		int page = Integer.parseInt(request.getParameter("page"));
+		/**
+		 * @page from 0
+		 */
+		List<BlogInfo> list = Factory.getIBlogService().getHotBlogs(page);
+		out.print(JSON.toJSON(list));
 		out.flush();
 		out.close();
 	}
@@ -90,16 +66,6 @@ public class LoginServlet extends HttpServlet {
 			throws ServletException, IOException {
 
 		doGet(request, response);
-	}
-
-	/**
-	 * Initialization of the servlet. <br>
-	 * 
-	 * @throws ServletException
-	 *             if an error occurs
-	 */
-	public void init() throws ServletException {
-		// Put your code here
 	}
 
 }
