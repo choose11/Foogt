@@ -72,6 +72,8 @@ public class MsgInfo extends HttpServlet {
 		IUserService userService = Factory.getIUserService();
 		msgInfo re = blogService.insertTMsgInfo(m);
 		int msgId=re.getMsgId();
+		//updateMsgCount
+		boolean b2=userService.updateMsgCount(userId);
 		//insert youself messageIndex
 		boolean b1=blogService.insertTUserMsgIndex(userId, userId, msgId, timeT);
 		//select follow_id 
