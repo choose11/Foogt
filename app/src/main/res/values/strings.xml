@@ -51,5 +51,7 @@
     <string name="transfer_sussess">转发成功</string>
     <string name="transfer_failed">转发失败</string>
     <string name="title_activity_transfer">TransferActivity</string>
+    <string name="upload_img_success">头像上传成功</string>
+    <string name="refresh_to_show">刷新即可显示</string>
 
 </resources>

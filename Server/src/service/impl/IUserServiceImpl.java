@@ -88,7 +88,7 @@ public class IUserServiceImpl implements IUserService {
 	public boolean insertTUserRelation(int cuid, int fuid) {
 		boolean i1 = dao.insertTUserRelation(cuid, fuid, USER_RELATION_FOCUS);
 		boolean i2 = dao.insertTUserRelation(fuid, cuid, USER_RELATION_FAN);
-		
+
 		return i1 && i2;
 	}
 
@@ -123,13 +123,21 @@ public class IUserServiceImpl implements IUserService {
 	public List<Integer> selectFollowId(int userId) {
 		return dao.selectFollowId(userId);
 	}
-	
 
 	@Override
 	public boolean checkHeadImg(int uid) {
 		return dao.checkHeadImg(uid);
 	}
-	
+
+	@Override
+	public boolean setHeadImg(int uid) {
+		if (checkHeadImg(uid)) {
+			return true;
+		} else {
+			return dao.setHeadImg(uid);
+		}
+	}
+
 	/**
 	 * Test Mod
 	 * 

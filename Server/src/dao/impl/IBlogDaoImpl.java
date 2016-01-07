@@ -30,7 +30,7 @@ public class IBlogDaoImpl implements IBlogDao {
 	public List<BlogInfo> selectBlogs(int userId, int pageSize, int page) {
 		Connection conn = new ConnectionOracle().getConnection();
 		PreparedStatement pstmt = null;
-		String sql = "select u.user_name, msg.content, to_char(msg.time_t,'yyyy-mm-dd hh:mi:ss'), msg.msg_id, u.user_id "
+		String sql = "select u.user_name, msg.content, to_char(msg.time_t,'yyyy-mm-dd hh24:mi:ss'), msg.msg_id, u.user_id "
 				+ "from t_msg_info msg, t_user_info u "
 				+ "where msg.user_id=u.user_id "
 				+ "and msg_id in ("
@@ -56,7 +56,7 @@ public class IBlogDaoImpl implements IBlogDao {
 				int msgId = rs.getInt(4);
 				int authorId = rs.getInt(5);
 				list.add(new BlogInfo(msgId, username, new SimpleDateFormat(
-						"yyyy-MM-dd hh:mm:ss").parse(postTime), content,
+						"yyyy-MM-dd kk:mm:ss").parse(postTime), content,
 						authorId));
 			}
 
@@ -74,7 +74,7 @@ public class IBlogDaoImpl implements IBlogDao {
 	public List<BlogInfo> selectUserOwnBlogs(int userId, int pageSize, int page) {
 		Connection conn = new ConnectionOracle().getConnection();
 		PreparedStatement pstmt = null;
-		String sql = "select u.user_name, msg.content, to_char(msg.time_t,'yyyy-mm-dd hh:mi:ss'), msg.msg_id "
+		String sql = "select u.user_name, msg.content, to_char(msg.time_t,'yyyy-mm-dd hh24:mi:ss'), msg.msg_id "
 				+ "from t_msg_info msg, t_user_info u "
 				+ "where msg.user_id=u.user_id "
 				+ "and msg_id in ("
@@ -101,7 +101,7 @@ public class IBlogDaoImpl implements IBlogDao {
 				String postTime = rs.getString(3);
 				int msgId = rs.getInt(4);
 				list.add(new BlogInfo(msgId, username + "",
-						new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
+						new SimpleDateFormat("yyyy-MM-dd kk:mm:ss")
 								.parse(postTime), content, userId));
 			}
 			System.out.println("getuserblog");
@@ -140,7 +140,7 @@ public class IBlogDaoImpl implements IBlogDao {
 	public List<BlogInfo> getCollections(int userId, int pageSize, int page) {
 		Connection conn = new ConnectionOracle().getConnection();
 		PreparedStatement pstmt = null;
-		String sql = "select u.user_name, msg.content, to_char(msg.time_t,'yyyy-mm-dd hh:mi:ss'), msg.msg_id, u.user_id from "
+		String sql = "select u.user_name, msg.content, to_char(msg.time_t,'yyyy-mm-dd hh24:mi:ss'), msg.msg_id, u.user_id from "
 				+ "T_MSG_INFO msg, T_BLOG_COLLECTION col, T_USER_INFO u "
 				+ "where msg.msg_id = col.msg_id "
 				+ "and msg.user_id = u.user_id "
@@ -170,7 +170,7 @@ public class IBlogDaoImpl implements IBlogDao {
 				int msgId = rs.getInt(4);
 				int authorId = rs.getInt(5);
 				list.add(new BlogInfo(msgId, username + "",
-						new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
+						new SimpleDateFormat("yyyy-MM-dd kk:mm:ss")
 								.parse(postTime), content, authorId));
 			}
 		} catch (Exception e) {
@@ -188,7 +188,7 @@ public class IBlogDaoImpl implements IBlogDao {
 		Connection conn = new ConnectionOracle().getConnection();
 		PreparedStatement ps = null;
 		ResultSet rs = null;
-		String sql = "insert into t_msg_info values(?,msg_id_sequence.nextval,?,?,?,?,to_date(?,'yyyy-MM-dd-HH-mi-ss'))";
+		String sql = "insert into t_msg_info values(?,msg_id_sequence.nextval,?,?,?,?,to_date(?,'yyyy-MM-dd-HH24-mi-ss'))";
 		try {
 			ps = conn.prepareStatement(sql);
 			ps.setInt(1, m.getUserId());
@@ -221,7 +221,7 @@ public class IBlogDaoImpl implements IBlogDao {
 			String timeT) {
 		Connection conn = new ConnectionOracle().getConnection();
 		PreparedStatement ps = null;
-		String sql = "insert into t_user_msg_index values(?,?,?,to_date(?,'yyyy-MM-dd-HH-mi-ss'))";
+		String sql = "insert into t_user_msg_index values(?,?,?,to_date(?,'yyyy-MM-dd-HH24-mi-ss'))";
 		try {
 			ps = conn.prepareStatement(sql);
 			ps.setInt(1, followId);
@@ -245,7 +245,7 @@ public class IBlogDaoImpl implements IBlogDao {
 		Connection conn = new ConnectionOracle().getConnection();
 		PreparedStatement ps = null;
 		boolean flag = false;
-		String sql = "insert into t_msg_msg_relation values(?,?,?,?,?,to_date(?,'yyyy-MM-dd-HH-mi-ss'))";
+		String sql = "insert into t_msg_msg_relation values(?,?,?,?,?,to_date(?,'yyyy-MM-dd-HH24-mi-ss'))";
 		try {
 			ps = conn.prepareStatement(sql);
 			ps.setInt(1, referenceId);
@@ -253,7 +253,7 @@ public class IBlogDaoImpl implements IBlogDao {
 			ps.setInt(3, referencedId);
 			ps.setInt(4, referencedMsgId);
 			ps.setInt(5, type);
-			ps.setString(6, new SimpleDateFormat("yyyy-MM-dd-hh-mm-ss")
+			ps.setString(6, new SimpleDateFormat("yyyy-MM-dd-kk-mm-ss")
 					.format(time));
 			int i = ps.executeUpdate();
 			if (i == 1) {

@@ -1,55 +1,82 @@
 package com.example.json.foogt.activity;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
+import com.android.volley.toolbox.Volley;
 import com.example.json.foogt.ActivityCollector.ActivityCollector;
 import com.example.json.foogt.R;
 import com.example.json.foogt.entity.User;
 import com.example.json.foogt.fragment.CommentFragment;
 import com.example.json.foogt.fragment.HomeFragment;
+import com.example.json.foogt.util.BitmapCache;
 import com.example.json.foogt.util.HttpCallbackListener;
 import com.example.json.foogt.util.HttpUtil;
 import com.example.json.foogt.util.IConst;
 import com.example.json.foogt.util.LogUtil;
 import com.example.json.foogt.util.Utility;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-
-import javax.net.ssl.ManagerFactoryParameters;
 
 public class MenuActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private ImageView dataEditImg;
+    public static final int SELECT_PIC_BY_PICK_PHOTO = 1;
     private int userId;
+    private String mPicturePath;
+
+    private ImageView dataEditImg;
+    private NetworkImageView headImg;
+    private ProgressDialog pd;
 
     private TextView fansTxt, focusTxt, countMsgTxt, userNameTxt, UserIntroMin;
 
     CollectionPagerAdapter mPagerAdapter;
     ViewPager mViewPager;
+    private ImageLoader mImageLoader;
+    private RequestQueue mQueue;
+    private Context mContext;
 
     @TargetApi(Build.VERSION_CODES.M)
     @Override
@@ -58,9 +85,8 @@ public class MenuActivity extends AppCompatActivity
         setContentView(R.layout.activity_menu);
 
         ActivityCollector.addActivity(this);
-
+        mContext = this;
         userId = getIntent().getIntExtra("userId", -1);
-        //userId=1;
 
         /*
         Toolbar最上层的一栏
@@ -84,7 +110,6 @@ public class MenuActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                 SendBlogActivity.actionStart(MenuActivity.this, userId);
             }
         });
@@ -127,7 +152,7 @@ public class MenuActivity extends AppCompatActivity
         countMsgTxt = (TextView) headerView.findViewById(R.id.txt_user_count);
         userNameTxt = (TextView) headerView.findViewById(R.id.txt_menu_userName);
         UserIntroMin = (TextView) headerView.findViewById(R.id.txt_menu_userIntro);
-
+        headImg = (NetworkImageView) headerView.findViewById(R.id.img_menu_user);
 
         OnDrawerItemClickListener listener = new OnDrawerItemClickListener();
         dataEditImg.setOnClickListener(listener);
@@ -135,12 +160,19 @@ public class MenuActivity extends AppCompatActivity
         focusTxt.setOnClickListener(listener);
         countMsgTxt.setOnClickListener(listener);
 
+        mQueue = Volley.newRequestQueue(this);
+        mImageLoader = new ImageLoader(mQueue, BitmapCache.getInstance());
+        //Set Head IMG
+        headImg.setDefaultImageResId(R.drawable.picture);
+        headImg.setErrorImageResId(R.drawable.search);
+        headImg.setImageUrl(IConst.SERVLET_ADDR + "GetHeadIMG?uid=" + userId, mImageLoader);
 
+        headImg.setOnClickListener(new SetHeadImgListener());
     }
 
     private void setupViewpager(ViewPager viewPager) {
         mPagerAdapter = new CollectionPagerAdapter(getSupportFragmentManager());
-        mPagerAdapter.addFragment(HomeFragment.newInstance(userId,HomeFragment.HOME), getResources().getString(R.string.home));
+        mPagerAdapter.addFragment(HomeFragment.newInstance(userId, HomeFragment.HOME), getResources().getString(R.string.home));
         mPagerAdapter.addFragment(CommentFragment.newInstance(), getResources().getString(R.string.comment));
         viewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
@@ -174,7 +206,6 @@ public class MenuActivity extends AppCompatActivity
             return true;
         }
     };
-
 
     public void change(int position) {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -220,8 +251,8 @@ public class MenuActivity extends AppCompatActivity
     }
 
     /*
-        返回键
-         */
+     * 返回键
+     */
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -242,7 +273,7 @@ public class MenuActivity extends AppCompatActivity
      * 跳转至各个界面
      *
      * @param item selected NavigationItem
-     * @return
+     * @return boolean
      */
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -264,6 +295,33 @@ public class MenuActivity extends AppCompatActivity
         return true;
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == Activity.RESULT_OK) {
+            Uri uri = data.getData();
+            String path = convertUriToPath(uri);
+            LogUtil.d("URI", uri.toString());
+            if (!Utility.isImageFileExtension(MimeTypeMap.getFileExtensionFromUrl(path))) {
+                alert("不是有效的PNG文件！");
+                return;
+            }
+            try {
+                Bitmap bitmap = BitmapFactory.decodeStream(this
+                        .getContentResolver().openInputStream(uri));
+                if (bitmap.getByteCount() > 4 * 1024 * 1024) { //max size 4MB
+                    alert("图片文件过大！");
+                    return;
+                }
+                mPicturePath = path;
+                LogUtil.d("MenuActivity", path);
+                doPhoto(mPicturePath);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+                LogUtil.e("MenuActivity", e.toString());
+            }
+        }
+    }
+
     /**
      * 登录后对接
      */
@@ -271,7 +329,6 @@ public class MenuActivity extends AppCompatActivity
     public static void actionStart(Context context, int userId) {
         Intent i = new Intent(context, MenuActivity.class);
         i.putExtra("userId", userId);
-        System.out.println(userId);
         context.startActivity(i);
     }
 
@@ -297,7 +354,7 @@ public class MenuActivity extends AppCompatActivity
                  *
                  */
                 case R.id.txt_user_count:
-                    UserBlogActivity.actionStart(MenuActivity.this,userId);
+                    UserBlogActivity.actionStart(MenuActivity.this, userId);
                     LogUtil.i("hehehe", "sdfsdfsfas");
                     break;
                 /**
@@ -323,7 +380,7 @@ public class MenuActivity extends AppCompatActivity
     /*
     刚刚跳转时从服务器得到数据
      */
-    public void getUserData(int userId) {
+    public void getUserData(final int userId) {
         String url = IConst.SERVLET_ADDR + "SearchUserDataServlet";
         String data = "userId=" + userId;
         HttpUtil.sendHttpRequest(url, "POST", data, new HttpCallbackListener() {
@@ -375,4 +432,101 @@ public class MenuActivity extends AppCompatActivity
             }
         });
     }
+
+    private class SetHeadImgListener implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            pickPhoto();
+        }
+    }
+
+    private void pickPhoto() {
+        Intent intent = new Intent();
+        // 如果要限制上传到服务器的图片类型时可以直接写如："image/jpeg 、 image/png等的类型"
+        intent.setType("image/png");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(intent, SELECT_PIC_BY_PICK_PHOTO);
+    }
+
+    /**
+     * 选择图片后，获取图片的路径
+     */
+    private void doPhoto(String picPath) {
+        // 如果图片非空将其上传到服务器
+        if (picPath != null) {
+/*          暂时无用，预览图片用
+//          BitmapFactory.Options option = new BitmapFactory.Options();
+//          压缩图片:表示缩略图大小为原始图片大小的几分之一，1为原图
+//          option.inSampleSize = 1;
+//          根据图片的SDCard路径读出Bitmap
+//          Bitmap bm = BitmapFactory.decodeFile(picPath, option);
+//          显示在图片控件上
+//          picImg.setImageBitmap(bm);
+*/
+            final File file = new File(picPath);
+            final String mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(
+                    MimeTypeMap.getFileExtensionFromUrl(picPath));
+            try {
+                pd = ProgressDialog.show(mContext, null, "正在上传图片，请稍候...");
+                int res = HttpUtil.postFileToURL(file, mimeType, new URL(IConst.SERVLET_ADDR + "UploadImg?userId=" + userId), "pic",
+                        new HttpCallbackListener() {
+                            @Override
+                            public void onFinish(String response) {
+                                if (Utility.handleBooleanResultResponse(response)) {
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            //reload img without cache
+                                            headImg.setImageUrl(IConst.SERVLET_ADDR + "GetHeadIMG?uid=" + userId + "&random=" + Math.random(), mImageLoader);
+                                            Toast.makeText(MenuActivity.this, getString(R.string.upload_img_success) + "," + getString(R.string.refresh_to_show), Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                }
+                            }
+
+                            @Override
+                            public void onError(Exception e) {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Toast.makeText(MenuActivity.this, R.string.http_fail, Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            }
+                        });
+                LogUtil.d("result", res + "");
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+                LogUtil.e("UploadImg", e.toString());
+            } finally {
+                pd.dismiss();
+            }
+        } else {
+            Toast.makeText(this, "选择图片文件不正确", Toast.LENGTH_LONG).show();
+        }
+
+    }
+
+    private String convertUriToPath(Uri uri) {
+        String[] proj = {MediaStore.Images.Media.DATA};
+        Cursor cursor = getContentResolver().query(uri, proj, null, null, null);
+        if (cursor == null) {
+            alert("图片不存在或尚未加入相册索引！");
+            return null;
+        }
+        int colunm_index = cursor
+                .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        String path = cursor.getString(colunm_index);
+        Log.i("MenuActivity", "PicPath: " + path);
+        return path;
+    }
+
+    private void alert(String msg) {
+        Dialog dialog = new AlertDialog.Builder(this).setTitle("提示")
+                .setMessage(msg)
+                .setPositiveButton("确定", null).create();
+        dialog.show();
+    }
+
 }

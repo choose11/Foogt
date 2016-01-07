@@ -31,6 +31,8 @@ import com.example.json.foogt.util.LogUtil;
 import com.example.json.foogt.util.Utility;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -65,6 +67,7 @@ public class HomeFragment extends Fragment implements
     private RequestQueue mQueue;
     private LinearLayoutManager layoutManager;
     private ImageLoader imageLoader;
+    private BitmapCache bitmapCache;
 
     private OnFragmentInteractionListener mListener;
 
@@ -118,8 +121,9 @@ public class HomeFragment extends Fragment implements
         }
         //volley request queue
         mQueue = Volley.newRequestQueue(getContext());
+        bitmapCache = BitmapCache.getInstance();
         //user head img loader. use bitmap cache
-        imageLoader = new ImageLoader(mQueue, new BitmapCache());
+        imageLoader = new ImageLoader(mQueue, bitmapCache);
     }
 
     @Override
@@ -138,9 +142,9 @@ public class HomeFragment extends Fragment implements
         list = new ArrayList<>();
         if (type == HOME) {
             adapter = new MBlogAdapter(list, this, imageLoader);
-        } else if(type == COLLECTION){
+        } else if (type == COLLECTION) {
             adapter = new MBlogAdapter(list, null, imageLoader);
-         }else {
+        } else {
             adapter = new MBlogAdapter(list, null, imageLoader);
 
         }
@@ -175,9 +179,10 @@ public class HomeFragment extends Fragment implements
     @Override
     public void onRefresh() {
         currentPage = 0;
-        if(type == PEOPLEBLOG){
+        bitmapCache.clear();
+        if (type == PEOPLEBLOG) {
             peopleLoad(currentPage);
-        }else {
+        } else {
             load(currentPage);
         }
     }
@@ -222,15 +227,15 @@ public class HomeFragment extends Fragment implements
     @Override
     public void onRepostClick(BlogInfo msg) {
         LogUtil.d(TAG, "onRepostClick");
-        for(BlogInfo b:list){
-            LogUtil.d(TAG,"BlogInfo"+ b.getAuthorId());
+        for (BlogInfo b : list) {
+            LogUtil.d(TAG, "BlogInfo" + b.getAuthorId());
         }
         System.out.println(msg.getAuthorId());
-        if (userId==msg.getAuthorId()){
-            Toast.makeText(getActivity(),"自己转发自己的微博？你是不是傻？",Toast.LENGTH_LONG).show();
-        }else {
+        if (userId == msg.getAuthorId()) {
+            Toast.makeText(getActivity(), "自己转发自己的微博？你是不是傻？", Toast.LENGTH_LONG).show();
+        } else {
             TransferActivity.actionStart(getActivity(), msg, userId);
-                }
+        }
     }
 
     /**
@@ -312,6 +317,7 @@ public class HomeFragment extends Fragment implements
             if (results.size() > 0) {
                 currentPage++;
                 list.addAll(results);
+                Collections.sort(list);
                 LogUtil.d(TAG, "list size" + list.size());
             } else {
                 currentPage++;

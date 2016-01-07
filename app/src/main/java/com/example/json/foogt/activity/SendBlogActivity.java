@@ -77,7 +77,7 @@ public class SendBlogActivity extends AppCompatActivity {
                 // TODO: 2016/1/4 msg length
                 content = contentEdit.getText().toString();
                 System.out.println(content);
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-hh-mm-ss");
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-kk-mm-ss");
                 timeT = sdf.format(new java.util.Date());
                 System.out.println(timeT);
 

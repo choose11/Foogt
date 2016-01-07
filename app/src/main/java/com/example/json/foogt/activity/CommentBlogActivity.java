@@ -67,7 +67,7 @@ public class CommentBlogActivity extends AppCompatActivity implements Response.E
         }
 
         blogUserName.setText(msg.getUsername());
-        blogPostTime.setText(new SimpleDateFormat("MM.dd hh:mm").format(msg.getPostTime()));
+        blogPostTime.setText(new SimpleDateFormat("MM.dd kk:mm").format(msg.getPostTime()));
         blogMsg.setText(msg.getMsg());
 
         submit.setOnClickListener(new OnSubmitClickListener());

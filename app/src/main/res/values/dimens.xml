@@ -8,4 +8,5 @@
     <dimen name="app_bar_height">269dp</dimen>
     <dimen name="expanded_toolbar_title_margin_start">64dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="head_img_size">50dp</dimen>
 </resources>

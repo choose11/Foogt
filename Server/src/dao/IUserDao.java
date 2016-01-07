@@ -39,4 +39,6 @@ public interface IUserDao {
 	public boolean checkHeadImg(int uid);
 	
 	public boolean updateMsgCount(int userId);
+	
+	public boolean setHeadImg(int uid);
 }

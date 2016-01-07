@@ -26,6 +26,7 @@ import com.example.json.foogt.util.IConst;
 import com.example.json.foogt.util.LogUtil;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class UserBlogActivity extends AppCompatActivity {
@@ -125,6 +126,7 @@ public class UserBlogActivity extends AppCompatActivity {
                     for (BlogInfo b : results) {
                         list.add(b);
                     }
+                    Collections.sort(list);
                 } else {
                     havaMoreBlogs = false;
                 }

@@ -5,7 +5,7 @@ import java.util.Date;
 /**
  * Created by Mzz on 2015/12/28.
  */
-public class BlogInfo {
+public class BlogInfo implements Comparable<BlogInfo> {
     private int authorId;
     private int msgId;
     private String username;
@@ -59,5 +59,11 @@ public class BlogInfo {
 
     public void setAuthorId(int autorId) {
         this.authorId = autorId;
+    }
+
+    @Override
+    public int compareTo(BlogInfo another) {
+        //时间越早，越往后排
+        return another.getPostTime().compareTo(this.postTime);
     }
 }

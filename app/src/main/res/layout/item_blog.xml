@@ -11,8 +11,8 @@
 
         <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/img_blog_user_profile"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="@dimen/head_img_size"
+            android:layout_height="@dimen/head_img_size"
             android:layout_gravity="center_horizontal"
             android:padding="5dp"
             />
