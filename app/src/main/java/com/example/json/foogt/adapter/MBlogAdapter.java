@@ -150,6 +150,7 @@ public class MBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     /**
      * according to position to return itemViewType.
      * itemViewType is used to decide which view to return in onCreateViewHolder
+     *
      * @param position item position
      * @return
      */

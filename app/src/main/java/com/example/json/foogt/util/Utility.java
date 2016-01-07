@@ -1,8 +1,11 @@
 package com.example.json.foogt.util;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.TypedArray;
 import android.text.TextUtils;
 
+import com.example.json.foogt.R;
 import com.example.json.foogt.entity.User;
 
 import org.json.JSONArray;
@@ -105,5 +108,14 @@ public class Utility {
             LogUtil.e(TAG,e.toString());
         }
         return list;
+    }
+
+    public static int getToolbarHeight(Context context) {
+        final TypedArray styledAttributes = context.getTheme().obtainStyledAttributes(
+                new int[]{R.attr.actionBarSize});
+        int toolbarHeight = (int) styledAttributes.getDimension(0, 0);
+        styledAttributes.recycle();
+
+        return toolbarHeight;
     }
 }
