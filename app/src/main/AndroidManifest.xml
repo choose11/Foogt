@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="com.example.json.foogt"
-          xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest
+    package="com.example.json.foogt"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
@@ -26,9 +27,7 @@
         <activity android:name=".activity.SendBlogActivity">
         </activity>
         <activity
-            android:name=".activity.MenuActivity"
-            android:label="@string/title_activity_menu"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:name=".activity.MenuActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -37,8 +36,7 @@
         </activity>
         <activity android:name=".activity.CollectionActivity">
         </activity>
-        <activity android:name=".activity.PeopleActivity"
-                  android:theme="@style/AppTheme.NoActionBar">
+        <activity android:name=".activity.PeopleActivity">
         </activity>
         <activity android:name=".activity.FansOrFocusActivity">
         </activity>
@@ -47,9 +45,7 @@
         <activity android:name=".activity.CommentBlogActivity">
         </activity>
         <activity
-            android:name=".activity.TransferActivity"
-            android:label="@string/title_activity_transfer"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:name=".activity.TransferActivity">
         </activity>
 
     </application>

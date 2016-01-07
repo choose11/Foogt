@@ -4,36 +4,45 @@
 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="5sp"
-    android:paddingBottom="5sp"
-    android:paddingLeft="5sp"
-    android:paddingRight="5sp"
-    android:paddingTop="5sp"
-    android:weightSum="1">
+    android:orientation="vertical">
 
-    <ListView
-        android:id="@+id/lv_changeUser_user"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_weight="0.97"/>
+    <include
+        layout="@layout/toolbar_main"/>
 
-    <Button
-        android:id="@+id/btn_change_user_add"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="50sp"
-        android:layout_gravity="center_horizontal"
-        android:text="@string/add_new_user"
-        android:background="#00ffffff"/>
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="5sp"
+        android:paddingBottom="5sp"
+        android:paddingLeft="5sp"
+        android:paddingRight="5sp"
+        android:paddingTop="5sp"
+        android:weightSum="1">
 
-    <Button
-        android:id="@+id/btn_change_user_quit"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#e3e1e1"
-        android:text="@string/exit_account"
-        android:textColor="#fb2b32"
-        android:textSize="20sp"/>
+        <ListView
+            android:id="@+id/lv_changeUser_user"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="0.97"/>
+
+        <Button
+            android:id="@+id/btn_change_user_add"
+            android:layout_width="match_parent"
+            android:layout_height="50sp"
+            android:layout_gravity="center_horizontal"
+            android:background="#00ffffff"
+            android:text="@string/add_new_user"/>
+
+        <Button
+            android:id="@+id/btn_change_user_quit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#e3e1e1"
+            android:text="@string/exit_account"
+            android:textColor="#fb2b32"
+            android:textSize="20sp"/>
+    </LinearLayout>
 
 </LinearLayout>

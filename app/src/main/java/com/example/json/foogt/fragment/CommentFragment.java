@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import com.alibaba.fastjson.JSON;
 import com.example.json.foogt.R;
 import com.example.json.foogt.entity.BlogInfo;
+import com.example.json.foogt.util.LogUtil;
 
 /**
  * A simple {@link Fragment} subclass.
