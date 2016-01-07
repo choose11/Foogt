@@ -54,7 +54,7 @@ public class IBlogServiceImpl implements IBlogService {
 	public boolean commentBlog(int userId, int msgId, int msgAuthorId,
 			String comment, Date time) {
 		System.out.println(msgId);
-		msgInfo m = new msgInfo(userId, comment, msgInfo.COMMENT, 0, 0, new SimpleDateFormat("yyyy-MM-dd-hh-mm-ss")
+		msgInfo m = new msgInfo(userId, comment, msgInfo.COMMENT, 0, 0, new SimpleDateFormat("yyyy-MM-dd-kk-mm-ss")
 		.format(time));
 		m = dao.insertTMsgInfo(m);
 		System.out.println(msgId);

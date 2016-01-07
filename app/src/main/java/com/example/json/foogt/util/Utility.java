@@ -1,8 +1,9 @@
 package com.example.json.foogt.util;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.TypedArray;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.text.TextUtils;
 
 import com.example.json.foogt.R;
@@ -105,7 +106,7 @@ public class Utility {
             }
         } catch (JSONException e) {
             e.printStackTrace();
-            LogUtil.e(TAG,e.toString());
+            LogUtil.e(TAG, e.toString());
         }
         return list;
     }
@@ -117,5 +118,18 @@ public class Utility {
         styledAttributes.recycle();
 
         return toolbarHeight;
+    }
+
+
+    public static boolean isImageFileExtension(String fileExtension) {
+        LogUtil.d(TAG, fileExtension);
+        return fileExtension.toUpperCase().endsWith("PNG");
+    }
+
+    public static boolean isNetworkAvailable(Context context) {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }

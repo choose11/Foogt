@@ -60,7 +60,7 @@ public class GetHeadIMG extends HttpServlet {
 		boolean result = Factory.getIUserService().checkHeadImg(uid);
 		String filename;
 		if (result) {
-			filename = cntx.getRealPath("HeaderImgs/" + "uid" + ".png");
+			filename = cntx.getRealPath("HeaderImgs/" + uid + ".png");
 		} else {
 			filename = cntx.getRealPath("HeaderImgs/default.jpg");
 		}

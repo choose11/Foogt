@@ -68,6 +68,7 @@ public class IUserDaoImpl implements IUserDao {
 		}
 		return flag;
 	}
+
 	@Override
 	public boolean userLogin(User u) {
 		Connection conn = new ConnectionOracle().getConnection();
@@ -217,7 +218,7 @@ public class IUserDaoImpl implements IUserDao {
 	 * @param
 	 */
 	@Override
-	public List<User> searchUser(String keyword,int limit) {
+	public List<User> searchUser(String keyword, int limit) {
 		List<User> resultUser = new ArrayList<User>();
 		Connection conn = new ConnectionOracle().getConnection();
 		PreparedStatement pstmt = null;
@@ -375,8 +376,6 @@ public class IUserDaoImpl implements IUserDao {
 		return user;
 	}
 
-	
-
 	// select user_id from t_user_account
 	@Override
 	public User selectUserId(String username) {
@@ -451,7 +450,7 @@ public class IUserDaoImpl implements IUserDao {
 
 		return result;
 	}
-	
+
 	@Override
 	public boolean checkHeadImg(int uid) {
 		Connection conn = new ConnectionOracle().getConnection();
@@ -464,6 +463,28 @@ public class IUserDaoImpl implements IUserDao {
 			pstmt.setInt(1, uid);
 			rs = pstmt.executeQuery();
 			if (rs.next()) {
+				result = true;
+			}
+		} catch (SQLException e) {
+			LogUtil.e(e);
+			e.printStackTrace();
+		} finally {
+			close(conn, pstmt, rs);
+		}
+		return result;
+	}
+
+	@Override
+	public boolean setHeadImg(int uid) {
+		Connection conn = new ConnectionOracle().getConnection();
+		PreparedStatement pstmt = null;
+		String sql = "insert into t_user_head_img values(?)";
+		boolean result = false;
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, uid);
+			int i = pstmt.executeUpdate();
+			if (i == 1) {
 				result = true;
 			}
 		} catch (SQLException e) {

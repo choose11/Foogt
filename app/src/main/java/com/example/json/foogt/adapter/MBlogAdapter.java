@@ -68,7 +68,7 @@ public class MBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         //bind data to view
         if (holder instanceof ViewHolder) {
             ((ViewHolder) holder).username.setText(list.get(position).getUsername());
-            ((ViewHolder) holder).postTime.setText(new SimpleDateFormat("MM.dd hh:mm").format(list.get(position).getPostTime()));
+            ((ViewHolder) holder).postTime.setText(new SimpleDateFormat("MM.dd kk:mm").format(list.get(position).getPostTime()));
             ((ViewHolder) holder).msg.setText(list.get(position).getMsg());
             // TODO: 2016/1/4 img change by msg state
             ((ViewHolder) holder).headIMG.setDefaultImageResId(R.drawable.picture);

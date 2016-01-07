@@ -13,13 +13,12 @@
               android:paddingTop="@dimen/activity_vertical_margin"
               android:theme="@style/ThemeOverlay.AppCompat.Dark">
 <!--android:id= "@+id/lin_lay"-->
-    <ImageView
+    <com.android.volley.toolbox.NetworkImageView
         android:id="@+id/img_menu_user"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/head_img_size"
+        android:layout_height="@dimen/head_img_size"
         android:layout_gravity="center_vertical"
-        android:paddingTop="@dimen/nav_header_vertical_spacing"
-        android:src="@android:drawable/sym_def_app_icon"/>
+        android:paddingTop="@dimen/nav_header_vertical_spacing"/>
 
     <LinearLayout
         android:layout_width="match_parent"
