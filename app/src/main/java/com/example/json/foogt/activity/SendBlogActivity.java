@@ -19,6 +19,7 @@ import com.example.json.foogt.R;
 import com.example.json.foogt.util.HttpCallbackListener;
 import com.example.json.foogt.util.HttpUtil;
 import com.example.json.foogt.util.IConst;
+import com.example.json.foogt.util.LogUtil;
 
 import java.sql.Date;
 import java.sql.SQLOutput;
@@ -34,6 +35,7 @@ public class SendBlogActivity extends AppCompatActivity {
         @Override
         public void handleMessage(Message msg) {
             String re= msg.obj.toString();
+            LogUtil.d("SendBlog", re);
             if (re.equals("s")){
                 Toast.makeText(SendBlogActivity.this,"发送微博成功",Toast.LENGTH_LONG).show();
                 finish();

@@ -30,4 +30,6 @@ public interface IUserService {
 	public List<Integer> selectFollowId(int userId);
 	
 	public boolean checkHeadImg(int uid);
+	
+	public boolean updateMsgCount(int userId);
 }

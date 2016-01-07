@@ -127,6 +127,8 @@ public class HomeFragment extends Fragment implements
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_home, container, false);
+//        CommentFragment.actionStart(getActivity(),msg,userId);
+
         rv = (RecyclerView) v.findViewById(R.id.rv_home_msg);
         sw = (SwipeRefreshLayout) v.findViewById(R.id.layout_swipe);
 

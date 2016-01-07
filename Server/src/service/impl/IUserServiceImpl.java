@@ -153,7 +153,14 @@ public class IUserServiceImpl implements IUserService {
 		// System.out.println(i.searchData(10).getUsername() + " : "
 		// + i.searchData(10).getUserIntro());
 		// System.out.println(i.updateUserData(12, "张三", "今天写了好多啊"));
+		//System.out.println("updateMsgCount\t"+i.updateMsgCount(2));
 
+	}
+
+	@Override
+	public boolean updateMsgCount(int userId) {
+		// TODO Auto-generated method stub
+		return dao.updateMsgCount(userId);
 	}
 
 }

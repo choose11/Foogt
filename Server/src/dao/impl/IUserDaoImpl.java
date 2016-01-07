@@ -491,4 +491,25 @@ public class IUserDaoImpl implements IUserDao {
 		}
 	}
 
+	@Override
+	public boolean updateMsgCount(int userId) {
+		// TODO Auto-generated method stub
+		Connection conn=new ConnectionOracle().getConnection();
+		PreparedStatement ps=null;
+		String sql="update t_user_info set msg_count=msg_count+1 where user_id=?";
+		try {
+			ps=conn.prepareStatement(sql);
+			ps.setInt(1, userId);
+			int i=ps.executeUpdate();
+			return true;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}finally{
+			close(conn, ps, null);
+		}
+		
+	}
+
 }
