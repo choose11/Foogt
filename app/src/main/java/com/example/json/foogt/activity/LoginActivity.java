@@ -3,6 +3,7 @@ package com.example.json.foogt.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
+import com.example.json.foogt.ActivityCollector.ActivityCollector;
 import com.example.json.foogt.R;
 import com.example.json.foogt.Sqlite.MySqliteOpenHelper;
 import com.example.json.foogt.entity.UserInfoMsg;
@@ -37,6 +39,7 @@ public class LoginActivity extends AppCompatActivity {
     private SQLiteDatabase db;
     private String dbName = "user";
     private int version = 1;
+    SharedPreferences preferences;
 
 
     private Handler handler = new Handler() {
@@ -59,6 +62,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        ActivityCollector.addActivity(this);
         loginBtn = (Button) findViewById(R.id.btn_login_login);
         registerBtn = (Button) findViewById(R.id.btn_login_register);
         countEdit = (EditText) findViewById(R.id.edit_login_userName);
@@ -73,6 +77,7 @@ public class LoginActivity extends AppCompatActivity {
         db = helper.getWritableDatabase();
 
         //登陆按钮点击事件
+
         loginBtn.setOnClickListener(new OnSubmitListener());
 
         registerBtn.setOnClickListener(new View.OnClickListener() {
@@ -125,16 +130,19 @@ public class LoginActivity extends AppCompatActivity {
                     public void onFinish(String response) {
                         UserInfoMsg UserInfo = JSON.parseObject(response, UserInfoMsg.class);
                         userId = UserInfo.getUser().getUserId();
-                        System.out.println(userId);
                         Message msg = new Message();
                         msg.obj = UserInfo.isResult();
-                        handler.sendMessage(msg);
-
-
                         /**
                          * 存数据到sqlite
                          */
                         SaveData(account);
+                        /**
+                         * 保存用户userId到本地，方便下次登陆
+                         */
+                        saveSharedPreferencesUserId(userId);
+
+                        handler.sendMessage(msg);
+                        //handler一定要放在上面两个函数后面执行，否则会先启动主界面再传值到文件里！！！！
                     }
 
                     @Override
@@ -151,5 +159,20 @@ public class LoginActivity extends AppCompatActivity {
                 });
             }
         }
+    }
+
+    private void saveSharedPreferencesUserId(int userId){
+        preferences = getSharedPreferences("userId"
+                , MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt("userId", userId);
+        // 提交修改
+        /*
+         *apply()与commit()区别：  apply没有返回值而commit返回boolean表明修改是否提交成功 ，
+         * apply是将修改数据原子提交到内存, 而后异步真正提交到硬件磁盘, 而commit是同步的提交到硬件磁盘
+         * apply方法不会提示任何失败的提示。
+         */
+        editor.apply();
+        //editor.commit();
     }
 }

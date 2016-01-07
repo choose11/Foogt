@@ -1,6 +1,5 @@
 package com.example.json.foogt.fragment;
 
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -31,7 +30,6 @@ import com.example.json.foogt.util.LogUtil;
 import com.example.json.foogt.util.Utility;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -111,13 +109,18 @@ public class HomeFragment extends Fragment implements
             type = getArguments().getInt(ARG_TYPE);
             //according to fragment type to define base url.
             // base url is used for load data from server
-            if (type == HOME) {
-                loadBaseUrl = IConst.SERVLET_ADDR + "GetBlogs";
-            } else if (type == COLLECTION) {
-                loadBaseUrl = IConst.SERVLET_ADDR + "GetCollections";
-            } else {
-                loadBaseUrl = IConst.SERVER_ADDR + "GetUserOwnBlogs";
-            }
+                if( userId != -1 ) {
+                    if (type == HOME) {
+                    loadBaseUrl = IConst.SERVLET_ADDR + "GetBlogs";
+                    } else if (type == COLLECTION) {
+                        loadBaseUrl = IConst.SERVLET_ADDR + "GetCollections";
+                    } else {
+                        loadBaseUrl = IConst.SERVER_ADDR + "GetUserOwnBlogs";
+                    }
+                }else{
+                    loadBaseUrl = IConst.SERVER_ADDR + "GetHotBlogs";
+                }
+
         }
         //volley request queue
         mQueue = Volley.newRequestQueue(getContext());
@@ -210,31 +213,43 @@ public class HomeFragment extends Fragment implements
     // implementation of MBlogAdapter.OnItemClickListener
     @Override
     public void onCollectClick(int msgId) {
-        collectBlog(msgId);
+        if(userId!=-1) {
+            collectBlog(msgId);
+        }else{
+                Toast.makeText(getActivity(), "请侧拉出菜单，进行登陆！！", Toast.LENGTH_SHORT).show();
+        }
     }
 
     // implementation of MBlogAdapter.OnItemClickListener
     @Override
     public void onCommentClick(BlogInfo msg) {
         LogUtil.d(TAG, "onCommentClick");
+        if(userId!=-1) {
         for (BlogInfo b : list) {
             LogUtil.d(TAG, "BlogInfo" + b.getAuthorId());
         }
         CommentBlogActivity.actionStart(getActivity(), msg, userId);
+        }else{
+            Toast.makeText(getActivity(), "请侧拉出菜单，进行登陆！！", Toast.LENGTH_SHORT).show();
+        }
     }
 
     // implementation of MBlogAdapter.OnItemClickListener
     @Override
     public void onRepostClick(BlogInfo msg) {
         LogUtil.d(TAG, "onRepostClick");
-        for (BlogInfo b : list) {
-            LogUtil.d(TAG, "BlogInfo" + b.getAuthorId());
+        if(userId!=-1){
+        for(BlogInfo b:list){
+            LogUtil.d(TAG,"BlogInfo"+ b.getAuthorId());
         }
         System.out.println(msg.getAuthorId());
         if (userId == msg.getAuthorId()) {
             Toast.makeText(getActivity(), "自己转发自己的微博？你是不是傻？", Toast.LENGTH_LONG).show();
         } else {
             TransferActivity.actionStart(getActivity(), msg, userId);
+                }
+        }else{
+            Toast.makeText(getActivity(), "请侧拉出菜单，进行登陆！！", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -264,11 +279,19 @@ public class HomeFragment extends Fragment implements
         if (!adapter.isHaveMoreBlog()) {
             return;
         }
-        String url = loadBaseUrl + "?userId=" + userId + "&page=" + page;
-        LogUtil.d(TAG, url);
-        //volley request
-        StringRequest stringRequest = new StringRequest(url, new GetBlogsListener(), this);
-        mQueue.add(stringRequest);
+        if(userId != -1) {
+            String url = loadBaseUrl + "?userId=" + userId + "&page=" + page;
+            LogUtil.d(TAG, url);
+            //volley request
+            StringRequest stringRequest = new StringRequest(url, new GetBlogsListener(), this);
+            mQueue.add(stringRequest);
+        }else{
+            String url = loadBaseUrl + "?page=" + page;
+            LogUtil.d(TAG, url);
+            //volley request
+            StringRequest stringRequest = new StringRequest(url, new GetBlogsListener(), this);
+            mQueue.add(stringRequest);
+        }
     }
 
 

@@ -5,8 +5,8 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -56,7 +56,6 @@ import java.io.FileNotFoundException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class MenuActivity extends AppCompatActivity
@@ -70,6 +69,7 @@ public class MenuActivity extends AppCompatActivity
     private NetworkImageView headImg;
     private ProgressDialog pd;
 
+    private int lastLoginUserId;
     private TextView fansTxt, focusTxt, countMsgTxt, userNameTxt, UserIntroMin;
 
     CollectionPagerAdapter mPagerAdapter;
@@ -78,6 +78,8 @@ public class MenuActivity extends AppCompatActivity
     private RequestQueue mQueue;
     private Context mContext;
 
+    SharedPreferences preferences;
+
     @TargetApi(Build.VERSION_CODES.M)
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -85,8 +87,18 @@ public class MenuActivity extends AppCompatActivity
         setContentView(R.layout.activity_menu);
 
         ActivityCollector.addActivity(this);
+
         mContext = this;
-        userId = getIntent().getIntExtra("userId", -1);
+
+        lastLoginUserId = getSharedPreferencesUserId();
+        if (lastLoginUserId == -1) {
+            userId = -1;
+        } else {
+
+            userId=lastLoginUserId;
+            //userId = getIntent().getIntExtra("userId", -1);
+
+        }
 
         /*
         Toolbar最上层的一栏
@@ -107,6 +119,9 @@ public class MenuActivity extends AppCompatActivity
         圆形按钮
          */
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        if (userId == -1) {
+            fab.setVisibility(View.GONE);
+        }
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -126,7 +141,12 @@ public class MenuActivity extends AppCompatActivity
 
             /** Called when a drawer has settled in a completely open state. */
             public void onDrawerOpened(View drawerView) {
-                getUserData(userId);//从服务器拿到原始数据,做一次刷新
+                if (userId != -1) {
+                    getUserData(userId);//从服务器拿到原始数据,做一次刷新
+                } else {
+                    Toast.makeText(MenuActivity.this, "Login First!!!!!", Toast.LENGTH_LONG).show();
+                }
+
             }
         };
 
@@ -155,6 +175,7 @@ public class MenuActivity extends AppCompatActivity
         headImg = (NetworkImageView) headerView.findViewById(R.id.img_menu_user);
 
         OnDrawerItemClickListener listener = new OnDrawerItemClickListener();
+
         dataEditImg.setOnClickListener(listener);
         fansTxt.setOnClickListener(listener);
         focusTxt.setOnClickListener(listener);
@@ -166,6 +187,14 @@ public class MenuActivity extends AppCompatActivity
         headImg.setDefaultImageResId(R.drawable.picture);
         headImg.setErrorImageResId(R.drawable.search);
         headImg.setImageUrl(IConst.SERVLET_ADDR + "GetHeadIMG?uid=" + userId, mImageLoader);
+
+        if (userId != -1) {
+            dataEditImg.setOnClickListener(listener);
+            fansTxt.setOnClickListener(listener);
+            focusTxt.setOnClickListener(listener);
+            countMsgTxt.setOnClickListener(listener);
+        }
+
 
         headImg.setOnClickListener(new SetHeadImgListener());
     }
@@ -194,12 +223,12 @@ public class MenuActivity extends AppCompatActivity
 
             switch (item.getItemId()) {
                 case R.id.action_home:
-                    toolbar.setTitle(R.string.home);
+                    //  toolbar.setTitle(R.string.home);
                     // TODO: 2015/12/29 未实现点击跳转
-
+// TODO: 2016/1/6 功能取消
                     break;
                 case R.id.action_comment:
-                    toolbar.setTitle(R.string.comment);
+                    //  toolbar.setTitle(R.string.comment);
 
                     break;
             }
@@ -259,8 +288,14 @@ public class MenuActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+           // super.onBackPressed();
+            /**
+             * 清除掉前面所有的活动
+             */
+            LogUtil.d("mune",ActivityCollector.activities.size()+"");
+            ActivityCollector.finishAll();
         }
+
     }
 
     @Override
@@ -279,17 +314,20 @@ public class MenuActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+        if (userId != -1) {
+            if (id == R.id.nav_search) {
+                SearchActivity.actionStart(MenuActivity.this, userId);
+            } else if (id == R.id.nav_collection) {
+                CollectionActivity.actionStart(MenuActivity.this, userId);
+            } else if (id == R.id.nav_send) {
+                SendBlogActivity.actionStart(MenuActivity.this, userId);
+            } else if (id == R.id.nav_manage) {
+                ChangeUserActivity.actionStart(MenuActivity.this, userId);
+            }
+        } else {
+            LoginActivity.actionStart(MenuActivity.this);
 
-        if (id == R.id.nav_search) {
-            SearchActivity.actionStart(MenuActivity.this, userId);
-        } else if (id == R.id.nav_collection) {
-            CollectionActivity.actionStart(MenuActivity.this, userId);
-        } else if (id == R.id.nav_send) {
-            SendBlogActivity.actionStart(MenuActivity.this, userId);
-        } else if (id == R.id.nav_manage) {
-            ChangeUserActivity.actionStart(MenuActivity.this, userId);
         }
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -329,6 +367,7 @@ public class MenuActivity extends AppCompatActivity
     public static void actionStart(Context context, int userId) {
         Intent i = new Intent(context, MenuActivity.class);
         i.putExtra("userId", userId);
+        LogUtil.d("MenuActivity", "当前启动的userId：" + userId);
         context.startActivity(i);
     }
 
@@ -433,6 +472,7 @@ public class MenuActivity extends AppCompatActivity
         });
     }
 
+
     private class SetHeadImgListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
@@ -529,4 +569,25 @@ public class MenuActivity extends AppCompatActivity
         dialog.show();
     }
 
+    private int getSharedPreferencesUserId() {
+        int lastUserId;
+        File f = new File("data/data/com.example.json.foogt/shared_prefs/userId.xml");
+        if (!f.exists()) {
+            preferences = getSharedPreferences("userId"
+                    , MODE_PRIVATE);
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putInt("userId", -1);
+            editor.apply();
+            lastUserId = preferences.getInt("userId", 0);
+            System.out.println("取出刚存的lastUserId = " + lastUserId);
+        } else {
+            preferences = getSharedPreferences("userId"
+                    , MODE_PRIVATE);
+            // 读取SharedPreferences里的数据
+            lastUserId = preferences.getInt("userId", 0);
+            System.out.println("取出上次存的lastUserId = " + lastUserId);
+        }
+        return lastUserId;
+    }
 }
+

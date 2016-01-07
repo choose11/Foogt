@@ -61,6 +61,11 @@ public class IBlogServiceImpl implements IBlogService {
 		boolean result = dao.insertTMsgMsgRelation(userId, m.getMsgId(),
 				msgAuthorId, msgId, msgInfo.COMMENT, time);
 		return result;
+	}
+
+	@Override
+	public List<BlogInfo> getHotBlogs(int page) {
+		return dao.getHotBlogs(page);
 	};
 
 }

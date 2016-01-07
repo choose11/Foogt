@@ -22,4 +22,6 @@ public interface IBlogDao {
 			String timeT);
 	
 	public boolean insertTMsgMsgRelation(int referenceId,int referenceMsgId,int referencedId,int referencedMsgId,int type,Date time);
+
+	public List<BlogInfo> getHotBlogs(int page);
 }

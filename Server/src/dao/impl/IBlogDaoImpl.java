@@ -113,6 +113,45 @@ public class IBlogDaoImpl implements IBlogDao {
 
 		return list;
 	}
+	
+	@Override
+	public List<BlogInfo> getHotBlogs(int page) {
+		Connection conn = new ConnectionOracle().getConnection();
+		PreparedStatement pstmt = null;
+		String sql = "select u.user_name, msg.content, to_char(msg.time_t,'yyyy-mm-dd hh:mi:ss'), msg.msg_id" +
+				" from t_msg_info msg, t_user_info u " +
+				"where u.user_id = msg.user_id and msg.msg_id in" +
+				"(select msg_id from " +
+				"(select rownum rn,msg_id from " +
+				"(select msg_id from t_msg_info " +
+				"where type = 0 order by msg_id desc)" +
+				"where rownum<=?)" +
+				"where rn>? )" +
+				" order by msg.msg_id desc";
+		ResultSet rs = null;
+		ArrayList<BlogInfo> list = new ArrayList<BlogInfo>();
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, (page+1)*10);
+			pstmt.setInt(2, page*10);
+			rs = pstmt.executeQuery();
+			while(rs.next()){
+				String username = rs.getString(1);
+				String content = rs.getString(2);
+				String postTime = rs.getString(3);
+				int msgId = rs.getInt(4);
+				list.add(new BlogInfo(msgId, username + "",
+						new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
+								.parse(postTime), content, -1));
+			}
+		}  catch (Exception e) {
+			LogUtil.e(e);
+		} finally {
+			close(conn, pstmt, rs);
+		}
+		return list;
+	}
+
 
 	@Override
 	public boolean collectBlog(int uid, int blogId) {
@@ -283,4 +322,5 @@ public class IBlogDaoImpl implements IBlogDao {
 		}
 	}
 
+	
 }

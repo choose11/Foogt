@@ -11,7 +11,9 @@ public interface IBlogService {
 	public List<BlogInfo> selectBlogs(int userId, int page);
 
 	public List<BlogInfo> selectUserOwnBlogs(int userId, int page);
-
+	
+	public List<BlogInfo> getHotBlogs(int page);
+	
 	public boolean collectBlog(int uid, int msgId);
 
 	public List<BlogInfo> getCollections(int userId, int page);
