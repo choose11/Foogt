@@ -11,6 +11,7 @@ public class BlogInfo implements Comparable<BlogInfo> {
     private String username;
     private Date postTime;
     private String msg;
+    private boolean collected;
 
     public BlogInfo() {
     }
@@ -59,6 +60,14 @@ public class BlogInfo implements Comparable<BlogInfo> {
 
     public void setAuthorId(int autorId) {
         this.authorId = autorId;
+    }
+
+    public boolean isCollected() {
+        return collected;
+    }
+
+    public void setCollected(boolean collected) {
+        this.collected = collected;
     }
 
     @Override

@@ -71,6 +71,11 @@ public class MBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             ((ViewHolder) holder).postTime.setText(new SimpleDateFormat("MM.dd kk:mm").format(list.get(position).getPostTime()));
             ((ViewHolder) holder).msg.setText(list.get(position).getMsg());
             // TODO: 2016/1/4 img change by msg state
+            if(list.get(position).isCollected()) {
+                ((ViewHolder) holder).collect.setImageResource(android.R.drawable.btn_star_big_on);
+            }else{
+                ((ViewHolder) holder).collect.setImageResource(android.R.drawable.btn_star_big_off);
+            }
             ((ViewHolder) holder).headIMG.setDefaultImageResId(R.drawable.picture);
             ((ViewHolder) holder).headIMG.setErrorImageResId(R.drawable.search);
             if (mImageLoader != null) {
@@ -127,7 +132,7 @@ public class MBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             if (mOnClickListener != null) {
                 if (v instanceof ImageView) {
                     //click collect
-                    mOnClickListener.onCollectClick(list.get(itemPosition).getMsgId());
+                    mOnClickListener.onCollectClick(list.get(itemPosition));
                 } else if (v.getId() == R.id.btn_comment) {
                     //click comment
                     mOnClickListener.onCommentClick(list.get(itemPosition));
@@ -172,7 +177,7 @@ public class MBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     }
 
     public interface OnItemClickListener {
-        void onCollectClick(int msgId);
+        void onCollectClick(BlogInfo msg);
 
         void onCommentClick(BlogInfo msg);
 

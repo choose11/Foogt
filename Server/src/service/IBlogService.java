@@ -27,4 +27,6 @@ public interface IBlogService {
 	public boolean commentBlog(int userId, int msgId, int msgAuthorId, String comment,Date time);
 	
 	public  List<msgRelation> selectRelation(int userId);
+	
+	public boolean checkCollected(int userId, int msgId);
 }
