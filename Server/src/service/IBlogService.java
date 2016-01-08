@@ -5,6 +5,7 @@ import java.util.List;
 
 import entity.BlogInfo;
 import entity.msgInfo;
+import entity.msgRelation;
 
 public interface IBlogService {
 
@@ -24,4 +25,6 @@ public interface IBlogService {
 			String timeT);
 	
 	public boolean commentBlog(int userId, int msgId, int msgAuthorId, String comment,Date time);
+	
+	public  List<msgRelation> selectRelation(int userId);
 }

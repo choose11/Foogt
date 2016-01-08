@@ -194,8 +194,8 @@ public class MenuActivity extends AppCompatActivity
 
     private void setupViewpager(ViewPager viewPager) {
         mPagerAdapter = new CollectionPagerAdapter(getSupportFragmentManager());
-        mPagerAdapter.addFragment(HomeFragment.newInstance(userId, HomeFragment.HOME), getResources().getString(R.string.home));
-        mPagerAdapter.addFragment(CommentFragment.newInstance(), getResources().getString(R.string.comment));
+        mPagerAdapter.addFragment(HomeFragment.newInstance(userId,HomeFragment.HOME), getResources().getString(R.string.home));
+        mPagerAdapter.addFragment(CommentFragment.newInstance(userId), getResources().getString(R.string.comment));
         viewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {

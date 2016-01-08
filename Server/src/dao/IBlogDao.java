@@ -5,6 +5,7 @@ import java.util.List;
 
 import entity.BlogInfo;
 import entity.msgInfo;
+import entity.msgRelation;
 
 public interface IBlogDao {
 
@@ -24,4 +25,7 @@ public interface IBlogDao {
 	public boolean insertTMsgMsgRelation(int referenceId,int referenceMsgId,int referencedId,int referencedMsgId,int type,Date time);
 
 	public List<BlogInfo> getHotBlogs(int page);
+
+	public  List<msgRelation> selectRelation(int userId);
+
 }
