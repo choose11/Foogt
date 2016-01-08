@@ -95,7 +95,7 @@ public class MenuActivity extends AppCompatActivity
             userId = -1;
         } else {
 
-            userId=lastLoginUserId;
+            userId = lastLoginUserId;
             //userId = getIntent().getIntExtra("userId", -1);
 
         }
@@ -217,12 +217,11 @@ public class MenuActivity extends AppCompatActivity
             switch (item.getItemId()) {
                 case R.id.action_home:
                     //  toolbar.setTitle(R.string.home);
-                    // TODO: 2015/12/29 未实现点击跳转
-// TODO: 2016/1/6 功能取消
+                    mViewPager.setCurrentItem(0);
                     break;
                 case R.id.action_comment:
                     //  toolbar.setTitle(R.string.comment);
-
+                    mViewPager.setCurrentItem(1);
                     break;
             }
             return true;
@@ -281,11 +280,11 @@ public class MenuActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-           // super.onBackPressed();
+            // super.onBackPressed();
             /**
              * 清除掉前面所有的活动
              */
-            LogUtil.d("mune",ActivityCollector.activities.size()+"");
+            LogUtil.d("mune", ActivityCollector.activities.size() + "");
             ActivityCollector.finishAll();
         }
 

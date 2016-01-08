@@ -215,9 +215,9 @@ public class HomeFragment extends Fragment implements
 
     // implementation of MBlogAdapter.OnItemClickListener
     @Override
-    public void onCollectClick(int msgId) {
+    public void onCollectClick(BlogInfo msg) {
         if (userId != -1) {
-            collectBlog(msgId);
+            collectBlog(msg);
         } else {
             Toast.makeText(getActivity(), "请侧拉出菜单，进行登陆！！", Toast.LENGTH_SHORT).show();
         }
@@ -316,10 +316,11 @@ public class HomeFragment extends Fragment implements
         mQueue.add(stringRequest);
     }
 
-    private void collectBlog(int msgId) {
-        LogUtil.d(TAG, "msgID=" + msgId);
+    private void collectBlog(BlogInfo msg) {
+        int msgId = msg.getMsgId();
+        LogUtil.d(TAG, "msgID=" + msg.getMsgId());
         String url = IConst.SERVLET_ADDR + "Collection?uid=" + userId + "&msgId=" + msgId;
-        StringRequest stringRequest = new StringRequest(url, new CollectListener(), this);
+        StringRequest stringRequest = new StringRequest(url, new CollectListener(msg), this);
         mQueue.add(stringRequest);
     }
 
@@ -361,9 +362,19 @@ public class HomeFragment extends Fragment implements
 
     //handle server response.
     private class CollectListener implements Response.Listener<String> {
+        private BlogInfo msg;
+
+        public CollectListener(BlogInfo msg) {
+            this.msg = msg;
+        }
+
         @Override
         public void onResponse(String response) {
             boolean result = Utility.handleBooleanResultResponse(response);
+            if (result) {
+                msg.setCollected(true);
+                adapter.notifyDataSetChanged();
+            }
             Toast.makeText(getContext(), result ? "Success" : "Failed", Toast.LENGTH_SHORT).show();
         }
     }

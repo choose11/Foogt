@@ -27,5 +27,6 @@ public interface IBlogDao {
 	public List<BlogInfo> getHotBlogs(int page);
 
 	public  List<msgRelation> selectRelation(int userId);
-
+	
+	public boolean checkCollected(int userId, int msgId);
 }

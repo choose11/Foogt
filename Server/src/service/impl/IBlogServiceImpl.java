@@ -23,7 +23,11 @@ public class IBlogServiceImpl implements IBlogService {
 
 	@Override
 	public List<BlogInfo> selectBlogs(int userId, int page) {
-		return dao.selectBlogs(userId, pageSize, page);
+		List<BlogInfo> list = dao.selectBlogs(userId, pageSize, page);
+		for (BlogInfo b : list) {
+			b.setCollected(checkCollected(userId, b.getMsgId()));
+		}
+		return list;
 	}
 
 	@Override
@@ -33,12 +37,19 @@ public class IBlogServiceImpl implements IBlogService {
 
 	@Override
 	public boolean collectBlog(int uid, int msgId) {
+		if (checkCollected(uid, msgId)) {
+			return true;
+		}
 		return dao.collectBlog(uid, msgId);
 	}
 
 	@Override
 	public List<BlogInfo> getCollections(int userId, int page) {
-		return dao.getCollections(userId, pageSize, page);
+		List<BlogInfo> list = dao.getCollections(userId, pageSize, page);
+		for (BlogInfo b : list) {
+			b.setCollected(true);
+		}
+		return list;
 	}
 
 	@Override
@@ -56,8 +67,8 @@ public class IBlogServiceImpl implements IBlogService {
 	public boolean commentBlog(int userId, int msgId, int msgAuthorId,
 			String comment, Date time) {
 		System.out.println(msgId);
-		msgInfo m = new msgInfo(userId, comment, msgInfo.COMMENT, 0, 0, new SimpleDateFormat("yyyy-MM-dd-kk-mm-ss")
-		.format(time));
+		msgInfo m = new msgInfo(userId, comment, msgInfo.COMMENT, 0, 0,
+				new SimpleDateFormat("yyyy-MM-dd-kk-mm-ss").format(time));
 		m = dao.insertTMsgInfo(m);
 		System.out.println(msgId);
 		boolean result = dao.insertTMsgMsgRelation(userId, m.getMsgId(),
@@ -69,11 +80,17 @@ public class IBlogServiceImpl implements IBlogService {
 	public List<BlogInfo> getHotBlogs(int page) {
 		return dao.getHotBlogs(page);
 	}
-				
+	
+	@Override			
 	public List<msgRelation> selectRelation(int userId) {
 		// TODO Auto-generated method stub
 		return dao.selectRelation(userId);
-	};
+	}
+
+	@Override
+	public boolean checkCollected(int userId, int msgId) {
+		return dao.checkCollected(userId, msgId);
+	}
 
 	
 	public static void main(String[] args) {

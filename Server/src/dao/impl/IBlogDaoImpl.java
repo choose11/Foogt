@@ -8,10 +8,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-
-
-
 import util.LogUtil;
 import dao.IBlogDao;
 import db.ConnectionOracle;
@@ -115,29 +111,28 @@ public class IBlogDaoImpl implements IBlogDao {
 
 		return list;
 	}
-	
+
 	@Override
 	public List<BlogInfo> getHotBlogs(int page) {
 		Connection conn = new ConnectionOracle().getConnection();
 		PreparedStatement pstmt = null;
-		String sql = "select u.user_name, msg.content, to_char(msg.time_t,'yyyy-mm-dd hh:mi:ss'), msg.msg_id" +
-				" from t_msg_info msg, t_user_info u " +
-				"where u.user_id = msg.user_id and msg.msg_id in" +
-				"(select msg_id from " +
-				"(select rownum rn,msg_id from " +
-				"(select msg_id from t_msg_info " +
-				"where type = 0 order by msg_id desc)" +
-				"where rownum<=?)" +
-				"where rn>? )" +
-				" order by msg.msg_id desc";
+		String sql = "select u.user_name, msg.content, to_char(msg.time_t,'yyyy-mm-dd hh:mi:ss'), msg.msg_id"
+				+ " from t_msg_info msg, t_user_info u "
+				+ "where u.user_id = msg.user_id and msg.msg_id in"
+				+ "(select msg_id from "
+				+ "(select rownum rn,msg_id from "
+				+ "(select msg_id from t_msg_info "
+				+ "where type = 0 order by msg_id desc)"
+				+ "where rownum<=?)"
+				+ "where rn>? )" + " order by msg.msg_id desc";
 		ResultSet rs = null;
 		ArrayList<BlogInfo> list = new ArrayList<BlogInfo>();
 		try {
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, (page+1)*10);
-			pstmt.setInt(2, page*10);
+			pstmt.setInt(1, (page + 1) * 10);
+			pstmt.setInt(2, page * 10);
 			rs = pstmt.executeQuery();
-			while(rs.next()){
+			while (rs.next()) {
 				String username = rs.getString(1);
 				String content = rs.getString(2);
 				String postTime = rs.getString(3);
@@ -146,14 +141,13 @@ public class IBlogDaoImpl implements IBlogDao {
 						new SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
 								.parse(postTime), content, -1));
 			}
-		}  catch (Exception e) {
+		} catch (Exception e) {
 			LogUtil.e(e);
 		} finally {
 			close(conn, pstmt, rs);
 		}
 		return list;
 	}
-
 
 	@Override
 	public boolean collectBlog(int uid, int blogId) {
@@ -308,6 +302,27 @@ public class IBlogDaoImpl implements IBlogDao {
 		return flag;
 	}
 
+	@Override
+	public boolean checkCollected(int userId, int msgId) {
+		Connection conn = new ConnectionOracle().getConnection();
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		boolean flag = false;
+		String sql = "select user_id from t_blog_collection where user_id=? and msg_id=?";
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, userId);
+			ps.setInt(2, msgId);
+			rs = ps.executeQuery();
+			flag = rs.next();
+		} catch (Exception e) {
+			LogUtil.e(e);
+		} finally {
+			close(conn, ps, rs);
+		}
+		return flag;
+	}
+
 	private void close(Connection conn, PreparedStatement pstmt, ResultSet rs) {
 
 		try {
@@ -327,7 +342,7 @@ public class IBlogDaoImpl implements IBlogDao {
 	
 	@Override
 	public List<msgRelation>selectRelation(int userId){
-		List<msgRelation>list=new ArrayList<>();
+		List<msgRelation>list=new ArrayList<msgRelation>();
 		Connection conn=new ConnectionOracle().getConnection();
 		PreparedStatement ps=null;
 		ResultSet rs=null;
