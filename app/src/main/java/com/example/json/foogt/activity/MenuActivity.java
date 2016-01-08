@@ -176,11 +176,6 @@ public class MenuActivity extends AppCompatActivity
 
         OnDrawerItemClickListener listener = new OnDrawerItemClickListener();
 
-        dataEditImg.setOnClickListener(listener);
-        fansTxt.setOnClickListener(listener);
-        focusTxt.setOnClickListener(listener);
-        countMsgTxt.setOnClickListener(listener);
-
         mQueue = Volley.newRequestQueue(this);
         mImageLoader = new ImageLoader(mQueue, BitmapCache.getInstance());
         //Set Head IMG
@@ -193,10 +188,8 @@ public class MenuActivity extends AppCompatActivity
             fansTxt.setOnClickListener(listener);
             focusTxt.setOnClickListener(listener);
             countMsgTxt.setOnClickListener(listener);
+            headImg.setOnClickListener(new SetHeadImgListener());
         }
-
-
-        headImg.setOnClickListener(new SetHeadImgListener());
     }
 
     private void setupViewpager(ViewPager viewPager) {
@@ -394,21 +387,18 @@ public class MenuActivity extends AppCompatActivity
                  */
                 case R.id.txt_user_count:
                     UserBlogActivity.actionStart(MenuActivity.this, userId);
-                    LogUtil.i("hehehe", "sdfsdfsfas");
                     break;
                 /**
                  * 点击进入粉丝界面
                  */
                 case R.id.txt_user_fans:
                     FansOrFocusActivity.actionStart(MenuActivity.this, userId, "粉丝");
-                    LogUtil.i("fensi", "sdfsdfsfas");
                     break;
                 /**
                  * 点击进入关注界面
                  */
                 case R.id.txt_user_focus:
                     FansOrFocusActivity.actionStart(MenuActivity.this, userId, "关注");
-                    LogUtil.i("guanzhu", "sdfsdfsfas");
                     break;
 
             }

@@ -34,4 +34,5 @@ public interface IUserService {
 	public boolean updateMsgCount(int userId);
 	
 	public boolean setHeadImg(int uid);
+	
 }

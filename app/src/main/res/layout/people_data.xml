@@ -12,6 +12,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
     <!--android:id= "@+id/lin_lay"-->
+    <!--TODO:2016.01.07 刷新头像
     <ImageView
         android:id="@+id/img_data_people"
         android:layout_width="wrap_content"
@@ -19,7 +20,7 @@
         android:layout_gravity="center_horizontal"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
         android:src="@android:drawable/sym_def_app_icon"/>
-
+-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

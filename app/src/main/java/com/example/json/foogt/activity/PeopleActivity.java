@@ -73,7 +73,7 @@ public class PeopleActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_people);
 
-         userId = getIntent().getIntExtra("userId", -1);
+         userId = getIntent().getIntExtra("UserId", -1);
          friendId = getIntent().getIntExtra("FriendId",friendId);
         //friendId=1;
 

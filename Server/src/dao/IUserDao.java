@@ -41,4 +41,8 @@ public interface IUserDao {
 	public boolean updateMsgCount(int userId);
 	
 	public boolean setHeadImg(int uid);
+	
+	public boolean updateFansCount(int userId);
+	
+	public boolean updateFocusCount(int userId);
 }
