@@ -49,6 +49,7 @@ public class LoginActivity extends AppCompatActivity {
             System.out.println(re);
             if (re == true) {
                 // TODO: 2015/12/28 get userId on Login
+
                 MenuActivity.actionStart(LoginActivity.this, userId);
                 finish();
             } else {
@@ -116,7 +117,7 @@ public class LoginActivity extends AppCompatActivity {
         context.startActivity(i);
     }
 
-    class OnSubmitListener implements View.OnClickListener {
+    public class OnSubmitListener implements View.OnClickListener {
 
         @Override
         public void onClick(View v) {
@@ -128,19 +129,23 @@ public class LoginActivity extends AppCompatActivity {
                 HttpUtil.sendHttpRequest(url, "POST", data, new HttpCallbackListener() {
                     @Override
                     public void onFinish(String response) {
+                        LogUtil.d("onFinish response", response);
                         UserInfoMsg UserInfo = JSON.parseObject(response, UserInfoMsg.class);
                         userId = UserInfo.getUser().getUserId();
+                        LogUtil.d("userId1", userId + "");
                         Message msg = new Message();
                         msg.obj = UserInfo.isResult();
+                        LogUtil.d("msg.obj",msg.obj+"");
                         /**
                          * 存数据到sqlite
                          */
                         SaveData(account);
+                        LogUtil.d("login sql","saveData le ");
                         /**
                          * 保存用户userId到本地，方便下次登陆
                          */
                         saveSharedPreferencesUserId(userId);
-
+                        LogUtil.d("login shared","saveShared le ");
                         handler.sendMessage(msg);
                         //handler一定要放在上面两个函数后面执行，否则会先启动主界面再传值到文件里！！！！
                     }
@@ -166,13 +171,14 @@ public class LoginActivity extends AppCompatActivity {
                 , MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putInt("userId", userId);
+        LogUtil.d("login","save userId"+userId);
         // 提交修改
         /*
          *apply()与commit()区别：  apply没有返回值而commit返回boolean表明修改是否提交成功 ，
          * apply是将修改数据原子提交到内存, 而后异步真正提交到硬件磁盘, 而commit是同步的提交到硬件磁盘
          * apply方法不会提示任何失败的提示。
          */
-        editor.apply();
-        //editor.commit();
+        //editor.apply();
+        editor.commit();
     }
 }
