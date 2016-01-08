@@ -178,6 +178,7 @@ public class HomeFragment extends Fragment implements
         return v;
     }
 
+
     /**
      * refresh data.
      * set current page = 0
@@ -378,4 +379,6 @@ public class HomeFragment extends Fragment implements
             Toast.makeText(getContext(), result ? "Success" : "Failed", Toast.LENGTH_SHORT).show();
         }
     }
+
+
 }

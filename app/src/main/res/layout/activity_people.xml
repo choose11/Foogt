@@ -60,7 +60,7 @@
                     android:id="@+id/tab_people_tab"
                     android:layout_width="match_parent"
                     android:layout_height="49dp"
-                    android:background="@color/colorAccent"
+                    android:background="@color/colorTab"
                     app:layout_collapseMode="pin"
                     app:tabIndicatorColor="@color/colorPrimary"
                     app:tabSelectedTextColor="@android:color/white"
