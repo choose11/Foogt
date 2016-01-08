@@ -8,4 +8,5 @@
     android:background="?attr/colorPrimary"
     app:layout_scrollFlags="scroll|enterAlways"
     app:popupTheme="@style/AppTheme.PopupOverlay"
-    app:titleTextColor="@android:color/white"/>
+    app:titleTextColor="@android:color/white"
+    android:theme="@style/ToolBarBackArrow"/>

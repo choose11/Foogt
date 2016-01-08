@@ -47,7 +47,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="8"
                 android:ems="10"
-                android:padding="5sp"/>
+                android:padding="5sp"
+                android:singleLine="true"/>
         </TableRow>
 
         <TableRow
