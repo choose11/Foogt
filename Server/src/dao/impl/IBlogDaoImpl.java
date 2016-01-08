@@ -11,11 +11,13 @@ import java.util.List;
 
 
 
+
 import util.LogUtil;
 import dao.IBlogDao;
 import db.ConnectionOracle;
 import entity.BlogInfo;
 import entity.msgInfo;
+import entity.msgRelation;
 
 public class IBlogDaoImpl implements IBlogDao {
 
@@ -307,6 +309,7 @@ public class IBlogDaoImpl implements IBlogDao {
 	}
 
 	private void close(Connection conn, PreparedStatement pstmt, ResultSet rs) {
+
 		try {
 			if (rs != null) {
 				rs.close();
@@ -321,6 +324,34 @@ public class IBlogDaoImpl implements IBlogDao {
 			LogUtil.e(e);
 		}
 	}
-
+	
+	@Override
+	public List<msgRelation>selectRelation(int userId){
+		List<msgRelation>list=new ArrayList<>();
+		Connection conn=new ConnectionOracle().getConnection();
+		PreparedStatement ps=null;
+		ResultSet rs=null;
+		String sql="select   a.user_name as  name1, a2.user_name as  name2,c1.content as content1,c2.content as content2,b.time_t from  t_user_info  a,t_msg_msg_relation  b,t_user_info a2,t_msg_info c1,t_msg_info c2 where b.referenced_id=? and  b.referenced_id=a2.user_id and b.reference_id=a.user_id and  b.reference_msg_id=c1.msg_id and b.referenced_msg_id=c2.msg_id order by time_t desc";
+				try {
+			ps=conn.prepareStatement(sql);
+			ps.setInt(1, userId);
+			rs=ps.executeQuery();
+			while (rs.next()) {
+				String name1= rs.getString(1);
+				String name2=rs.getString(2);
+				String content1=rs.getString(3);
+				String content2=rs.getString(4);
+				msgRelation msg=new msgRelation(name1, content1, name2, content2);
+				list.add(msg);
+			}
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally{
+			close(conn, ps, rs);
+		}
+		return list;
+	}
 	
 }

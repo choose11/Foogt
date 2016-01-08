@@ -9,7 +9,9 @@ import servlet.MsgInfo;
 import dao.IBlogDao;
 import dao.impl.IBlogDaoImpl;
 import entity.BlogInfo;
+import entity.User;
 import entity.msgInfo;
+import entity.msgRelation;
 
 public class IBlogServiceImpl implements IBlogService {
 	public static final int pageSize = 5;
@@ -66,6 +68,20 @@ public class IBlogServiceImpl implements IBlogService {
 	@Override
 	public List<BlogInfo> getHotBlogs(int page) {
 		return dao.getHotBlogs(page);
+	}
+				
+	public List<msgRelation> selectRelation(int userId) {
+		// TODO Auto-generated method stub
+		return dao.selectRelation(userId);
 	};
 
+	
+	public static void main(String[] args) {
+		IBlogServiceImpl i = new IBlogServiceImpl();
+//		User u = new User("eric", "eric");
+//		List<msgRelation>l= i.selectRelation(2);
+//		System.out.println(l.get(0).getContent2());
+	
+
+	}
 }
