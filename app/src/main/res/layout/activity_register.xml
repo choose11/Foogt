@@ -5,6 +5,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <include
+        layout="@layout/toolbar_main"/>
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -33,10 +35,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
+                android:padding="20sp"
                 android:text="@string/username"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="20sp"
-                android:padding="20sp"/>
+                android:textSize="20sp"/>
 
             <EditText
                 android:id="@+id/edit_register_account"
@@ -56,10 +58,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
+                android:padding="20sp"
                 android:text="@string/register_pwd"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="20sp"
-                android:padding="20sp"/>
+                android:textSize="20sp"/>
 
             <EditText
                 android:id="@+id/edit_register_pwd"
@@ -83,23 +85,23 @@
             android:layout_width="200dp"
             android:layout_height="65dp"
             android:layout_gravity="center"
-            android:text="@string/register"
-            android:textSize="20sp"
             android:background="#585cde"
-            android:textColor="#fefcfc"/>
+            android:text="@string/register"
+            android:textColor="#fefcfc"
+            android:textSize="20sp"/>
 
     </FrameLayout>
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0.1">
+        android:layout_weight="0.1"
+        android:orientation="horizontal">
 
         <CheckBox
+            android:id="@+id/checkBox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/checkBox"
             android:checked="false"/>
 
         <TextView
