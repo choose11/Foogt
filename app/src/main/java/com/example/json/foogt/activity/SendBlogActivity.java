@@ -31,7 +31,6 @@ import java.text.SimpleDateFormat;
 public class SendBlogActivity extends AppCompatActivity {
     private Button send_btn;
     private EditText contentEdit;
-    private ImageView addImg;
     private int userId;
     private String content, timeT;
     private Handler handler = new Handler() {
@@ -53,7 +52,6 @@ public class SendBlogActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_send_blog);
         contentEdit = (EditText) findViewById(R.id.edit_send_content);
-        addImg = (ImageView) findViewById(R.id.img_picture_add);
         send_btn = (Button) findViewById(R.id.send);
         // Find the toolbar view inside the activity layout
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

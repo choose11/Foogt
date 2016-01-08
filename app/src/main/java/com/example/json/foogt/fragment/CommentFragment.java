@@ -1,9 +1,5 @@
 package com.example.json.foogt.fragment;
 
-import android.app.Activity;
-import android.app.Dialog;
-import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -17,15 +13,12 @@ import android.widget.SimpleAdapter;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.example.json.foogt.R;
-import com.example.json.foogt.entity.BlogInfo;
 import com.example.json.foogt.util.LogUtil;
-import com.example.json.foogt.entity.UserInfoMsg;
 import com.example.json.foogt.entity.msgRelation;
-import com.example.json.foogt.entity.msgRelation1;
 import com.example.json.foogt.util.HttpCallbackListener;
 import com.example.json.foogt.util.HttpUtil;
 import com.example.json.foogt.util.IConst;
-import com.example.json.foogt.util.LogUtil;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -55,8 +48,6 @@ public class CommentFragment extends Fragment {
 
             int g=0;
             List<HashMap<String,String>> l=new ArrayList<>();
-            System.out.println("gggg" + g);
-            LogUtil.d("m",m.get(0).getContent1());
             for (g=0;g<m.size();g++){
                 HashMap<String,String> h=new HashMap<>();
                 h.put("name1",m.get(g).getName1());
@@ -83,24 +74,7 @@ public class CommentFragment extends Fragment {
     private ListView lv;
 
     private OnFragmentInteractionListener mListener;
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment CommentFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-/*    public static CommentFragment newInstance(String param1, String param2) {
-        CommentFragment fragment = new CommentFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }*/
+    
     public static CommentFragment newInstance(int userId) {
         CommentFragment fragment = new CommentFragment();
         Bundle args = new Bundle();

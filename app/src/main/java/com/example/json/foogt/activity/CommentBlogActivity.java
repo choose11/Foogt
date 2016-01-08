@@ -117,6 +117,7 @@ public class CommentBlogActivity extends AppCompatActivity implements Response.E
         public void onResponse(String response) {
             if (Utility.handleBooleanResultResponse(response)) {
                 Toast.makeText(getApplicationContext(), R.string.comment_success, Toast.LENGTH_SHORT).show();
+                finish();
             } else {
                 Toast.makeText(getApplicationContext(), R.string.comment_failed, Toast.LENGTH_SHORT).show();
             }

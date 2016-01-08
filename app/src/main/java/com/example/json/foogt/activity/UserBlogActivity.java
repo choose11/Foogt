@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -17,11 +18,13 @@ import com.alibaba.fastjson.TypeReference;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.json.foogt.R;
 import com.example.json.foogt.adapter.MBlogAdapter;
 import com.example.json.foogt.entity.BlogInfo;
+import com.example.json.foogt.util.BitmapCache;
 import com.example.json.foogt.util.IConst;
 import com.example.json.foogt.util.LogUtil;
 
@@ -48,7 +51,11 @@ public class UserBlogActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_blog);
-
+        // Find the toolbar view inside the activity layout
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        // Sets the Toolbar to act as the ActionBar for this Activity window.
+        // Make sure the toolbar exists in the activity and is not null
+        setSupportActionBar(toolbar);
         bar = getSupportActionBar();
 
         if (bar != null) {
@@ -71,7 +78,7 @@ public class UserBlogActivity extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(this);
         rv.setLayoutManager(layoutManager);
         list = new ArrayList<>();
-        adapter = new MBlogAdapter(list, null, null);
+        adapter = new MBlogAdapter(list, null, new ImageLoader(mQueue, BitmapCache.getInstance()));
         rv.setAdapter(adapter);
 
 

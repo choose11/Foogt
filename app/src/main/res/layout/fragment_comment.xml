@@ -13,11 +13,4 @@
         android:id="@+id/listView2"
         android:layout_gravity="center_horizontal|top"/>
 
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="text评论"
-        android:id="@+id/btn_content"
-        android:layout_gravity="left|bottom"/>
 </FrameLayout>
