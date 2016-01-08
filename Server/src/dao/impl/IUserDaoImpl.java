@@ -285,7 +285,7 @@ public class IUserDaoImpl implements IUserDao {
 		Connection conn = new ConnectionOracle().getConnection();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		String sql = "select ui.user_id,ui.user_name,ui.user_intro from t_user_info ui where   ui.user_id in(select user_id from (select rownum rn,user_id from( select user_id  from (select user_id from t_user_relation  where follow_id =? and type=0 order by user_id desc) where rownum<=? )	)	where rn>?)";
+		String sql = "select ui.user_id,ui.user_name,ui.user_intro from t_user_info ui where   ui.user_id in(select user_id from (select rownum rn,user_id from( select user_id  from (select user_id from t_user_relation  where follow_id =? and type=1 order by user_id desc) where rownum<=? )	)	where rn>?)";
 		try {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, userId);
@@ -531,6 +531,43 @@ public class IUserDaoImpl implements IUserDao {
 			close(conn, ps, null);
 		}
 		
+	}
+
+	@Override
+	public boolean updateFansCount(int userId) {
+		Connection conn=new ConnectionOracle().getConnection();
+		PreparedStatement ps=null;
+		String sql="update t_user_info set fans_count=fans_count+1 where user_id=?";
+		try {
+			ps=conn.prepareStatement(sql);
+			ps.setInt(1, userId);
+			int i=ps.executeUpdate();
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}finally{
+			close(conn, ps, null);
+		}
+		
+	}
+
+	@Override
+	public boolean updateFocusCount(int userId) {
+		Connection conn=new ConnectionOracle().getConnection();
+		PreparedStatement ps=null;
+		String sql="update t_user_info set focus_count=focus_count+1 where user_id=?";
+		try {
+			ps=conn.prepareStatement(sql);
+			ps.setInt(1, userId);
+			int i=ps.executeUpdate();
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}finally{
+			close(conn, ps, null);
+		}
 	}
 
 }

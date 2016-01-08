@@ -70,6 +70,7 @@ public class GetFans extends HttpServlet {
 			jsonArray.put(JSON.toJSON(u));
 		}
 		out.write(jsonArray.toString());
+		log(jsonArray.toString());
 		out.flush();
 		out.close();
 	}

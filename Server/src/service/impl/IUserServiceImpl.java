@@ -9,7 +9,7 @@ import entity.User;
 
 public class IUserServiceImpl implements IUserService {
 
-	public static final int SEARCH_USER_LIMIT = 5;
+	public static final int SEARCH_USER_LIMIT = 10;
 	public static final int USER_RELATION_FAN = 0;
 	public static final int USER_RELATION_FOCUS = 1;
 
@@ -88,8 +88,9 @@ public class IUserServiceImpl implements IUserService {
 	public boolean insertTUserRelation(int cuid, int fuid) {
 		boolean i1 = dao.insertTUserRelation(cuid, fuid, USER_RELATION_FOCUS);
 		boolean i2 = dao.insertTUserRelation(fuid, cuid, USER_RELATION_FAN);
-
-		return i1 && i2;
+		boolean i3 = dao.updateFansCount(fuid);
+		boolean i4 = dao.updateFocusCount(cuid);
+		return i1 && i2 && i3 && i4;
 	}
 
 	/**
@@ -137,6 +138,7 @@ public class IUserServiceImpl implements IUserService {
 			return dao.setHeadImg(uid);
 		}
 	}
+	
 
 	/**
 	 * Test Mod
@@ -170,5 +172,4 @@ public class IUserServiceImpl implements IUserService {
 		// TODO Auto-generated method stub
 		return dao.updateMsgCount(userId);
 	}
-
 }
