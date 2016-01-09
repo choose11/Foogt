@@ -1,5 +1,7 @@
 package entity;
 
+import org.json.JSONObject;
+
 public class User {
 	private int userId;
 	private String account;
@@ -9,9 +11,6 @@ public class User {
 	private int msgCount;
 	private int fansCount;
 	private int focusCount;
-
-	public User() {
-	}
 
 	/**
 	 * For register. default username is account.
@@ -28,6 +27,36 @@ public class User {
 		super();
 		this.account = account;
 		this.password = password;
+		this.username = username;
+		this.userIntro = userIntro;
+		this.msgCount = msgCount;
+		this.fansCount = fansCount;
+		this.focusCount = focusCount;
+	}
+
+	public User(int userId, String username, String userIntro) {
+		
+		this.userId = userId;
+		this.username = username;
+		this.userIntro = userIntro;
+	}
+
+	public User(int userId, String username) {
+		super();
+		this.userId = userId;
+		this.username = username;
+	}
+
+	public User(String account,int userId) {
+		super();
+		this.userId = userId;
+		this.account = account;
+	}
+
+	public User(int userId, String username, String userIntro, int msgCount,
+			int fansCount, int focusCount) {
+		super();
+		this.userId = userId;
 		this.username = username;
 		this.userIntro = userIntro;
 		this.msgCount = msgCount;
@@ -97,6 +126,11 @@ public class User {
 
 	public void setFocusCount(int focusCount) {
 		this.focusCount = focusCount;
+	}
+
+	public User(int userId) {
+		super();
+		this.userId = userId;
 	}
 
 }

@@ -15,6 +15,106 @@
     <servlet-name>LoginServlet</servlet-name>
     <servlet-class>servlet.LoginServlet</servlet-class>
   </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>MsgInfo</servlet-name>
+    <servlet-class>servlet.MsgInfo</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>GetBlogs</servlet-name>
+    <servlet-class>servlet.GetBlogs</servlet-class>
+  </servlet>
+    <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>SearchUserServlet</servlet-name>
+    <servlet-class>servlet.SearchUserServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>DataEditServlet</servlet-name>
+    <servlet-class>servlet.DataEditServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>SearchUserDataServlet</servlet-name>
+    <servlet-class>servlet.SearchUserDataServlet</servlet-class>
+  </servlet>
+  <servlet>
+
+    <servlet-name>Focus</servlet-name>
+    <servlet-class>servlet.Focus</servlet-class>
+</servlet>
+ <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>GetUserOwnBlogs</servlet-name>
+    <servlet-class>servlet.GetUserOwnBlogs</servlet-class>
+
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>SearchUserAccount</servlet-name>
+    <servlet-class>servlet.SearchUserAccount</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>GetFans</servlet-name>
+    <servlet-class>servlet.GetFans</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>GetFocus</servlet-name>
+    <servlet-class>servlet.GetFocus</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>Collection</servlet-name>
+    <servlet-class>servlet.Collection</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>GetCollections</servlet-name>
+    <servlet-class>servlet.GetCollections</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>Comment</servlet-name>
+    <servlet-class>servlet.Comment</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>GetHeadIMG</servlet-name>
+    <servlet-class>servlet.GetHeadIMG</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>UploadImg</servlet-name>
+    <servlet-class>servlet.UploadImg</servlet-class>
+   </servlet>
+   <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>GetHotBlogs</servlet-name>
+    <servlet-class>servlet.GetHotBlogs</servlet-class>
+</servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>ShowComment</servlet-name>
+    <servlet-class>servlet.ShowComment</servlet-class>
+  </servlet>
+
+
+
+
+
+
+
+
+
+
 
  <servlet-mapping>
   <servlet-name>UserRegister</servlet-name>
@@ -27,6 +127,74 @@
   <servlet-mapping>
     <servlet-name>LoginServlet</servlet-name>
     <url-pattern>/LoginServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>MsgInfo</servlet-name>
+    <url-pattern>/MsgInfo</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>GetBlogs</servlet-name>
+    <url-pattern>/GetBlogs</url-pattern>
+  </servlet-mapping>
+    <servlet-mapping>
+    <servlet-name>SearchUserServlet</servlet-name>
+    <url-pattern>/SearchUserServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>DataEditServlet</servlet-name>
+    <url-pattern>/DataEditServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>SearchUserDataServlet</servlet-name>
+    <url-pattern>/SearchUserDataServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>Focus</servlet-name>
+    <url-pattern>/Focus</url-pattern>
+  </servlet-mapping>
+    <servlet-mapping>
+    <servlet-name>GetUserOwnBlogs</servlet-name>
+    <url-pattern>/GetUserOwnBlogs</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>SearchUserAccount</servlet-name>
+    <url-pattern>/SearchUserAccount</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>GetFans</servlet-name>
+    <url-pattern>/GetFans</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>GetFocus</servlet-name>
+    <url-pattern>/GetFocus</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>Collection</servlet-name>
+    <url-pattern>/Collection</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>GetCollections</servlet-name>
+    <url-pattern>/GetCollections</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>Comment</servlet-name>
+    <url-pattern>/Comment</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>GetHeadIMG</servlet-name>
+    <url-pattern>/GetHeadIMG</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>UploadImg</servlet-name>
+    <url-pattern>/UploadImg</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>GetHotBlogs</servlet-name>
+    <url-pattern>/GetHotBlogs</url-pattern>
+    </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>ShowComment</servlet-name>
+    <url-pattern>/ShowComment</url-pattern>
   </servlet-mapping>
  <welcome-file-list>
   <welcome-file>index.jsp</welcome-file>

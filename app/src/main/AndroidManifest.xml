@@ -4,6 +4,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
     <application
         android:allowBackup="true"
@@ -11,33 +13,41 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity
-            android:name=".activity.LoginActivity"
-            android:label="@string/title_activity_login"
-            android:theme="@style/AppTheme.NoActionBar">
+        <activity android:name=".activity.LoginActivity">
+
         </activity>
         <activity android:name=".activity.RegisterActivity">
         </activity>
         <activity android:name=".activity.DataEditActivity">
         </activity>
         <activity android:name=".activity.ChangeUserActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
         </activity>
         <activity android:name=".activity.SearchActivity">
         </activity>
         <activity android:name=".activity.SendBlogActivity">
         </activity>
         <activity
-            android:name=".activity.MenuActivity"
-            android:label="@string/title_activity_menu"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:name=".activity.MenuActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
         </activity>
         <activity android:name=".activity.CollectionActivity">
         </activity>
+        <activity android:name=".activity.PeopleActivity">
+        </activity>
+        <activity android:name=".activity.FansOrFocusActivity">
+        </activity>
+        <activity android:name=".activity.UserBlogActivity">
+        </activity>
+        <activity android:name=".activity.CommentBlogActivity">
+        </activity>
+        <activity
+            android:name=".activity.TransferActivity">
+        </activity>
+
     </application>
 
 </manifest>

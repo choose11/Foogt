@@ -6,13 +6,13 @@
 
     <item android:id="@+id/action_home"
           android:orderInCategory="80"
-          android:icon="@android:drawable/ic_menu_info_details"
+          android:icon="@drawable/home_bar"
           app:showAsAction="ifRoom"
           android:title="home"/>
 
     <item android:id="@+id/action_comment"
           android:orderInCategory="90"
-          android:icon="@android:drawable/ic_dialog_email"
+          android:icon="@drawable/pinglun"
           app:showAsAction="ifRoom"
           android:title="comment"/>
 </menu>

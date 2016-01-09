@@ -3,22 +3,24 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:weightSum="1">
+    android:orientation="vertical">
 
+    <include
+        layout="@layout/toolbar_main"/>
 
     <EditText
+        android:gravity="left|top"
         android:id="@+id/edit_send_content"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_weight="0.40"
+        android:layout_weight="1"
         android:hint="@string/say_something"/>
 
-    <ImageView
-        android:id="@+id/img_picture_add"
-        android:layout_width="100dp"
+
+    <Button
+        android:id="@+id/send"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:src="@android:drawable/ic_menu_gallery"
-        android:layout_weight="0.14"/>
+        android:background="@color/colorButton"
+        android:text="@string/send_blog"/>
 </LinearLayout>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include
+        layout="@layout/toolbar_main"/>
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/layout_userBlog_swipe"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_User_msg"
+            android:layout_width="wrap_content"
+            android:layout_height="488dp"
+            android:layout_gravity="left|top"/>
+    </android.support.v4.widget.SwipeRefreshLayout>
+</LinearLayout>

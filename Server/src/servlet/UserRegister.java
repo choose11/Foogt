@@ -1,5 +1,4 @@
 package servlet;
-
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -8,11 +7,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.json.JSONObject;
-
 import com.alibaba.fastjson.JSON;
-
-import sun.org.mozilla.javascript.internal.json.JsonParser;
 
 import entity.User;
 import entity.UserInfoMsg;

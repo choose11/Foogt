@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
+    android:id="@+id/layout_root"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -12,23 +13,23 @@
 
 
         <EditText
-            android:layout_width="wrap_content"
+            android:id="@+id/edit_search_in"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:id="@+id/editText"
             android:layout_weight="0.7"/>
 
         <ImageButton
+            android:id="@+id/ibtn_search_search"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/imageButton"
             android:src="@drawable/search"
             />
     </LinearLayout>
 
     <ListView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/listView"
+        android:id="@+id/lv_search_result"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
         android:layout_gravity="center_vertical"
         android:layout_weight="1"/>
 
