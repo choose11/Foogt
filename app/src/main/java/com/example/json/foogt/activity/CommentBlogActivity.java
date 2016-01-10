@@ -87,6 +87,7 @@ public class CommentBlogActivity extends AppCompatActivity implements Response.E
 
     @Override
     public void onErrorResponse(VolleyError error) {
+        LogUtil.d("网络","网络有问题");
         Toast.makeText(getApplicationContext(), R.string.http_fail, Toast.LENGTH_SHORT).show();
     }
 
